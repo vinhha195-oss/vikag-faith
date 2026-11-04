@@ -1,0 +1,18 @@
+{
+"q2#424|graph|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#424|graph|1": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#424|graph|2": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#424|naive|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#424|naive|1": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#424|naive|2": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#466|graph|0": {"label": "supported", "evidence": "P1,P3,P4", "note": "Trách nhiệm trước hết của chính quyền địa phương; UBND tỉnh bố trí ngân sách"},
+"q2#466|graph|1": {"label": "supported", "evidence": "P1", "note": ""},
+"q2#466|graph|2": {"label": "supported", "evidence": "P5", "note": ""},
+"q2#466|naive|0": {"label": "supported", "evidence": "P1,P3", "note": ""},
+"q2#466|naive|1": {"label": "supported", "evidence": "P1", "note": "QĐ 2348 quy định UBND tỉnh bố trí ngân sách cho Đề án"},
+"q2#544|graph|0": {"label": "supported", "evidence": "P4", "note": "NVYT báo cáo kịp thời người có trách nhiệm khi phát hiện nguy cơ (yếu: nguy cơ ATVSLĐ)"},
+"q2#544|graph|1": {"label": "unsupported", "evidence": "P4", "note": "Không có quy định NVYT đề xuất công bố GSP"},
+"q2#544|graph|2": {"label": "supported", "evidence": "P5", "note": "Ban hành trên cơ sở tài liệu hướng dẫn của WHO"},
+"q2#544|naive|0": {"label": "supported", "evidence": "P4", "note": "Như graph|0 (yếu)"},
+"q2#544|naive|1": {"label": "supported", "evidence": "P5", "note": "\"tốt nhất\" là thêm thắt nhẹ"}
+}

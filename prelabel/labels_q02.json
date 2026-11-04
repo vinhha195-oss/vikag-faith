@@ -1,0 +1,22 @@
+{
+"q1#1461|graph|0": {"label": "unsupported", "evidence": "P1,P4,P6", "note": "Đoạn trích của BV Huế và BV ĐHYD không có siêu âm thai; siêu âm thai lại có trong danh mục BV Quân y 7B"},
+"q1#1461|graph|1": {"label": "contradicted", "evidence": "P5", "note": "Bệnh xá Học viện Quốc phòng có \"Siêu âm tuyến vú hai bên\" (STT 10)"},
+"q1#1461|graph|2": {"label": "contradicted", "evidence": "P1,P6", "note": "BV Đại học Y Dược (ĐHQG HN) cũng có dịch vụ này (STT 3)"},
+"q1#1461|graph|3": {"label": "contradicted", "evidence": "P1,P4,P5,P6", "note": "Bệnh xá HVQP không có mã 02.0373.0001; ba cơ sở còn lại có"},
+"q1#1461|naive|0": {"label": "contradicted", "evidence": "P5", "note": "Danh mục siêu âm của Bệnh xá HVQP không có siêu âm thai"},
+"q1#1461|naive|1": {"label": "contradicted", "evidence": "P5", "note": "Bệnh xá HVQP có dịch vụ này"},
+"q1#1461|naive|2": {"label": "supported", "evidence": "P1,P4,P5,P6", "note": "Trong 4 cơ sở được hỏi, chỉ BV Huế và BV ĐHYD có"},
+"q1#1461|naive|3": {"label": "contradicted", "evidence": "P4", "note": "BV Quân y 7B cũng có mã 02.0373.0001"},
+"q1#255|graph|0": {"label": "contradicted", "evidence": "P4", "note": "Viện CL&CSYT nghiên cứu phương pháp đo lường sự hài lòng với dịch vụ y tế công"},
+"q1#255|graph|1": {"label": "contradicted", "evidence": "P2", "note": "Đây là nhiệm vụ của Văn phòng Bộ (mục 5.2)"},
+"q1#255|graph|2": {"label": "contradicted", "evidence": "P2", "note": "Nhiệm vụ của Văn phòng Bộ"},
+"q1#255|graph|3": {"label": "contradicted", "evidence": "P2", "note": "Nhiệm vụ của Văn phòng Bộ"},
+"q1#255|naive|0": {"label": "contradicted", "evidence": "P4", "note": "Như graph|0"},
+"q1#255|naive|1": {"label": "contradicted", "evidence": "P1", "note": "Sổ vàng do Cục Quản lý Y, Dược cổ truyền quản lý"},
+"q1#567|graph|0": {"label": "contradicted", "evidence": "P5", "note": "Luật Dược sửa đổi dự kiến trình Quốc hội tháng 10/2022; Kỳ họp thứ 10 (10/2025) là của Luật ATTP"},
+"q1#567|graph|1": {"label": "supported", "evidence": "P3,P6", "note": "28/12/2021, sau 28/9/2020"},
+"q1#567|graph|2": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#567|naive|0": {"label": "contradicted", "evidence": "P5", "note": "Tháng 10/2022, không phải 10/2025"},
+"q1#567|naive|1": {"label": "supported", "evidence": "P3", "note": "Ngày 28/12/2021"},
+"q1#567|naive|2": {"label": "supported", "evidence": "P1", "note": ""}
+}

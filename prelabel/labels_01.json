@@ -1,0 +1,10 @@
+{
+"q1#1134|naive|0": {"label": "contradicted", "evidence": "2", "note": "QĐ với An Triết do Trưởng đoàn thanh tra (theo QĐ 39/QĐ-TTrB) ký, không phải Chánh Thanh tra"},
+"q1#1134|naive|1": {"label": "supported", "evidence": "1", "note": "Chánh Thanh tra Bộ Y tế ra quyết định (thuộc Thanh tra Bộ Y tế)"},
+"q1#1134|naive|2": {"label": "contradicted", "evidence": "4", "note": "Cục Dân số có chức năng thanh tra chuyên ngành, xử lý vi phạm; có Phòng Pháp chế - Thanh tra"},
+"q1#1134|naive|3": {"label": "contradicted", "evidence": "5,6", "note": "Biên bản lập tại phòng họp Thanh tra Bộ Y tế, 138B Giảng Võ"},
+"q1#114|graph|0": {"label": "supported", "evidence": "1", "note": "90% Quỹ BHYT phân bổ cho KCB"},
+"q1#114|graph|1": {"label": "supported", "evidence": "1", "note": ""},
+"q1#114|naive|0": {"label": "supported", "evidence": "1", "note": ""},
+"q1#114|naive|1": {"label": "supported", "evidence": "1", "note": ""}
+}

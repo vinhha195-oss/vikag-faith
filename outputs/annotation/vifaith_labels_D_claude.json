@@ -1,0 +1,1576 @@
+{
+ "mode": "D",
+ "labeler": "claude",
+ "note": "Nhãn do Claude gán, CHƯA được người duyệt; không phải pass mù của người.",
+ "exported": "2026-10-29T02:24:40.600791Z",
+ "labels": {
+  "881f06e788e4": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": false,
+   "note": "Phụ lục I ban hành trên cơ sở tài liệu hướng dẫn của WHO",
+   "confirmed": false
+  },
+  "853cfdcde3e9": {
+   "label": "unsupported",
+   "evidence": "1,6",
+   "bad": false,
+   "note": "Đoạn trích của BV Huế/ĐHYD không có Siêu âm thai; trong 4 cơ sở chỉ thấy ở QY 7B (đoạn 4)",
+   "confirmed": false
+  },
+  "69c18a69bc0c": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "Siêu âm tuyến vú hai bên có trong danh mục 17 bệnh xá (mã 18.0054.0001)",
+   "confirmed": false
+  },
+  "4508d68cfff6": {
+   "label": "contradicted",
+   "evidence": "1,6",
+   "bad": false,
+   "note": "Catheter tĩnh mạch (01.0020.0001) có ở cả Huế và ĐHYD (ĐHQG HN)",
+   "confirmed": false
+  },
+  "2dd574c63d73": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "bfde8266a0bd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "ad88a94f7d81": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6cd9dc723ce7": {
+   "label": "unsupported",
+   "evidence": "1,3,6",
+   "bad": true,
+   "note": "Gộp 5 ý; ý 1-2 có bằng chứng, ý 3-5 là khuyến nghị chung chung tự suy ra",
+   "confirmed": false
+  },
+  "7d84202e8ab1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "1f95ab40e2e3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "ed9457aa4421": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "cb2007195cc9": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có TikTok",
+   "confirmed": false
+  },
+  "bcfa3d8376c4": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có Pinterest",
+   "confirmed": false
+  },
+  "26aa77d57345": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có YouTube",
+   "confirmed": false
+  },
+  "3f4a8096cf41": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "3dfa108b4447": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Văn bản ghi \"Shoppee\"",
+   "confirmed": false
+  },
+  "945c42b68bf2": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "551df8781d75": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Hộ gia đình được hỗ trợ tối thiểu 30%; 50% là của nhóm HSSV, không phải cơ chế cho hộ gia đình",
+   "confirmed": false
+  },
+  "5c5f4777c626": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2a041184b2f2": {
+   "label": "contradicted",
+   "evidence": "6",
+   "bad": false,
+   "note": "Đoạn 6 có nêu cải cách TTHC lấy người bệnh làm trung tâm (3 giải pháp, TT 26/2025)",
+   "confirmed": false
+  },
+  "1a42b63ac8d5": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "77df7140ae64": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có TikTok",
+   "confirmed": false
+  },
+  "45257dcc447a": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có Pinterest",
+   "confirmed": false
+  },
+  "85b66247c1dc": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "Danh sách MXH chỉ nêu facebook, zalo; không có YouTube",
+   "confirmed": false
+  },
+  "220de9abb279": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "dee14d3f5473": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Văn bản ghi \"Shoppee\"",
+   "confirmed": false
+  },
+  "6cbf923cb964": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "7bc138f9e7e4": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "Trách nhiệm chính quyền địa phương; QĐ 2348 giao UBND tỉnh bố trí ngân sách",
+   "confirmed": false
+  },
+  "b7dbc9885f97": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "3ca256d20ebc": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "99bd1d24639a": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "fa128a0fb12f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8607b81de969": {
+   "label": "supported",
+   "evidence": "1,2,7",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8a3bcf3df363": {
+   "label": "supported",
+   "evidence": "1,7",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "f2b6af7aab0f": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "Ngày ban hành các Quyết định để trống (/QĐ-QLD ngày / /)",
+   "confirmed": false
+  },
+  "da9891e5e645": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "71d4372544a2": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "bc37285e9988": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "b76d83d94b5f": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2d9646449098": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "NĐ 124/2021 sửa đổi NĐ 115/2018 và 117/2020 về xử phạt VPHC (y tế, ATTP)",
+   "confirmed": false
+  },
+  "533be0f27fe6": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d9654651f879": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2afec9db634d": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Bệnh viện hoàn thành HSBA điện tử chậm nhất 30/9/2025, trước 15/8/2028",
+   "confirmed": false
+  },
+  "db69034acbd4": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2253b34cab6b": {
+   "label": "unsupported",
+   "evidence": "3",
+   "bad": false,
+   "note": "Hỗ trợ 36 tháng từ 01/11/2023 áp dụng cho đối tượng điểm b khoản 3 Điều 1 NĐ 75, không phải phụ nữ mang thai",
+   "confirmed": false
+  },
+  "17d16d8514df": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "\"Điều này\" không đứng độc lập",
+   "confirmed": false
+  },
+  "a392bb3d980a": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "Nam Việt (Khánh Hòa) không có Zalo/Tiktok; Zalo/Tiktok thuộc Vạn Xuân và MCT Group",
+   "confirmed": false
+  },
+  "2e7d67efb65f": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "Danh sách của Vạn Xuân không có email/SMS; email/SMS thuộc Mãi Mãi Hạnh Phúc",
+   "confirmed": false
+  },
+  "035fd2cf389a": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": true,
+   "note": "Mảnh câu; Twitter chỉ có ở BIONATURE GOLD, không phải chung cả 4",
+   "confirmed": false
+  },
+  "3391f32cf04f": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Vai trò điều phối có ở đoạn 1; không có bằng chứng PHEOC áp dụng quy định xét nghiệm người nhập cảnh",
+   "confirmed": false
+  },
+  "627973acaa1d": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Đề xuất xét nghiệm nhanh là của Tiểu ban Truyền thông, không phải PHEOC",
+   "confirmed": false
+  },
+  "aa2e9f414fd6": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "\"các bệnh này\" không rõ; không có bằng chứng PHEOC chẩn đoán phân biệt",
+   "confirmed": false
+  },
+  "4ec16728f2e6": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": true,
+   "note": "\"các bệnh này\" không rõ; đoạn 4 chỉ phân biệt BPTNMT với hen",
+   "confirmed": false
+  },
+  "f340b5a34dfd": {
+   "label": "unsupported",
+   "evidence": "2,3,4",
+   "bad": false,
+   "note": "Chỉ thấy ở 3/6 quyết định (Đào Tiến, Gia Phú, Đa Phúc); không xác nhận được \"đều\"",
+   "confirmed": false
+  },
+  "5d9a031a1c7e": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Cục QLD (để phối hợp) chỉ thấy ở QĐ Đào Tiến",
+   "confirmed": false
+  },
+  "77f6c8e01474": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Claim mơ hồ, không nêu nội dung cụ thể",
+   "confirmed": false
+  },
+  "cfb8145178e1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "f6c055743c94": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "617f8d26f159": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "b69ae8e61732": {
+   "label": "unsupported",
+   "evidence": "1,4,6",
+   "bad": false,
+   "note": "Trong 4 cơ sở chỉ thấy Siêu âm thai ở QY 7B",
+   "confirmed": false
+  },
+  "cd570336c321": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "Siêu âm tuyến vú hai bên có trong danh mục 17 bệnh xá",
+   "confirmed": false
+  },
+  "de9a08244db7": {
+   "label": "supported",
+   "evidence": "1,6",
+   "bad": false,
+   "note": "Trong 4 cơ sở chỉ Huế và ĐHYD có mã 01.0020.0001",
+   "confirmed": false
+  },
+  "2c4cb673b3da": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "Mục 5.9: Viện nghiên cứu đề xuất sửa đổi phương pháp đo lường hài lòng với dịch vụ y tế công",
+   "confirmed": false
+  },
+  "8a690cfe378f": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Nhiệm vụ này thuộc Văn phòng Bộ (mục 5.2)",
+   "confirmed": false
+  },
+  "feee7a61e663": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Nhiệm vụ này thuộc Văn phòng Bộ (mục 5.2)",
+   "confirmed": false
+  },
+  "288fae7bf301": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Nhiệm vụ ISO 9001 thuộc Văn phòng Bộ (mục 5.2)",
+   "confirmed": false
+  },
+  "18ee05570482": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "05a84aff11fb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "295d8c27ce14": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "434359cd3298": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d17b99f2c394": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "c23227d71051": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "e50699861679": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Cục QLD (để phối hợp) chỉ thấy ở QĐ Đào Tiến, không thấy ở QĐ Đa Phúc",
+   "confirmed": false
+  },
+  "7e3971a9da7f": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "VnTime cỡ 140 cho dòng 1-2",
+   "confirmed": false
+  },
+  "f83ce90cf35b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "1a458377c3a8": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": false,
+   "note": "Văn bản không nhắc cường giáp",
+   "confirmed": false
+  },
+  "118e0b3adf87": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "20ec81df2a60": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "121ad23204e2": {
+   "label": "unsupported",
+   "evidence": "3",
+   "bad": false,
+   "note": "Hỗ trợ 36 tháng từ 01/11/2023 áp dụng cho đối tượng điểm b khoản 3 Điều 1 NĐ 75, không phải phụ nữ mang thai",
+   "confirmed": false
+  },
+  "8e4912502954": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "\"Đây đều là\" không đứng độc lập; nhận định chung tự suy ra",
+   "confirmed": false
+  },
+  "6ec401f68c45": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "0db46c6d4174": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Người đại diện Thái Hà là ông Lê Quang Sơn, không phải Lê Thị Kim Huyền",
+   "confirmed": false
+  },
+  "74608d84d58b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "3a29116a0d92": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "f9a27282b57b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "284052e5c591": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Đề xuất xét nghiệm nhanh là của Tiểu ban Truyền thông, không phải PHEOC",
+   "confirmed": false
+  },
+  "010a760e7545": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "Không có bằng chứng PHEOC phân biệt sởi với hen phế quản",
+   "confirmed": false
+  },
+  "575f331f681e": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "\"các bệnh này\" không rõ; không có bằng chứng",
+   "confirmed": false
+  },
+  "322f9c9d5351": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Đoạn 6 (tờ trình cũ) ghi tháng 10/2022, đoạn 2 cập nhật tháng 10/2025",
+   "confirmed": false
+  },
+  "b61c90ebced9": {
+   "label": "supported",
+   "evidence": "3,5",
+   "bad": false,
+   "note": "Ngày 28/12/2021",
+   "confirmed": false
+  },
+  "6074ddfad73d": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "263dc570ec34": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "a956d316fbeb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "NĐ 124/2021 sửa đổi cả NĐ 115/2018 và NĐ 117/2020",
+   "confirmed": false
+  },
+  "7242c8451215": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "NĐ 124/2021 sửa đổi NĐ 115/2018 và 117/2020 về xử phạt VPHC (y tế, ATTP)",
+   "confirmed": false
+  },
+  "1fae256e5513": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "79f1a3e692bd": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "Cử tri đề nghị được tham gia theo hộ gia đình THAY CHO mua BHYT tại trường",
+   "confirmed": false
+  },
+  "2989181364cd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Kiến nghị áp dụng cho người tham gia BHYT nói chung",
+   "confirmed": false
+  },
+  "c02d5a0594cd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "17f38c22f381": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "5e70cfc0f8fb": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu dẫn, không có nội dung",
+   "confirmed": false
+  },
+  "d344df664690": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "a65e96bbac21": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d693c124f651": {
+   "label": "unsupported",
+   "evidence": "2,4",
+   "bad": false,
+   "note": "Sản phẩm LIVELA (đoạn 4) chỉ ghi mẫn cảm với thành phần; \"chứa cá và đậu nành\" là của sản phẩm khác",
+   "confirmed": false
+  },
+  "d18e2f70731f": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "fafcfbf6c157": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "752bbb8fb5be": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu dẫn, không có nội dung",
+   "confirmed": false
+  },
+  "2eb615a7416d": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Tên công ty viết sai (Mái Mái); U-G GOLD có số 5531/2023, không thuộc 2024-2025",
+   "confirmed": false
+  },
+  "4c36b0f45709": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "e694aa7dd2b7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d302d359d693": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "QĐ với An Triết do Trưởng đoàn thanh tra (QĐ 39/QĐ-TTrB) ban hành, không phải Chánh Thanh tra",
+   "confirmed": false
+  },
+  "6228481b67e5": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6b2cc73e70d7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "63037e20ff07": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "f352b3f603ff": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "c6bf2b1116f4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "15227454e781": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "13ef89d5c302": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "Không xác định được công ty ở Bắc Từ Liêm; mọi giấy xác nhận đều có nhà chờ",
+   "confirmed": false
+  },
+  "1ff4fbf7a443": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "Không xác định được công ty ở Bắc Từ Liêm; mọi giấy xác nhận đều có điểm bán vé xe buýt",
+   "confirmed": false
+  },
+  "00f64306020f": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": true,
+   "note": "Nhắc lại câu hỏi, không có nội dung cụ thể",
+   "confirmed": false
+  },
+  "1396cbe9a005": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu dẫn chung chung",
+   "confirmed": false
+  },
+  "f2819d03d6ea": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "397d60930ff3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "36427934b6c6": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "Cử tri đề nghị bổ sung đối tượng hưởng trợ cấp xã hội hàng tháng",
+   "confirmed": false
+  },
+  "8fba4a9030bb": {
+   "label": "unsupported",
+   "evidence": "3",
+   "bad": false,
+   "note": "Cử tri nêu thiếu danh mục kỹ thuật cho bác sĩ đa khoa; \"chưa đủ linh hoạt\" là suy diễn",
+   "confirmed": false
+  },
+  "7fda67c145b3": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu dẫn, không có nội dung",
+   "confirmed": false
+  },
+  "3d2bb0e9e5d6": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6914487de8c2": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "Văn bản ghi Công ty TNHH, không phải Cổ phần",
+   "confirmed": false
+  },
+  "53ee187829db": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Số 6117/2022, không thuộc 2024-2025",
+   "confirmed": false
+  },
+  "b6255fb12392": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Tên viết sai (Mai Mai)",
+   "confirmed": false
+  },
+  "392bd1ea0342": {
+   "label": "contradicted",
+   "evidence": "3",
+   "bad": false,
+   "note": "Viện có nhiệm vụ nghiên cứu, đề xuất sửa đổi phương pháp đo lường sự hài lòng với dịch vụ y tế công",
+   "confirmed": false
+  },
+  "432699754e70": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "7824 > 6950 (Minh Phúc) > 6283 (Xuân Dược)",
+   "confirmed": false
+  },
+  "fe32adf5c8d1": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "a793d8cec112": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "115b3eaec58e": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": true,
+   "note": "\"Mức phạt\" không rõ chủ thể; Medic - Chi Lăng bị phạt 4.000.000 đồng",
+   "confirmed": false
+  },
+  "14e7bf7442a4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "aba758dc0a28": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "aedf144e965f": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "Đoạn 3: Cục QLD cấp GCN đủ ĐKKD dược cho cơ sở XNK; đoạn 1 nêu Bộ Y tế/Sở Y tế",
+   "confirmed": false
+  },
+  "2b531054cb6a": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "be65914f398b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "c12870fbbf89": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8d9d9699d0f6": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "4c2cbad020ba": {
+   "label": "supported",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "TT 04/2019 quy định phân cấp thẩm quyền cấp GCN đủ điều kiện xét nghiệm khẳng định HIV",
+   "confirmed": false
+  },
+  "7cadcd8a2e62": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu rỗng nghĩa",
+   "confirmed": false
+  },
+  "ca89aafab82e": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Bằng chứng không đề cập BHYT hỗ trợ chi phí xét nghiệm",
+   "confirmed": false
+  },
+  "fc75efe364da": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "ece010b9cb1f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "02fa3e162381": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "acb7e43280be": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Đoạn trích dự thảo không nhắc BV Bệnh nhiệt đới TW",
+   "confirmed": false
+  },
+  "80c5545d5208": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Đoạn trích dự thảo không nhắc BV Bệnh nhiệt đới TW (điều kiện nằm ở GCN, đoạn 2)",
+   "confirmed": false
+  },
+  "56156646fb3e": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "Đoạn trích dự thảo không có thông tin tài chính",
+   "confirmed": false
+  },
+  "72fe0a2b3eba": {
+   "label": "supported",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "Không xác định được công ty ở Bắc Từ Liêm; mọi giấy xác nhận đều có nhà chờ",
+   "confirmed": false
+  },
+  "55cbafb497d3": {
+   "label": "supported",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "Không xác định được công ty ở Bắc Từ Liêm; mọi giấy xác nhận đều có điểm bán vé xe buýt",
+   "confirmed": false
+  },
+  "b69f1e3bf73a": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "6283 là số nhỏ nhất (Minh Phúc 6950 lớn hơn)",
+   "confirmed": false
+  },
+  "40f167ada018": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "95e5a0e96de6": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "6950 lớn hơn 6283 của Xuân Dược, không phải nhỏ nhất",
+   "confirmed": false
+  },
+  "caea2bc4905b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "89e2401e7c54": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "Câu dẫn, không có nội dung",
+   "confirmed": false
+  },
+  "a485095aeba9": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8144f59b10d5": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d9bde241e862": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6e32fa18790a": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "43fc215f93d0": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "df7529807845": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "bbe69122b672": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "56f528e5757f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "182073141ea6": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "Người lao động báo cáo kịp thời với người có trách nhiệm khi phát hiện nguy cơ",
+   "confirmed": false
+  },
+  "042a8b9cf85f": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": false,
+   "note": "Ban hành trên cơ sở tài liệu hướng dẫn của WHO",
+   "confirmed": false
+  },
+  "a98cdd0e9cd6": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": true,
+   "note": "Diễn đạt mơ hồ: Chánh VP chịu trách nhiệm thi hành quyết định giá",
+   "confirmed": false
+  },
+  "110c63c907a4": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": true,
+   "note": "Diễn đạt mơ hồ: Chánh VP chịu trách nhiệm thi hành quyết định giá",
+   "confirmed": false
+  },
+  "9947e4ffb428": {
+   "label": "supported",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "e681d2177461": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "HSSV được HỖ TRỢ tối thiểu 50% mức đóng, không phải mức đóng là 50%",
+   "confirmed": false
+  },
+  "a7a605714e7c": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "c40b4e9401f3": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "bc1879c08fc4": {
+   "label": "supported",
+   "evidence": "6",
+   "bad": true,
+   "note": "Câu chung chung, không nêu giải pháp cụ thể",
+   "confirmed": false
+  },
+  "6b0d2d2605b8": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6321f55262e4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "c1557ffc26fb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "bbeb5cec9cdf": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8d0197efbee3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8910146108ee": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6eca35045e2d": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "Đánh giá từ xa qua phương tiện thông tin điện tử",
+   "confirmed": false
+  },
+  "d0d10bedcd59": {
+   "label": "contradicted",
+   "evidence": "2,6",
+   "bad": false,
+   "note": "Thu Cúc bị phạt 8.000.000 đồng, cao hơn Medic - Chi Lăng",
+   "confirmed": false
+  },
+  "7abcdf4dcbb7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d41627337770": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "7d4a3303ede2": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2b3d513b8b67": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "4b0edaf81e05": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "Thông tư mới có hiệu lực 28/10/2024; TT 30/2017 là thông tư cũ bị thay thế",
+   "confirmed": false
+  },
+  "ed27afb6572d": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "Đăng tải trên Cổng TTĐT Bộ Y tế và trang của Cục QL YDCT",
+   "confirmed": false
+  },
+  "47081f22295b": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "Đoạn 5 có dự thảo TT phân nhóm TBYT, hiệu lực 01/01/2026",
+   "confirmed": false
+  },
+  "0415f945148d": {
+   "label": "contradicted",
+   "evidence": "3",
+   "bad": false,
+   "note": "Danh mục đăng trên Cổng TTĐT Bộ Y tế/Cục QL YDCT, không phải Tạp chí Dược học",
+   "confirmed": false
+  },
+  "ac1814aa34aa": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "eb1491e24642": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "22af585d60af": {
+   "label": "unsupported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "QĐ với Tiên Tiến căn cứ NĐ xử phạt trong lĩnh vực hóa chất và vật liệu nổ công nghiệp",
+   "confirmed": false
+  },
+  "3afdfd62da30": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "af96220f2969": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": true,
+   "note": "\"Mức phạt\" không rõ chủ thể; Medic - Chi Lăng bị phạt 4.000.000 đồng",
+   "confirmed": false
+  },
+  "e700aaa84da5": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "Ghi biển hiệu là biện pháp khắc phục hậu quả, không phải mức phạt",
+   "confirmed": false
+  },
+  "c131a551c39f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "ffe38c33dfd1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "ee9f4de8c3d7": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "Đoạn 3: Cục QLD / Cục QL YDCT tiếp nhận hồ sơ GCN đủ ĐKKD cho cơ sở XNK",
+   "confirmed": false
+  },
+  "427ee8b9309e": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "8afbda628137": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "2f3d024af960": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "a1b9d6aaaab5": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "Nam Việt (Khánh Hòa) không có Zalo/Tiktok",
+   "confirmed": false
+  },
+  "f6134545b09c": {
+   "label": "contradicted",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "Danh sách của Vạn Xuân không có email/SMS",
+   "confirmed": false
+  },
+  "0cce39e726da": {
+   "label": "contradicted",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "Twitter chỉ có ở BIONATURE GOLD, không phải chung cả 4",
+   "confirmed": false
+  },
+  "6341a197d093": {
+   "label": "supported",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "15/8/2028 sau hạn HSBA điện tử của bệnh viện (30/9/2025)",
+   "confirmed": false
+  },
+  "dfcf51255792": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": true,
+   "note": "Claim lỗi (số QĐ [?], câu vòng vo); QĐ có hiệu lực từ ngày ký",
+   "confirmed": false
+  },
+  "87dc1a5a6fc0": {
+   "label": "unsupported",
+   "evidence": "6",
+   "bad": true,
+   "note": "Claim lỗi (số QĐ [?], câu vòng vo); QĐ có hiệu lực từ ngày ký",
+   "confirmed": false
+  },
+  "c71a0ab7d4a4": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": true,
+   "note": "Claim lỗi (số [?]); văn bản ghi không áp dụng giá ban hành kèm Thông tư",
+   "confirmed": false
+  },
+  "b46bf7350794": {
+   "label": "unsupported",
+   "evidence": "6",
+   "bad": true,
+   "note": "Claim lỗi (số [?]); văn bản ghi không áp dụng giá ban hành kèm Thông tư",
+   "confirmed": false
+  },
+  "8a2834485f3b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "a7642e53ee34": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "1f8c9e3e19fd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "e446981490bc": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "6bf88b79879b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "3b72d608feac": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "55d55924682b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "d38758d5b71f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "01841a0501f2": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "64e2380b1ce0": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "7670986ff79f": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "VnTime cỡ 140 cho dòng 1-2",
+   "confirmed": false
+  },
+  "d26543254b30": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": false,
+   "note": "Văn bản không nhắc cường giáp",
+   "confirmed": false
+  },
+  "c5a714dafb11": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  },
+  "4fb137e1cfdd": {
+   "label": "supported",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "",
+   "confirmed": false
+  }
+ }
+}

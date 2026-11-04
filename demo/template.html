@@ -1,0 +1,289 @@
+<title>ViKAG-Faith Explorer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Literata:opsz,wght@7..72,500;7..72,650&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a regulator's case file — list of questions on the left, the two systems' answers side by side,
+   each claim carrying a row of verdict stamps; evidence opens under the claim you pick. */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --sunk:#eef1f4; --fg:#17202c; --muted:#5d6878; --line:#d8dde4;
+  --accent:#1f5d88; --accent-soft:#e3edf5;
+  --sup:#2b7a4b; --sup-bg:#e3f2e8; --con:#bf3a31; --con-bg:#f9e3e1; --uns:#a66d12; --uns-bg:#f7ecd6; --na:#8a93a0;
+  --mark:#fff1a8; --mark-fg:#17202c;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-body:"Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f141a; --surface:#161d26; --sunk:#1c2530; --fg:#e5e9ef; --muted:#9aa5b3; --line:#2a3542;
+  --accent:#74b3e0; --accent-soft:#1c3346;
+  --sup:#5fc58c; --sup-bg:#173325; --con:#f07a70; --con-bg:#3a1d1b; --uns:#e2b252; --uns-bg:#36290f; --na:#6b7684;
+  --mark:#5b4f12; --mark-fg:#fff6cc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141a; --surface:#161d26; --sunk:#1c2530; --fg:#e5e9ef; --muted:#9aa5b3; --line:#2a3542;
+  --accent:#74b3e0; --accent-soft:#1c3346;
+  --sup:#5fc58c; --sup-bg:#173325; --con:#f07a70; --con-bg:#3a1d1b; --uns:#e2b252; --uns-bg:#36290f; --na:#6b7684;
+  --mark:#5b4f12; --mark-fg:#fff6cc; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1480px;margin:0 auto;padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--line)}
+h1{font:650 26px/1.15 var(--f-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:13.5px;margin-top:4px;max-width:70ch}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px}
+.tabs button{font:500 14px var(--f-body);border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+button:focus-visible,select:focus-visible,input:focus-visible,.qitem:focus-visible,.claim:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);margin:12px 0 4px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;margin-top:14px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);align-self:start;max-height:calc(100vh - 40px);display:flex;flex-direction:column;gap:10px}
+@media (max-width:900px){aside{position:static;max-height:none}}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.filters label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;flex-direction:column;gap:3px}
+.filters .full{grid-column:1/-1}
+select,input[type=search]{font:14px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%}
+.qlist{overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);min-height:120px}
+@media (max-width:900px){.qlist{max-height:260px}}
+.qitem{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.qitem:last-child{border-bottom:0}
+.qitem:hover{background:var(--sunk)}
+.qitem[aria-current="true"]{background:var(--accent-soft)}
+.qitem .hop{font:500 11px var(--f-mono);color:var(--accent);padding-top:2px}
+.qitem .qt{font-size:13px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qitem .bars{grid-column:2;display:flex;gap:3px}
+.qitem .bars i{height:4px;flex:1;border-radius:2px}
+.count{font-size:12px;color:var(--muted)}
+main{min-width:0}
+.qhead{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;font:500 12px var(--f-mono);color:var(--muted)}
+.meta b{color:var(--accent);font-weight:500}
+.question{font:500 19px/1.45 var(--f-display);margin:8px 0 0;text-wrap:pretty}
+details.gold{margin-top:10px;font-size:14px}
+details.gold summary{cursor:pointer;color:var(--accent);font-weight:500}
+details.gold p{margin:6px 0 0;color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:1100px){.cols{grid-template-columns:1fr}}
+.sys{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.sys h2{font:650 16px var(--f-display);margin:0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.scores{display:flex;gap:14px;font:500 12px var(--f-mono);color:var(--muted)}
+.scores b{color:var(--fg);font-weight:500}
+.rev{margin:10px 0 0;font-size:13px}.rev summary{cursor:pointer;color:var(--muted)}.rev ul{margin:6px 0;padding-left:18px}.rev li{margin:4px 0}.rev-none{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.answer{font-size:14px;color:var(--fg);background:var(--sunk);border-radius:6px;padding:10px 12px;margin:10px 0 12px;white-space:pre-wrap}
+.claims{display:flex;flex-direction:column;gap:8px}
+.claim{border:1px solid var(--line);border-left:4px solid var(--na);border-radius:6px;padding:8px 10px;cursor:pointer;background:var(--surface)}
+.claim[data-l="supported"]{border-left-color:var(--sup)}
+.claim[data-l="contradicted"]{border-left-color:var(--con)}
+.claim[data-l="unsupported"]{border-left-color:var(--uns)}
+.claim[aria-expanded="true"]{background:var(--sunk)}
+.claim .ct{font-size:14px}
+.claim .bad{font:500 11px var(--f-mono);color:var(--muted);border:1px dashed var(--line);border-radius:4px;padding:0 5px;margin-left:6px}
+.stamps{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.st{font:500 11px var(--f-mono);padding:1px 6px;border-radius:4px;border:1px solid transparent;white-space:nowrap}
+.st.supported{background:var(--sup-bg);color:var(--sup)}
+.st.contradicted{background:var(--con-bg);color:var(--con)}
+.st.unsupported{background:var(--uns-bg);color:var(--uns)}
+.st.none{background:var(--sunk);color:var(--na)}
+.st.off{border-color:currentColor}
+.st.human{font-weight:600}
+.note{font-size:12.5px;color:var(--muted);margin-top:5px}
+.evidence{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px;display:flex;flex-direction:column;gap:8px}
+.psg{font-size:13px;line-height:1.55}
+.psg .pt{font-weight:600;font-size:12.5px;display:flex;gap:6px;flex-wrap:wrap;align-items:baseline}
+.psg .tag{font:500 10.5px var(--f-mono);color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:0 4px}
+.psg .pf{font-size:11.5px;color:var(--muted)}
+.psg .px{max-height:240px;overflow:auto;white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;margin-top:3px}
+mark{background:var(--mark);color:var(--mark-fg);border-radius:2px;padding:0 1px}
+/* overview */
+.ov{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+@media (max-width:1000px){.ov{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0}
+.panel h2{font:650 17px var(--f-display);margin:0 0 4px}
+.panel .lead{font-size:13.5px;color:var(--muted);margin:0 0 12px;max-width:68ch}
+.bar{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr) 46px;gap:10px;align-items:center;font-size:13px;padding:3px 0}
+.bar .track{position:relative;height:14px;background:var(--sunk);border-radius:3px}
+.bar .fill{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:3px}
+.bar .ci{position:absolute;top:50%;height:2px;background:var(--fg);opacity:.55}
+.bar .v{font:500 12.5px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+td.hi{background:var(--accent-soft);font-weight:600}
+.big{display:flex;gap:28px;flex-wrap:wrap;margin:4px 0 10px}
+.big div{display:flex;flex-direction:column}
+.big b{font:650 26px var(--f-display)}
+.big span{font-size:12px;color:var(--muted)}
+.warn{font-size:13px;border-left:3px solid var(--uns);background:var(--uns-bg);padding:8px 10px;border-radius:0 6px 6px 0;color:var(--fg)}
+@media (prefers-reduced-motion: no-preference){.claim,.qitem{transition:background .12s}}
+/* simple mode (default): one coloured verdict per claim; the per-metric stamps appear on demand */
+.guide{font-size:14px;color:var(--fg);background:var(--accent-soft);border-radius:8px;padding:10px 14px;margin:0 0 10px;max-width:110ch}
+.toggle{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-weight:500;color:var(--fg)}
+.verdict{font:600 12px var(--f-body,inherit);margin-top:5px}
+.verdict.supported{color:var(--sup)}.verdict.contradicted{color:var(--con)}.verdict.unsupported{color:var(--uns)}
+body:not(.detail) .detail-only,body:not(.detail) .stamps,body:not(.detail) .note{display:none}
+body.detail .verdict{display:none}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>ViKAG-Faith Explorer</h1>
+      <div class="sub">Câu trả lời của hai hệ hỏi đáp (Naive RAG, GraphRAG) về văn bản pháp quy y tế, tách thành từng mệnh đề và đối chiếu với bằng chứng.</div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-q" aria-selected="true">Câu hỏi</button>
+      <button role="tab" id="tab-o" aria-selected="false">Tổng quan</button>
+    </div>
+  </header>
+
+  <section id="view-q">
+    <div class="guide">① Chọn một câu hỏi bên trái → ② đọc câu trả lời của hai hệ → ③ mỗi dòng bên dưới là một mệnh đề (claim), màu cho biết nó đúng hay sai so với bằng chứng → ④ bấm vào mệnh đề để xem bằng chứng.</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--sup)"></i>có căn cứ</span>
+      <span><i class="dot" style="background:var(--con)"></i>mâu thuẫn với bằng chứng</span>
+      <span><i class="dot" style="background:var(--uns)"></i>không có căn cứ</span>
+      <label class="toggle"><input type="checkbox" id="f-detail"> Hiện nhãn của từng metric</label>
+      <span class="detail-only">Claude = nhãn chuẩn (silver) · J7/J3 = LLM-judge Qwen 7B/3B · V1/V2 = NLI zero-shot không/có graph · FT = NLI fine-tune · Người = nhãn kiểm định mù · nhãn có viền = khác Claude</span>
+    </div>
+    <div class="layout">
+      <aside>
+        <div class="filters">
+          <label>Số hop<select id="f-hop"><option value="">Tất cả</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="detail-only">Lọc claim<select id="f-kind"><option value="">Tất cả</option><option value="contradicted">Có contradicted</option><option value="disagree">Metric bất đồng</option><option value="human">Có nhãn người</option></select></label>
+          <label class="full">Tìm<input type="search" id="f-text" placeholder="vd: bảo hiểm y tế, 117/2020"></label>
+        </div>
+        <div class="count" id="count"></div>
+        <div class="qlist" id="qlist" role="list"></div>
+      </aside>
+      <main id="detail"></main>
+    </div>
+  </section>
+
+  <section id="view-o" hidden></section>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const P = DATA.passages, S = DATA.summary;
+const LAB = ["supported", "contradicted", "unsupported"];
+const VI = {supported: "Có căn cứ", contradicted: "Mâu thuẫn với bằng chứng", unsupported: "Không có căn cứ"};
+(function detailToggle(){
+  const box = document.getElementById("f-detail");
+  let on = false;
+  try { on = localStorage.getItem("vikag-detail") === "1"; } catch (e) {}
+  box.checked = on; document.body.classList.toggle("detail", on);
+  box.onchange = () => { document.body.classList.toggle("detail", box.checked);
+    try { localStorage.setItem("vikag-detail", box.checked ? "1" : "0"); } catch (e) {} };
+})();
+const STAMPS = [["claude", "Claude"], ["j7", "J7"], ["j3", "J3"], ["v1", "V1"], ["ft", "FT"], ["v2", "V2"], ["human", "Người"]];
+const SYS = [["naive", "Naive RAG"], ["graph", "GraphRAG"]];
+const NAMES = {judge_7b:"LLM-judge 7B", judge_3b:"LLM-judge 3B", nli_zs_v1:"NLI V1 (đoạn văn)", nli_zs_v2:"NLI V2 (+graph)",
+  "nli_zs_v1+rule":"NLI V1 + rule", "nli_zs_v2+rule":"NLI V2 + rule", rule_only:"Chỉ rule số/ngày", majority_supported:"Luôn supported",
+  ragas_7b:"RAGAS 7B", ragas_3b:"RAGAS 3B", nli_ft_v1:"NLI fine-tune V1", nli_ft_v2:"NLI fine-tune V2",
+  nli_nosynth_v1:"Fine-tune chỉ ViNLI V1", nli_nosynth_v2:"Fine-tune chỉ ViNLI V2", nli_selfcheck:"SelfCheckGPT"};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt = (x, d=3) => x == null ? "–" : x.toFixed(d).replace(".", ",");
+const col = l => ({supported:"var(--sup)", contradicted:"var(--con)", unsupported:"var(--uns)"}[l] || "var(--na)");
+const words = s => new Set((s.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter(w => w.length > 2));
+function hl(text, claim){ const w = words(claim); return esc(text).replace(/[\p{L}\p{N}/.-]+/gu, t => w.has(t.toLowerCase()) ? `<mark>${t}</mark>` : t); }
+const ggf = cl => { const u = cl.filter(c => !c.bad); return u.length ? u.filter(c => c.L.claude === "supported").length / u.length : null; };
+
+let state = {i: 0, open: null};
+try { const s = JSON.parse(localStorage.getItem("vkf-demo") || "{}"); if (typeof s.i === "number") state.i = s.i; } catch (e) {}
+const save = () => { try { localStorage.setItem("vkf-demo", JSON.stringify({i: state.i})); } catch (e) {} };
+
+function allClaims(it){ return SYS.flatMap(([s]) => it.sys[s] ? it.sys[s].claims : []); }
+function matches(it){
+  const hop = document.getElementById("f-hop").value, kind = document.getElementById("f-kind").value;
+  const q = document.getElementById("f-text").value.trim().toLowerCase();
+  if (hop && String(it.hop) !== hop) return false;
+  const cl = allClaims(it);
+  if (kind === "contradicted" && !cl.some(c => c.L.claude === "contradicted")) return false;
+  if (kind === "disagree" && !cl.some(c => new Set(["claude","j7","v1"].map(k => c.L[k])).size > 1)) return false;
+  if (kind === "human" && !cl.some(c => c.L.human)) return false;
+  if (q && !(it.question + " " + SYS.map(([s]) => it.sys[s]?.answer || "").join(" ")).toLowerCase().includes(q)) return false;
+  return true;
+}
+function renderList(){
+  const box = document.getElementById("qlist"); const shown = DATA.items.map((it, i) => [it, i]).filter(([it]) => matches(it));
+  document.getElementById("count").textContent = `${shown.length}/${DATA.items.length} câu hỏi`;
+  box.innerHTML = shown.map(([it, i]) => {
+    const cl = allClaims(it).filter(c => !c.bad);
+    const bars = LAB.map(l => `<i style="background:${col(l)};flex:${cl.filter(c => c.L.claude === l).length || 0.001}"></i>`).join("");
+    return `<div class="qitem" role="listitem" tabindex="0" data-i="${i}" aria-current="${i === state.i}"><span class="hop">${it.hop}-hop</span><span class="qt">${esc(it.question)}</span><span class="bars">${bars}</span></div>`;
+  }).join("") || `<div class="qitem"><span></span><span class="qt">Không có câu hỏi khớp bộ lọc.</span></div>`;
+  box.querySelectorAll(".qitem[data-i]").forEach(el => {
+    const go = () => { state.i = +el.dataset.i; state.open = null; save(); renderList(); renderDetail(); };
+    el.onclick = go; el.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+}
+function renderDetail(){
+  const it = DATA.items[state.i];
+  const cols = SYS.map(([s, name]) => {
+    const d = it.sys[s]; if (!d) return `<div class="sys"><h2>${name}</h2><p class="count">Không có claim.</p></div>`;
+    const claims = d.claims.map((c, j) => {
+      const key = s + j, open = state.open === key;
+      const stamps = STAMPS.map(([k, lab]) => { const v = c.L[k]; if (k === "human" && !v) return "";
+        const off = k !== "claude" && v && v !== c.L.claude ? " off" : "";
+        return `<span class="st ${v || "none"}${off}${k === "human" ? " human" : ""}" title="${lab}: ${v || "không có nhãn"}">${lab} ${v ? v.slice(0,3) : "–"}</span>`; }).join("");
+      const ev = open ? `<div class="evidence">${d.pool.map((pid, n) => { const p = P[pid];
+        return `<div class="psg"><div class="pt">[${n+1}] ${esc(p.t)}${it.gold_ids.includes(pid) ? '<span class="tag">đoạn vàng</span>' : ""}</div>
+        ${p.f.length ? `<div class="pf">${esc(p.f.join(" · "))}</div>` : ""}<div class="px">${hl(p.x, c.c)}</div></div>`; }).join("")}</div>` : "";
+      return `<div class="claim" tabindex="0" data-k="${key}" data-l="${c.L.claude}" aria-expanded="${open}">
+        <div class="ct">${esc(c.c)}${c.bad ? '<span class="bad">claim lỗi</span>' : ""}</div>
+        <div class="verdict ${c.L.claude}">${VI[c.L.claude] || ""}${open ? "" : " · bấm để xem bằng chứng"}</div>
+        <div class="stamps">${stamps}</div>${c.note ? `<div class="note">Lý do (Claude): ${esc(c.note)}</div>` : ""}${ev}</div>`;
+    }).join("");
+    return `<div class="sys"><h2>${name}<span class="scores"><span>GGF <b>${fmt(ggf(d.claims), 2)}</b></span><span>RAGAS-7B <b>${fmt(d.ragas7, 2)}</b></span></span></h2>
+      <div class="answer">${esc(d.answer)}</div><div class="claims">${claims}</div>${revised(d.rev)}</div>`;
+  }).join("");
+  document.getElementById("detail").innerHTML = `<div class="qhead"><div class="meta"><b>${it.hop}-hop</b><span>tập ${it.split}</span><span>${esc(it.q)}</span></div>
+    <p class="question">${esc(it.question)}</p><details class="gold"><summary>Đáp án tham khảo của ViHERMES</summary><p>${esc(it.gold)}</p></details></div><div class="cols">${cols}</div>`;
+  document.querySelectorAll(".claim").forEach(el => {
+    const t = () => { state.open = state.open === el.dataset.k ? null : el.dataset.k; renderDetail(); };
+    el.onclick = e => { if (!e.target.closest(".px")) t(); };
+    el.onkeydown = e => { if (e.key === "Enter") t(); };
+  });
+}
+function revised(r){
+  if (!r) return `<p class="rev-none">Kiểm chứng rồi sửa: judge 7B không gắn cờ claim nào, câu trả lời giữ nguyên.</p>`;
+  const cl = r.claims.map((c, i) => `<li><span class="st ${r.labels[i] || "none"}">J7 ${r.labels[i] ? r.labels[i].slice(0,3) : "–"}</span> ${esc(c)}</li>`).join("");
+  return `<details class="rev"><summary>Sau kiểm chứng rồi sửa (${r.rounds} vòng) · GGF theo J7 ${fmt(r.ggf, 2)}</summary>
+    <div class="answer">${esc(r.answer)}</div><ul>${cl || "<li>Không còn claim nào</li>"}</ul></details>`;
+}
+function renderOverview(){
+  const c = S.claim, order = Object.keys(c).filter(k => !k.endsWith("+rule")).sort((a, b) => c[b].f1 - c[a].f1), max = 0.7;
+  const bars = order.map(k => `<div class="bar"><span>${NAMES[k]}</span><span class="track"><span class="fill" style="width:${c[k].f1 / max * 100}%"></span>
+    <span class="ci" style="left:${c[k].ci[0] / max * 100}%;width:${(c[k].ci[1] - c[k].ci[0]) / max * 100}%"></span></span><span class="v">${fmt(c[k].f1)}</span></div>`).join("");
+  const co = S.corr, cord = Object.keys(co).filter(k => !k.endsWith("+rule")).sort((a, b) => co[b] - co[a]);
+  const cbars = cord.map(k => `<div class="bar"><span>${NAMES[k]}</span><span class="track"><span class="fill" style="width:${Math.max(co[k], 0) / max * 100}%"></span></span><span class="v">${fmt(co[k])}</span></div>`).join("");
+  const a = S.audit, cm = a.confusion_claude_rows_human_cols;
+  const cmt = `<table><tr><th>Claude \\ Người</th>${LAB.map(l => `<th>${l}</th>`).join("")}</tr>${cm.map((r, i) => `<tr><td>${LAB[i]}</td>${r.map((v, j) => `<td class="${i === j ? "hi" : ""}">${v}</td>`).join("")}</tr>`).join("")}</table>`;
+  const sy = S.systems;
+  document.getElementById("view-o").innerHTML = `<div class="ov">
+    <div class="panel"><h2>Metric nào khớp nhãn chuẩn nhất?</h2><p class="lead">Macro-F1 ba nhãn trên ${S.n_test} claim của tập test, so với nhãn silver của Claude. Vạch đen là khoảng tin cậy 95%.</p>${bars}</div>
+    <div class="panel"><h2>Tương quan ở mức câu trả lời</h2><p class="lead">Spearman giữa điểm tự động của mỗi câu trả lời và tỉ lệ claim supported (GGF) theo nhãn chuẩn.</p>${cbars}</div>
+    <div class="panel"><h2>Nhãn Claude so với người</h2><p class="lead">Mẫu kiểm định mù ${a.n} claim, người gán không thấy gợi ý. Claude khắt khe hơn: nhiều claim Claude gán contradicted/unsupported thì người gán supported.</p>
+      <div class="big"><div><b>${fmt(a.acc * 100, 0)}%</b><span>trùng nhãn</span></div><div><b>${fmt(a.kappa, 2)}</b><span>Cohen's κ</span></div><div><b>${fmt(a.rank_spearman, 2)}</b><span>tương quan thứ hạng metric (ρ)</span></div></div>
+      <div class="tbl">${cmt}</div></div>
+    <div class="panel"><h2>Hai hệ có khác nhau không?</h2><p class="lead">GGF trung bình trên 80 câu trả lời; Wilcoxon cặp p = ${fmt(S.p, 2)}, tức chưa có khác biệt ý nghĩa.</p>
+      <div class="tbl"><table><tr><th>Hệ</th><th>GGF</th><th>Contradicted</th><th>Unsupported</th><th>F1 đáp án</th></tr>
+      ${SYS.map(([s, n]) => `<tr><td>${n}</td><td>${fmt(sy[s].GGF)}</td><td>${fmt(sy[s].CR)}</td><td>${fmt(sy[s].UR)}</td><td>${fmt(S.qa[s].answer_f1)}</td></tr>`).join("")}</table></div>
+      </div>
+    <div class="panel"><h2>Kiểm chứng rồi sửa</h2><p class="lead">Judge 7B gắn cờ claim sai, Qwen2.5-3B viết lại từ cùng ngữ cảnh (tối đa 2 vòng). ${S.revise.revised}/${S.revise.answers} câu trả lời được sửa.</p>
+      <div class="big"><div><b>${fmt(S.revise.GGF_before, 2)} → ${fmt(S.revise.GGF_after, 2)}</b><span>GGF theo judge 7B</span></div><div><b>${fmt(S.revise.answer_f1_before, 2)} → ${fmt(S.revise.answer_f1_after, 2)}</b><span>token F1 so với đáp án</span></div></div>
+      <p class="lead">Câu trả lời trung thực hơn chủ yếu vì ngắn đi (${fmt(S.revise.claims_before, 1)} → ${fmt(S.revise.claims_after, 1)} claim). Judge chấm lại chính kết quả mình gắn cờ, nên đây là giới hạn trên.</p>
+      <p class="warn">Mọi số trên trang này tính theo nhãn silver của Claude (trừ cột "Người"); xem báo cáo PDF mục 4.1 và 8 về độ tin cậy.</p></div></div>`;
+}
+function tab(o){ document.getElementById("tab-q").setAttribute("aria-selected", !o); document.getElementById("tab-o").setAttribute("aria-selected", o);
+  document.getElementById("view-q").hidden = o; document.getElementById("view-o").hidden = !o; }
+document.getElementById("tab-q").onclick = () => tab(false);
+document.getElementById("tab-o").onclick = () => tab(true);
+["f-hop", "f-kind", "f-text"].forEach(id => document.getElementById(id).addEventListener("input", renderList));
+if (state.i >= DATA.items.length) state.i = 0;
+renderList(); renderDetail(); renderOverview();
+</script>

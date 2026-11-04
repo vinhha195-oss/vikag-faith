@@ -1,0 +1,1706 @@
+{
+ "q1#111|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Mục III.1 liệt kê phụ nữ mang thai",
+  "bad": false
+ },
+ "q1#111|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "\"Bà mẹ, người chăm sóc trẻ dưới 2 tuổi\"",
+  "bad": false
+ },
+ "q1#111|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Bằng chứng ghi thêm \"tại xã có triển khai mô hình\"",
+  "bad": false
+ },
+ "q1#111|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#111|naive|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1116|graph|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "800x600 mm, lụa sa tanh đỏ, chỉ vàng, VnTime cỡ 140 (dòng 1-2)",
+  "bad": false
+ },
+ "q1#1116|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Chép gần nguyên văn mục 3.1",
+  "bad": false
+ },
+ "q1#1116|graph|2": {
+  "label": "unsupported",
+  "evidence": "5",
+  "note": "Bằng chứng nêu hồi hộp đánh trống ngực cần phân biệt với bệnh tim mạch; không nhắc cường giáp",
+  "bad": false
+ },
+ "q1#1116|graph|3": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "Mục 5.3.4, sai chính tả \"lồng ấm\"",
+  "bad": false
+ },
+ "q1#1116|naive|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#1116|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1116|naive|2": {
+  "label": "unsupported",
+  "evidence": "5",
+  "note": "Không có cường giáp; cũng không có thông tin cơ sở ở Hải Phòng đang điều trị",
+  "bad": false
+ },
+ "q1#1134|graph|0": {
+  "label": "contradicted",
+  "evidence": "1,2",
+  "note": "QĐ với Tiên Tiến căn cứ NĐ 71/2019 về hóa chất và vật liệu nổ, không phải lĩnh vực y tế",
+  "bad": false
+ },
+ "q1#1134|graph|1": {
+  "label": "contradicted",
+  "evidence": "1,2",
+  "note": "Chỉ QĐ An Triết căn cứ NĐ 118/2021 và 117; QĐ Tiên Tiến căn cứ NĐ 71/2019",
+  "bad": false
+ },
+ "q1#1134|naive|0": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "QĐ với An Triết do Trưởng đoàn thanh tra (theo QĐ 39/QĐ-TTrB) ký, không phải Chánh Thanh tra",
+  "bad": false
+ },
+ "q1#1134|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Chánh Thanh tra Bộ Y tế ra quyết định (thuộc Thanh tra Bộ Y tế)",
+  "bad": false
+ },
+ "q1#1134|naive|2": {
+  "label": "contradicted",
+  "evidence": "4",
+  "note": "Cục Dân số có chức năng thanh tra chuyên ngành, xử lý vi phạm; có Phòng Pháp chế - Thanh tra",
+  "bad": false
+ },
+ "q1#1134|naive|3": {
+  "label": "contradicted",
+  "evidence": "5,6",
+  "note": "Biên bản lập tại phòng họp Thanh tra Bộ Y tế, 138B Giảng Võ",
+  "bad": false
+ },
+ "q1#114|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "90% Quỹ BHYT phân bổ cho KCB",
+  "bad": false
+ },
+ "q1#114|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#114|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#114|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1143|graph|0": {
+  "label": "unsupported",
+  "evidence": "1,2",
+  "note": "CLAIM LỖI: gộp 5 ý; ý 1-2 có trong bằng chứng, ý 3-5 là khuyến nghị không có trong bằng chứng",
+  "bad": true
+ },
+ "q1#1143|naive|0": {
+  "label": "supported",
+  "evidence": "1,2",
+  "note": "Khái quát, khớp nội dung kiến nghị",
+  "bad": false
+ },
+ "q1#1143|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "\"Chi phí khám chữa bệnh mà người dân phải chi trả vẫn còn ở mức cao\"",
+  "bad": false
+ },
+ "q1#1143|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "\"hệ thống bảo hiểm y tế chưa thực sự bao phủ đầy đủ\"",
+  "bad": false
+ },
+ "q1#1143|naive|3": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Suy ra từ kiến nghị bổ sung đối tượng hưởng trợ cấp xã hội (yếu)",
+  "bad": false
+ },
+ "q1#1143|naive|4": {
+  "label": "unsupported",
+  "evidence": "3",
+  "note": "Bằng chứng chỉ nói thiếu danh mục kỹ thuật cho bác sĩ đa khoa; \"chưa đủ linh hoạt\" là diễn giải",
+  "bad": false
+ },
+ "q1#12|graph|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#12|graph|1": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Cục YDCT chỉ tiếp nhận, thẩm định và trình Bộ trưởng cấp",
+  "bad": false
+ },
+ "q1#12|graph|2": {
+  "label": "unsupported",
+  "evidence": "1,3",
+  "note": "P3 chỉ nói Cục QLD tiếp nhận hồ sơ GSP; P1 nói Bộ Y tế và Sở Y tế cấp",
+  "bad": false
+ },
+ "q1#12|naive|0": {
+  "label": "supported",
+  "evidence": "1,2",
+  "note": "Bộ Y tế có thẩm quyền; các cục tiếp nhận, thẩm định",
+  "bad": false
+ },
+ "q1#12|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Bộ Y tế cấp phép XNK; vai trò của từng cục với giấy phép XNK không nêu rõ (yếu)",
+  "bad": false
+ },
+ "q1#1242|graph|0": {
+  "label": "unsupported",
+  "evidence": "5",
+  "note": "Chánh VP chỉ có tên trong danh sách thi hành quyết định; không nói tổ chức thẩm định giá",
+  "bad": false
+ },
+ "q1#1242|graph|1": {
+  "label": "unsupported",
+  "evidence": "6",
+  "note": "Như trên",
+  "bad": false
+ },
+ "q1#1242|graph|2": {
+  "label": "unsupported",
+  "evidence": "2",
+  "note": "Như trên",
+  "bad": false
+ },
+ "q1#1242|naive|0": {
+  "label": "unsupported",
+  "evidence": "4,7",
+  "note": "Không nói Chánh VP thẩm định giá hay hướng dẫn thanh toán",
+  "bad": false
+ },
+ "q1#1242|naive|1": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "CLAIM LỖI (mơ hồ); Chánh VP thuộc danh sách thi hành QĐ giá tại BV Cần Thơ",
+  "bad": true
+ },
+ "q1#1242|naive|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "CLAIM LỖI (mơ hồ); như trên với BV Quân - Dân y Cà Mau",
+  "bad": true
+ },
+ "q1#1266|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1266|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1347|graph|0": {
+  "label": "supported",
+  "evidence": "3,4",
+  "note": "",
+  "bad": false
+ },
+ "q1#1347|graph|1": {
+  "label": "supported",
+  "evidence": "3,4",
+  "note": "Đợt 8 ban hành năm 2023, đợt 17 năm 2024",
+  "bad": false
+ },
+ "q1#1347|naive|0": {
+  "label": "supported",
+  "evidence": "3,4",
+  "note": "",
+  "bad": false
+ },
+ "q1#1347|naive|1": {
+  "label": "unsupported",
+  "evidence": "1,7",
+  "note": "Khoảng \"từ ngày hết hiệu lực đến 31/12/2024\" là thời gian thuốc được tiếp tục sử dụng, không phải hiệu lực của quyết định",
+  "bad": false
+ },
+ "q1#1347|naive|2": {
+  "label": "supported",
+  "evidence": "3,4",
+  "note": "Ngữ cảnh còn có đợt 3, 6 nhưng so sánh chỉ giữa đợt 8 và 17",
+  "bad": false
+ },
+ "q1#1347|naive|3": {
+  "label": "supported",
+  "evidence": "3,4",
+  "note": "",
+  "bad": false
+ },
+ "q1#1437|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1437|graph|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q1#1437|graph|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Bằng chứng nói rõ hơn: bác sĩ tại trạm y tế xã có CCHN chuyên khoa hệ nội, nội-nhi",
+  "bad": false
+ },
+ "q1#1437|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#1437|naive|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q1#1437|naive|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q1#1461|graph|0": {
+  "label": "unsupported",
+  "evidence": "1,4,6",
+  "note": "Đoạn trích của BV Huế và BV ĐHYD không có siêu âm thai; siêu âm thai lại có trong danh mục BV Quân y 7B",
+  "bad": false
+ },
+ "q1#1461|graph|1": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Bệnh xá Học viện Quốc phòng có \"Siêu âm tuyến vú hai bên\" (STT 10)",
+  "bad": false
+ },
+ "q1#1461|graph|2": {
+  "label": "contradicted",
+  "evidence": "1,6",
+  "note": "BV Đại học Y Dược (ĐHQG HN) cũng có dịch vụ này (STT 3)",
+  "bad": false
+ },
+ "q1#1461|graph|3": {
+  "label": "contradicted",
+  "evidence": "1,4,5,6",
+  "note": "Bệnh xá HVQP không có mã 02.0373.0001; ba cơ sở còn lại có",
+  "bad": false
+ },
+ "q1#1461|naive|0": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Danh mục siêu âm của Bệnh xá HVQP không có siêu âm thai",
+  "bad": false
+ },
+ "q1#1461|naive|1": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Bệnh xá HVQP có dịch vụ này",
+  "bad": false
+ },
+ "q1#1461|naive|2": {
+  "label": "supported",
+  "evidence": "1,4,5,6",
+  "note": "Trong 4 cơ sở được hỏi, chỉ BV Huế và BV ĐHYD có",
+  "bad": false
+ },
+ "q1#1461|naive|3": {
+  "label": "contradicted",
+  "evidence": "4",
+  "note": "BV Quân y 7B cũng có mã 02.0373.0001",
+  "bad": false
+ },
+ "q1#255|graph|0": {
+  "label": "contradicted",
+  "evidence": "4",
+  "note": "Viện CL&CSYT nghiên cứu phương pháp đo lường sự hài lòng với dịch vụ y tế công",
+  "bad": false
+ },
+ "q1#255|graph|1": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Đây là nhiệm vụ của Văn phòng Bộ (mục 5.2)",
+  "bad": false
+ },
+ "q1#255|graph|2": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Nhiệm vụ của Văn phòng Bộ",
+  "bad": false
+ },
+ "q1#255|graph|3": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Nhiệm vụ của Văn phòng Bộ",
+  "bad": false
+ },
+ "q1#255|naive|0": {
+  "label": "contradicted",
+  "evidence": "3",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q1#255|naive|1": {
+  "label": "contradicted",
+  "evidence": "1",
+  "note": "Sổ vàng do Cục Quản lý Y, Dược cổ truyền quản lý",
+  "bad": false
+ },
+ "q1#567|graph|0": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Luật Dược sửa đổi dự kiến trình Quốc hội tháng 10/2022; Kỳ họp thứ 10 (10/2025) là của Luật ATTP",
+  "bad": false
+ },
+ "q1#567|graph|1": {
+  "label": "supported",
+  "evidence": "3,6",
+  "note": "28/12/2021, sau 28/9/2020",
+  "bad": false
+ },
+ "q1#567|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#567|naive|0": {
+  "label": "contradicted",
+  "evidence": "6",
+  "note": "Tháng 10/2022, không phải 10/2025",
+  "bad": false
+ },
+ "q1#567|naive|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "Ngày 28/12/2021",
+  "bad": false
+ },
+ "q1#567|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#57|graph|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#57|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Kiến nghị sau Kỳ họp thứ 7",
+  "bad": false
+ },
+ "q1#57|naive|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#57|naive|1": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Cử tri muốn KHÔNG phải mua BHYT tại trường học (lỗi khi tách claim)",
+  "bad": false
+ },
+ "q1#57|naive|2": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Kiến nghị nói chung cho người tham gia BHYT, không riêng học sinh, sinh viên",
+  "bad": false
+ },
+ "q1#639|graph|0": {
+  "label": "contradicted",
+  "evidence": "2,3",
+  "note": "Số lớn nhất là 7824 (Phương Đông); 6283 của Xuân Dược là nhỏ nhất",
+  "bad": false
+ },
+ "q1#639|graph|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#639|graph|2": {
+  "label": "contradicted",
+  "evidence": "1,2",
+  "note": "6950 không phải nhỏ nhất; 6283 nhỏ hơn",
+  "bad": false
+ },
+ "q1#639|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#639|naive|0": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "7824 lớn nhất trong các số 6283, 6950, 7824, 7329",
+  "bad": false
+ },
+ "q1#639|naive|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q1#792|graph|0": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "Nam Việt được quảng cáo trên mạng xã hội (facebook, Twitter...), không nêu Zalo/TikTok; trụ sở ở Khánh Hòa, không phải TP.HCM",
+  "bad": false
+ },
+ "q1#792|graph|1": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Danh sách phương tiện của Vạn Xuân không có email/SMS (email, SMS là của Mãi Mãi Hạnh Phúc)",
+  "bad": false
+ },
+ "q1#792|graph|2": {
+  "label": "supported",
+  "evidence": "1,2,3,4",
+  "note": "Cả 4 giấy đều có báo chí/báo điện tử, mạng xã hội",
+  "bad": false
+ },
+ "q1#792|naive|0": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q1#792|naive|1": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q1#792|naive|2": {
+  "label": "supported",
+  "evidence": "1,2,3,4",
+  "note": "CLAIM LỖI: thiếu vị từ; nội dung đúng với cả 4 giấy",
+  "bad": true
+ },
+ "q1#942|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q1#942|graph|1": {
+  "label": "contradicted",
+  "evidence": "1,2",
+  "note": "Bệnh viện phải triển khai bệnh án điện tử chậm nhất 30/9/2025, trước 15/8/2028",
+  "bad": false
+ },
+ "q1#942|naive|0": {
+  "label": "supported",
+  "evidence": "1,2",
+  "note": "Claim đảo ngược câu trả lời nhưng lại đúng: 15/8/2028 sau 30/9/2025",
+  "bad": false
+ },
+ "q1#942|naive|1": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "CLAIM LỖI: lặp lại chính nó, có \"[?]\"",
+  "bad": true
+ },
+ "q1#942|naive|2": {
+  "label": "supported",
+  "evidence": "6",
+  "note": "CLAIM LỖI: lặp lại chính nó",
+  "bad": true
+ },
+ "q1#942|naive|3": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "CLAIM LỖI: có \"[?]\"; nội dung khớp: không áp dụng giá theo TT 21/2023 và 22/2023",
+  "bad": true
+ },
+ "q1#942|naive|4": {
+  "label": "supported",
+  "evidence": "6",
+  "note": "CLAIM LỖI: như trên",
+  "bad": true
+ },
+ "q2#1081|graph|0": {
+  "label": "contradicted",
+  "evidence": "2,5,6",
+  "note": "Medic 4 triệu, Thu Cúc 8 triệu, YHCT Sài Gòn có ít nhất 30 triệu",
+  "bad": false
+ },
+ "q2#1081|graph|1": {
+  "label": "contradicted",
+  "evidence": "2,5,6",
+  "note": "Medic 4 triệu là thấp nhất; YHCT Sài Gòn 30 triệu",
+  "bad": false
+ },
+ "q2#1081|naive|0": {
+  "label": "contradicted",
+  "evidence": "2,5,6",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q2#1213|graph|0": {
+  "label": "unsupported",
+  "evidence": "",
+  "note": "CLAIM LỖI: chỉ là câu dẫn, không có nội dung",
+  "bad": true
+ },
+ "q2#1213|graph|1": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Lấy từ sản phẩm vitamin B tương tự (AusNatures)",
+  "bad": false
+ },
+ "q2#1213|graph|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#1213|graph|3": {
+  "label": "unsupported",
+  "evidence": "2",
+  "note": "\"Chứa cá và đậu nành\" là của Kids Smart Drops DHA, không liên quan sản phẩm vitamin B",
+  "bad": false
+ },
+ "q2#1213|naive|0": {
+  "label": "unsupported",
+  "evidence": "",
+  "note": "CLAIM LỖI: câu dẫn",
+  "bad": true
+ },
+ "q2#1213|naive|1": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Đối tượng: người trưởng thành; \"không phù hợp trẻ em\" là suy ra",
+  "bad": false
+ },
+ "q2#1213|naive|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#1213|naive|3": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#1213|naive|4": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|5": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|6": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|7": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|8": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|graph|9": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Cách tách theo từng nghị định là gượng ép nhưng không sai",
+  "bad": false
+ },
+ "q2#13|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#13|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#304|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Bộ Y tế đề nghị Chủ tịch UBND tỉnh quan tâm chỉ đạo tổ chức thực hiện",
+  "bad": false
+ },
+ "q2#304|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Mục 5: huy động ban, ngành, đoàn thể, cộng đồng",
+  "bad": false
+ },
+ "q2#304|graph|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q2#304|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#304|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#304|naive|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "Diễn đạt lại \"đánh giá từ xa qua phương tiện thông tin điện tử\"",
+  "bad": false
+ },
+ "q2#394|graph|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q2#394|graph|1": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Cơ sở ĐƯỢC PHÉP (không bắt buộc) xây dựng hướng dẫn quy trình kỹ thuật riêng",
+  "bad": false
+ },
+ "q2#394|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#394|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#394|naive|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q2#394|naive|1": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q2#394|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#394|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#424|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#466|graph|0": {
+  "label": "supported",
+  "evidence": "1,3,4",
+  "note": "Trách nhiệm trước hết của chính quyền địa phương; UBND tỉnh bố trí ngân sách",
+  "bad": false
+ },
+ "q2#466|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#466|graph|2": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "",
+  "bad": false
+ },
+ "q2#466|naive|0": {
+  "label": "supported",
+  "evidence": "1,3",
+  "note": "",
+  "bad": false
+ },
+ "q2#466|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "QĐ 2348 quy định UBND tỉnh bố trí ngân sách cho Đề án",
+  "bad": false
+ },
+ "q2#544|graph|0": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "NVYT báo cáo kịp thời người có trách nhiệm khi phát hiện nguy cơ (yếu: nguy cơ ATVSLĐ)",
+  "bad": false
+ },
+ "q2#544|graph|1": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "Không có quy định NVYT đề xuất công bố GSP",
+  "bad": false
+ },
+ "q2#544|graph|2": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "Ban hành trên cơ sở tài liệu hướng dẫn của WHO",
+  "bad": false
+ },
+ "q2#544|naive|0": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Như claim tương ứng ở câu trả lời còn lại (yếu)",
+  "bad": false
+ },
+ "q2#544|naive|1": {
+  "label": "supported",
+  "evidence": "5",
+  "note": "\"tốt nhất\" là thêm thắt nhẹ",
+  "bad": false
+ },
+ "q2#652|graph|0": {
+  "label": "unsupported",
+  "evidence": "",
+  "note": "CLAIM LỖI: câu dẫn, không có nội dung",
+  "bad": true
+ },
+ "q2#652|graph|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "6369/2024/ĐKSP",
+  "bad": false
+ },
+ "q2#652|graph|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Đúng quận 1 và sản phẩm; tên loại hình sai (Công ty TNHH chứ không phải Cổ phần)",
+  "bad": false
+ },
+ "q2#652|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Đúng nhưng số đăng ký là 6117/2022 (không thuộc 2024-2025)",
+  "bad": false
+ },
+ "q2#652|graph|4": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "Đúng nhưng số đăng ký là 5531/2023; sai chính tả tên công ty",
+  "bad": false
+ },
+ "q2#652|naive|0": {
+  "label": "unsupported",
+  "evidence": "",
+  "note": "CLAIM LỖI: câu dẫn",
+  "bad": true
+ },
+ "q2#652|naive|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "Số đăng ký là 5531/2023",
+  "bad": false
+ },
+ "q2#652|naive|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q2#868|graph|0": {
+  "label": "unsupported",
+  "evidence": "1,2",
+  "note": "PHEOC điều phối phòng chống dịch (P1) nhưng không có gì về quy định xét nghiệm người nhập cảnh",
+  "bad": false
+ },
+ "q2#868|graph|1": {
+  "label": "unsupported",
+  "evidence": "2",
+  "note": "Đề xuất do Tiểu ban Truyền thông đưa ra, không phải PHEOC",
+  "bad": false
+ },
+ "q2#868|graph|2": {
+  "label": "unsupported",
+  "evidence": "1,5",
+  "note": "Không có vai trò của PHEOC với chẩn đoán sởi",
+  "bad": false
+ },
+ "q2#868|graph|3": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#868|graph|4": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "P4 nói chẩn đoán phân biệt BPTNMT với hen, không phải sởi; tầm quan trọng không được nêu",
+  "bad": false
+ },
+ "q2#868|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#868|naive|1": {
+  "label": "unsupported",
+  "evidence": "2",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q2#868|naive|2": {
+  "label": "unsupported",
+  "evidence": "3,4",
+  "note": "",
+  "bad": false
+ },
+ "q2#868|naive|3": {
+  "label": "unsupported",
+  "evidence": "3",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q2#922|graph|0": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q2#922|graph|1": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Đúng, dù Đa Phúc không thuộc 4 đơn vị được hỏi",
+  "bad": false
+ },
+ "q2#922|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q2#922|graph|3": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q2#922|graph|4": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q2#922|graph|5": {
+  "label": "unsupported",
+  "evidence": "2,3",
+  "note": "Đoạn QĐ Gia Phú không có nơi nhận; Cục QLD xuất hiện ở QĐ Đào Tiến",
+  "bad": false
+ },
+ "q2#922|graph|6": {
+  "label": "contradicted",
+  "evidence": "4",
+  "note": "Nơi nhận của QĐ Đa Phúc không có Cục QLD",
+  "bad": false
+ },
+ "q2#922|naive|0": {
+  "label": "unsupported",
+  "evidence": "1,3,5,6",
+  "note": "Chỉ QĐ Gia Phú ghi \"đại diện theo pháp luật\"",
+  "bad": false
+ },
+ "q2#922|naive|1": {
+  "label": "contradicted",
+  "evidence": "1,5,6",
+  "note": "Tiên Tiến: Phòng thanh tra y tế dự phòng; DC Dentist, Kỳ Hòa: Phòng Tổng hợp và Giám sát",
+  "bad": false
+ },
+ "q2#922|naive|2": {
+  "label": "contradicted",
+  "evidence": "5,6",
+  "note": "DC Dentist và Kỳ Hòa gửi Sở Y tế TP.HCM",
+  "bad": false
+ },
+ "q2#922|naive|3": {
+  "label": "unsupported",
+  "evidence": "",
+  "note": "CLAIM LỖI: mơ hồ, gần như lặp lại",
+  "bad": true
+ },
+ "q3#1142|graph|0": {
+  "label": "supported",
+  "evidence": "2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|graph|1": {
+  "label": "supported",
+  "evidence": "2,5",
+  "note": "4 triệu cho hành vi ghi sổ (Vietlife còn thêm hành vi niêm yết giá)",
+  "bad": false
+ },
+ "q3#1142|graph|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "Hồng Đức bị phạt vì biển hiệu thiếu thông tin, buộc ghi đầy đủ (diễn đạt lỏng)",
+  "bad": false
+ },
+ "q3#1142|graph|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|naive|0": {
+  "label": "supported",
+  "evidence": "2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|naive|1": {
+  "label": "supported",
+  "evidence": "2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|naive|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#1142|naive|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#1145|graph|0": {
+  "label": "supported",
+  "evidence": "1,3",
+  "note": "Ngân sách đóng BHYT cho người nghèo, DTTS vùng khó khăn",
+  "bad": false
+ },
+ "q3#1145|graph|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "NĐ 75/2023 hỗ trợ 36 tháng từ 01/11/2023 cho DTTS vùng khó khăn",
+  "bad": false
+ },
+ "q3#1145|graph|2": {
+  "label": "supported",
+  "evidence": "1,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#1145|graph|3": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Cử tri mới KIẾN NGHỊ bổ sung PNMT hộ nghèo vào diện trợ cấp hàng tháng, tức là hiện chưa được hưởng",
+  "bad": false
+ },
+ "q3#1145|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#1145|naive|0": {
+  "label": "supported",
+  "evidence": "1,3",
+  "note": "",
+  "bad": false
+ },
+ "q3#1145|naive|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#1145|naive|2": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q3#1145|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#119|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#119|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Sửa đổi các nghị định xử phạt về ATTP và lĩnh vực y tế",
+  "bad": false
+ },
+ "q3#119|graph|2": {
+  "label": "supported",
+  "evidence": "1,2",
+  "note": "Được viện dẫn làm căn cứ xác định hành vi và tình tiết",
+  "bad": false
+ },
+ "q3#119|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#119|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#119|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|graph|0": {
+  "label": "supported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|graph|1": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "Các giấy của Fine Việt Nam không có Instagram (Instagram có ở giấy HAPPY LADY của công ty khác)",
+  "bad": false
+ },
+ "q3#140|graph|2": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "Không có TikTok",
+  "bad": false
+ },
+ "q3#140|graph|3": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "Không có Pinterest",
+  "bad": false
+ },
+ "q3#140|graph|4": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "Không có YouTube",
+  "bad": false
+ },
+ "q3#140|graph|5": {
+  "label": "supported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|graph|6": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "\"Shoppee\"",
+  "bad": false
+ },
+ "q3#140|graph|7": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|0": {
+  "label": "supported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|1": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "Như claim tương ứng ở câu trả lời còn lại",
+  "bad": false
+ },
+ "q3#140|naive|2": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|3": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|4": {
+  "label": "unsupported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|5": {
+  "label": "supported",
+  "evidence": "1,2,5",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|6": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#140|naive|7": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#299|graph|0": {
+  "label": "supported",
+  "evidence": "2,5,6",
+  "note": "",
+  "bad": false
+ },
+ "q3#299|graph|1": {
+  "label": "supported",
+  "evidence": "2,5,6",
+  "note": "",
+  "bad": false
+ },
+ "q3#299|graph|2": {
+  "label": "supported",
+  "evidence": "2,5,6",
+  "note": "Bằng chứng còn có điểm bán vé xe khách, tàu, sân bay",
+  "bad": false
+ },
+ "q3#299|naive|0": {
+  "label": "supported",
+  "evidence": "2,6,7",
+  "note": "",
+  "bad": false
+ },
+ "q3#299|naive|1": {
+  "label": "supported",
+  "evidence": "2,6,7",
+  "note": "",
+  "bad": false
+ },
+ "q3#299|naive|2": {
+  "label": "supported",
+  "evidence": "2,6,7",
+  "note": "CLAIM LỖI: lặp lại câu hỏi, không nêu địa điểm cụ thể",
+  "bad": true
+ },
+ "q3#353|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Bằng chứng nói thêm: người đại diện bàn giao lại cho cơ sở điều trị thay thế",
+  "bad": false
+ },
+ "q3#353|graph|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#353|graph|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#353|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#353|naive|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#353|naive|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|graph|0": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "Tên đúng là ông Lê Quang Sơn (claim thiếu chữ \"Quang\" do lỗi sinh văn bản)",
+  "bad": false
+ },
+ "q3#539|graph|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|graph|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|graph|3": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|graph|5": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|naive|0": {
+  "label": "contradicted",
+  "evidence": "2",
+  "note": "\"Lê Thị Kim Huyền\" do bước tách claim tự sinh ra; người đại diện là ông Lê Quang Sơn",
+  "bad": false
+ },
+ "q3#539|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#539|naive|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#620|graph|0": {
+  "label": "unsupported",
+  "evidence": "1,4",
+  "note": "Không có ngày hiệu lực của TT 30/2017; chỉ biết TT này hết hiệu lực từ 28/10/2024",
+  "bad": false
+ },
+ "q3#620|graph|1": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Dự thảo TT phân nhóm thiết bị y tế có hiệu lực từ 01/01/2026",
+  "bad": false
+ },
+ "q3#620|graph|2": {
+  "label": "contradicted",
+  "evidence": "3",
+  "note": "Đăng trên Cổng TTĐT Bộ Y tế và ydct.moh.gov.vn, không phải Tạp chí Dược học",
+  "bad": false
+ },
+ "q3#620|naive|0": {
+  "label": "contradicted",
+  "evidence": "4",
+  "note": "TT mới về PP chế biến dược liệu hiệu lực 28/10/2024; TT 30/2017 hết hiệu lực từ ngày đó",
+  "bad": false
+ },
+ "q3#620|naive|1": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Có thông tin: hiệu lực 01/01/2026",
+  "bad": false
+ },
+ "q3#620|naive|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "Cổng TTĐT Bộ Y tế",
+  "bad": false
+ },
+ "q3#623|graph|0": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "P1 chỉ là mục lục dự thảo, không nhắc BV Bệnh nhiệt đới TW",
+  "bad": false
+ },
+ "q3#623|graph|1": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Không thấy dẫn chiếu TT 05/2023",
+  "bad": false
+ },
+ "q3#623|graph|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "GCN căn cứ TT 04/2019 về cấp GCN đủ điều kiện xét nghiệm khẳng định",
+  "bad": false
+ },
+ "q3#623|graph|3": {
+  "label": "supported",
+  "evidence": "1,2,4",
+  "note": "CLAIM LỖI: mơ hồ",
+  "bad": true
+ },
+ "q3#623|graph|4": {
+  "label": "unsupported",
+  "evidence": "1",
+  "note": "Mục lục có \"Kết nối khách hàng ... đến dịch vụ xét nghiệm\" nhưng không nhắc BV BNĐTW",
+  "bad": false
+ },
+ "q3#623|graph|5": {
+  "label": "unsupported",
+  "evidence": "4",
+  "note": "Không có nội dung BHYT chi trả xét nghiệm",
+  "bad": false
+ },
+ "q3#623|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Phần dự thảo được trích chỉ là mục lục",
+  "bad": false
+ },
+ "q3#623|naive|1": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "Điều kiện nằm ở GCN (P2), không ở dự thảo",
+  "bad": false
+ },
+ "q3#623|naive|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#839|graph|0": {
+  "label": "contradicted",
+  "evidence": "1,4,5",
+  "note": "Câu trả lời từ chối nhưng bằng chứng có đủ: mức phụ cấp kiến nghị, mức phạt J&J 8,5 triệu, yêu cầu đối với ASAP",
+  "bad": false
+ },
+ "q3#839|naive|0": {
+  "label": "contradicted",
+  "evidence": "5",
+  "note": "Thanh tra yêu cầu ASAP Châu Á thực hiện nghiêm quy định, rà soát sản phẩm",
+  "bad": false
+ },
+ "q3#881|graph|0": {
+  "label": "supported",
+  "evidence": "1,2",
+  "note": "",
+  "bad": false
+ },
+ "q3#881|graph|1": {
+  "label": "unsupported",
+  "evidence": "1,4",
+  "note": "Mức hỗ trợ 50% là của HSSV; cơ chế cho hộ gia đình là đóng giảm dần (P4) và hỗ trợ tối thiểu 30%",
+  "bad": false
+ },
+ "q3#881|graph|2": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#881|graph|3": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "Điểm b khoản 3 NĐ 75/2023",
+  "bad": false
+ },
+ "q3#881|graph|4": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#881|graph|5": {
+  "label": "contradicted",
+  "evidence": "6",
+  "note": "P6 nêu rõ: bệnh án điện tử, TT 26/2025, chuẩn hóa danh mục, đặt lịch trực tuyến, thanh toán không tiền mặt",
+  "bad": false
+ },
+ "q3#881|naive|0": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "4,5% mức tiền lương, lương hưu... hoặc lương cơ sở",
+  "bad": false
+ },
+ "q3#881|naive|1": {
+  "label": "contradicted",
+  "evidence": "1",
+  "note": "HSSV được HỖ TRỢ tối thiểu 50% mức đóng, không phải mức đóng bằng 50%",
+  "bad": false
+ },
+ "q3#881|naive|2": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "UBND tỉnh trình HĐND quyết định mức hỗ trợ cao hơn",
+  "bad": false
+ },
+ "q3#881|naive|3": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#881|naive|4": {
+  "label": "supported",
+  "evidence": "6",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|graph|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|graph|1": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|graph|2": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|graph|3": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|naive|0": {
+  "label": "supported",
+  "evidence": "1",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|naive|1": {
+  "label": "supported",
+  "evidence": "2",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|naive|2": {
+  "label": "supported",
+  "evidence": "3",
+  "note": "",
+  "bad": false
+ },
+ "q3#992|naive|3": {
+  "label": "supported",
+  "evidence": "4",
+  "note": "",
+  "bad": false
+ }
+}

@@ -1,0 +1,10 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+transformers 5.20.2 torch 2.11.0+cu130 dtype torch.float32
+train rows 12000 -> /content/vikag-faith/models/verifier_nosynth
+dev acc before: {'vinli': 0.758, 'synth': 0.5447}
+step 150/750 loss 0.5056 dev {'vinli': 0.799, 'synth': 0.4932}
+step 300/750 loss 0.1506 dev {'vinli': 0.789, 'synth': 0.5718} -> saved
+step 450/750 loss 0.1925 dev {'vinli': 0.798, 'synth': 0.5881} -> saved
+step 600/750 loss 0.7815 dev {'vinli': 0.798, 'synth': 0.5854}
+step 750/750 loss 0.9679 dev {'vinli': 0.8, 'synth': 0.5827}
+best dev mean acc: 0.693 non-finite batches skipped: 0

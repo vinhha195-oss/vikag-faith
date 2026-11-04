@@ -1,0 +1,1994 @@
+{
+ "mode": "A",
+ "exported": "2026-10-27T02:35:04.508Z",
+ "labels": {
+  "a2e7ad436d8e": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "881f06e788e4": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "1a42b63ac8d5": {
+   "label": "supported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4717e72ff5b6": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "77df7140ae64": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "45257dcc447a": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "85b66247c1dc": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "220de9abb279": {
+   "label": "supported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dee14d3f5473": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6cbf923cb964": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "392bd1ea0342": {
+   "label": "contradicted",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "417f4f44bf95": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7fda67c145b3": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "3d2bb0e9e5d6": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6914487de8c2": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "53ee187829db": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b6255fb12392": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a1b9d6aaaab5": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f6134545b09c": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "0cce39e726da": {
+   "label": "supported",
+   "evidence": "1,2,3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ca3dd677c6f3": {
+   "label": "unsupported",
+   "evidence": "1,3,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f340b5a34dfd": {
+   "label": "contradicted",
+   "evidence": "1,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "5d9a031a1c7e": {
+   "label": "contradicted",
+   "evidence": "5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "77f6c8e01474": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "6cd9dc723ce7": {
+   "label": "unsupported",
+   "evidence": "1,2",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "7bc138f9e7e4": {
+   "label": "supported",
+   "evidence": "1,3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8e5482a02d73": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fcfd69c02899": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3afdfd62da30": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "af96220f2969": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e700aaa84da5": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c131a551c39f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ffe38c33dfd1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2dd574c63d73": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bfde8266a0bd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "96e202384138": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ad88a94f7d81": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "427ee8b9309e": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ce1fdc8dafce": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7816ed32a34f": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4c2cbad020ba": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7cadcd8a2e62": {
+   "label": "supported",
+   "evidence": "1,2,4",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "b99b5b4bf323": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ca89aafab82e": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "20ec81df2a60": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "121ad23204e2": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "706dbf35e2e0": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8e4912502954": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8a2834485f3b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a7642e53ee34": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1f8c9e3e19fd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e446981490bc": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6bf88b79879b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3b72d608feac": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "55d55924682b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d38758d5b71f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "01841a0501f2": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "64e2380b1ce0": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b7dbc9885f97": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3ca256d20ebc": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "99bd1d24639a": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fa128a0fb12f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ed9457aa4421": {
+   "label": "supported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "999142c79565": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "cb2007195cc9": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bcfa3d8376c4": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "26aa77d57345": {
+   "label": "unsupported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3f4a8096cf41": {
+   "label": "supported",
+   "evidence": "1,2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3dfa108b4447": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "63cc562a186b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "322f9c9d5351": {
+   "label": "contradicted",
+   "evidence": "6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b61c90ebced9": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6074ddfad73d": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a793d8cec112": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "115b3eaec58e": {
+   "label": "supported",
+   "evidence": "2,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "11c5752e7457": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "14e7bf7442a4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bc4e241288f1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "945c42b68bf2": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "551df8781d75": {
+   "label": "unsupported",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "5c5f4777c626": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "87d1f0843143": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7998077ed850": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2a041184b2f2": {
+   "label": "contradicted",
+   "evidence": "6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6b0d2d2605b8": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6321f55262e4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c1557ffc26fb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bbeb5cec9cdf": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a9e1445ff924": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "be5a8cf39ad6": {
+   "label": "unsupported",
+   "evidence": "1,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "47081f22295b": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "0415f945148d": {
+   "label": "contradicted",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f9a27282b57b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "284052e5c591": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "010a760e7545": {
+   "label": "unsupported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "575f331f681e": {
+   "label": "unsupported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c02d5a0594cd": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "17f38c22f381": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f8254dcf2f17": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "355b651ba26a": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6ec401f68c45": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "066192c3f045": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8afbda628137": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2f3d024af960": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "51f193aa636b": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "853cfdcde3e9": {
+   "label": "unsupported",
+   "evidence": "1,4,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "69c18a69bc0c": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4508d68cfff6": {
+   "label": "contradicted",
+   "evidence": "1,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b2d5d2eba97d": {
+   "label": "contradicted",
+   "evidence": "1,4,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "18ee05570482": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e2c5223ce903": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "05a84aff11fb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "295d8c27ce14": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f3f6fa4cdfd7": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "43fc215f93d0": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6341a197d093": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dfcf51255792": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "87dc1a5a6fc0": {
+   "label": "supported",
+   "evidence": "6",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "c71a0ab7d4a4": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "b46bf7350794": {
+   "label": "supported",
+   "evidence": "6",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "263dc570ec34": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a956d316fbeb": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7242c8451215": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d9654651f879": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2afec9db634d": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7d84202e8ab1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1f95ab40e2e3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "13ef89d5c302": {
+   "label": "supported",
+   "evidence": "2,6,7",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1ff4fbf7a443": {
+   "label": "supported",
+   "evidence": "2,6,7",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "00f64306020f": {
+   "label": "supported",
+   "evidence": "2,6,7",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "7e3971a9da7f": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f83ce90cf35b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1a458377c3a8": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "118e0b3adf87": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c5a714dafb11": {
+   "label": "supported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4fb137e1cfdd": {
+   "label": "supported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "5e70cfc0f8fb": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "d344df664690": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a65e96bbac21": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d693c124f651": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2c4cb673b3da": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8a690cfe378f": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "feee7a61e663": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "288fae7bf301": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fc75efe364da": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ece010b9cb1f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "02fa3e162381": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d18e2f70731f": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "258eeaee2df9": {
+   "label": "supported",
+   "evidence": "3,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fafcfbf6c157": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d302d359d693": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6228481b67e5": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e160be6c9206": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dbaac62edc72": {
+   "label": "contradicted",
+   "evidence": "5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6b2cc73e70d7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "63037e20ff07": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7f5298c8caa6": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2d9646449098": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "533be0f27fe6": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "acb7e43280be": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "80c5545d5208": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "56156646fb3e": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1396cbe9a005": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f2819d03d6ea": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "397d60930ff3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "36427934b6c6": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8fba4a9030bb": {
+   "label": "unsupported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3391f32cf04f": {
+   "label": "unsupported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "627973acaa1d": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4bc032a247ef": {
+   "label": "unsupported",
+   "evidence": "1,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "aa2e9f414fd6": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4ec16728f2e6": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b69ae8e61732": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "cd570336c321": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "de9a08244db7": {
+   "label": "supported",
+   "evidence": "1,4,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c8429c544df4": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "cfb8145178e1": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f6c055743c94": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "617f8d26f159": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "db69034acbd4": {
+   "label": "supported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2253b34cab6b": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "17d16d8514df": {
+   "label": "supported",
+   "evidence": "1,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "0e1b11a35a91": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1f07a35eb631": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "aba758dc0a28": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "647485d2a418": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "aedf144e965f": {
+   "label": "unsupported",
+   "evidence": "1,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "182073141ea6": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "cf4dcc168ee9": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "042a8b9cf85f": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2b531054cb6a": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "be65914f398b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c12870fbbf89": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8d9d9699d0f6": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f8cec356686d": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "752bbb8fb5be": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "2eb615a7416d": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4c36b0f45709": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7ed65dc4d581": {
+   "label": "contradicted",
+   "evidence": "1,4,5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "89e2401e7c54": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "a485095aeba9": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8144f59b10d5": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d9bde241e862": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6e32fa18790a": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "661752392c65": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7abcdf4dcbb7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d41627337770": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7d4a3303ede2": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2b3d513b8b67": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3f06bee466aa": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e694aa7dd2b7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ddca332c7f6f": {
+   "label": "contradicted",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d0d10bedcd59": {
+   "label": "contradicted",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "df7529807845": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bbe69122b672": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "56f528e5757f": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8d0197efbee3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8910146108ee": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "6eca35045e2d": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f352b3f603ff": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c6bf2b1116f4": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "15227454e781": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "361edeb4d593": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c328090d2bf0": {
+   "label": "unsupported",
+   "evidence": "6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "9e5d6685e73b": {
+   "label": "unsupported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "9947e4ffb428": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e681d2177461": {
+   "label": "contradicted",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a7a605714e7c": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c40b4e9401f3": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bc1879c08fc4": {
+   "label": "supported",
+   "evidence": "6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "97e99feb5d40": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "da9891e5e645": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "71d4372544a2": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bc37285e9988": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8fe610cabee2": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b76d83d94b5f": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "72fe0a2b3eba": {
+   "label": "supported",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "55cbafb497d3": {
+   "label": "supported",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dbe28bd19c16": {
+   "label": "supported",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "432699754e70": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fe32adf5c8d1": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1fae256e5513": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "79f1a3e692bd": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2989181364cd": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4b0edaf81e05": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fa18b6eeed44": {
+   "label": "contradicted",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ed27afb6572d": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "5861de15fc02": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ac1814aa34aa": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a028c9e14082": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "eb1491e24642": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "22af585d60af": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4d9d507e48b2": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "434359cd3298": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e62ef05cf777": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fb2bc13147ea": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d17b99f2c394": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c23227d71051": {
+   "label": "supported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f96bafb8c262": {
+   "label": "unsupported",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e50699861679": {
+   "label": "contradicted",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4ed007d460e8": {
+   "label": "supported",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ee9f4de8c3d7": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "0db46c6d4174": {
+   "label": "contradicted",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "74608d84d58b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3a29116a0d92": {
+   "label": "supported",
+   "evidence": "3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1eef10c688bf": {
+   "label": "unsupported",
+   "evidence": "4,7",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a98cdd0e9cd6": {
+   "label": "supported",
+   "evidence": "5",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "110c63c907a4": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "4c9574883ae2": {
+   "label": "supported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8607b81de969": {
+   "label": "unsupported",
+   "evidence": "1,7",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8a3bcf3df363": {
+   "label": "supported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f2b6af7aab0f": {
+   "label": "supported",
+   "evidence": "3,4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b69f1e3bf73a": {
+   "label": "contradicted",
+   "evidence": "2,3",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "40f167ada018": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "95e5a0e96de6": {
+   "label": "contradicted",
+   "evidence": "1,2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "caea2bc4905b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a392bb3d980a": {
+   "label": "unsupported",
+   "evidence": "4",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "2e7d67efb65f": {
+   "label": "unsupported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "035fd2cf389a": {
+   "label": "supported",
+   "evidence": "1,2,3,4",
+   "bad": true,
+   "note": "",
+   "confirmed": true
+  },
+  "af4757ba63cf": {
+   "label": "contradicted",
+   "evidence": "2,5,6",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7670986ff79f": {
+   "label": "supported",
+   "evidence": "2",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fa224571c65b": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "d26543254b30": {
+   "label": "unsupported",
+   "evidence": "5",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "31f0593e8919": {
+   "label": "supported",
+   "evidence": "1",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  }
+ }
+}

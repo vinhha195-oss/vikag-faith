@@ -1,0 +1,276 @@
+{
+ "mode": "G",
+ "exported": "2026-10-30T03:42:47.072Z",
+ "labels": {
+  "392bd1ea0342": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793330710102,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "881f06e788e4": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793330795304,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "3d2bb0e9e5d6": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793330846687,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "b7dbc9885f97": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793330879546,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "7d84202e8ab1": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331100326,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "df7529807845": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331119170,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "13ef89d5c302": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331129888,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "aba758dc0a28": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331166723,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "3f4a8096cf41": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331183225,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "7fda67c145b3": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793331201593,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "2989181364cd": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331246241,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "be65914f398b": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331264386,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "feee7a61e663": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331288017,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "d0d10bedcd59": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331326906,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "c12870fbbf89": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331363816,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "56f528e5757f": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331402067,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "a65e96bbac21": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331409086,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "ac1814aa34aa": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331449281,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "45257dcc447a": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331488750,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "551df8781d75": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331503393,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "26aa77d57345": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331530400,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "7242c8451215": {
+   "label": "unsupported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331567147,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "14e7bf7442a4": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331582684,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "5e70cfc0f8fb": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793331649496,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "bfde8266a0bd": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793331656058,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "617f8d26f159": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331677131,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "8e4912502954": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793331690063,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "89e2401e7c54": {
+   "label": "",
+   "bad": true,
+   "confirmed": true,
+   "t": 1793331699988,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "0db46c6d4174": {
+   "label": "supported",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331732612,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  },
+  "3dfa108b4447": {
+   "label": "contradicted",
+   "bad": false,
+   "confirmed": true,
+   "t": 1793331765513,
+   "expanded": false,
+   "evidence": "",
+   "note": ""
+  }
+ }
+}

@@ -1,0 +1,8 @@
+train rows 12000 -> /content/vikag-faith/models/verifier_nosynth
+dev acc before: {'vinli': 0.758, 'synth': 0.5501}
+step 150/750 loss nan dev {'vinli': 0.338, 'synth': 0.4038}
+step 300/750 loss nan dev {'vinli': 0.338, 'synth': 0.4038}
+step 450/750 loss nan dev {'vinli': 0.338, 'synth': 0.4038}
+step 600/750 loss nan dev {'vinli': 0.338, 'synth': 0.4038}
+step 750/750 loss nan dev {'vinli': 0.338, 'synth': 0.4038}
+best dev mean acc: 0.6541

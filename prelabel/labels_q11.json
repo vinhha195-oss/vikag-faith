@@ -1,0 +1,23 @@
+{
+"q3#839|graph|0": {"label": "contradicted", "evidence": "P1,P4,P5", "note": "Câu trả lời từ chối nhưng bằng chứng có đủ: mức phụ cấp kiến nghị, mức phạt J&J 8,5 triệu, yêu cầu đối với ASAP"},
+"q3#839|naive|0": {"label": "contradicted", "evidence": "P5", "note": "Thanh tra yêu cầu ASAP Châu Á thực hiện nghiêm quy định, rà soát sản phẩm"},
+"q3#881|graph|0": {"label": "supported", "evidence": "P1,P2", "note": ""},
+"q3#881|graph|1": {"label": "unsupported", "evidence": "P1,P4", "note": "Mức hỗ trợ 50% là của HSSV; cơ chế cho hộ gia đình là đóng giảm dần (P4) và hỗ trợ tối thiểu 30%"},
+"q3#881|graph|2": {"label": "supported", "evidence": "P1", "note": ""},
+"q3#881|graph|3": {"label": "supported", "evidence": "P2", "note": "Điểm b khoản 3 NĐ 75/2023"},
+"q3#881|graph|4": {"label": "supported", "evidence": "P1", "note": ""},
+"q3#881|graph|5": {"label": "contradicted", "evidence": "P6", "note": "P6 nêu rõ: bệnh án điện tử, TT 26/2025, chuẩn hóa danh mục, đặt lịch trực tuyến, thanh toán không tiền mặt"},
+"q3#881|naive|0": {"label": "supported", "evidence": "P2", "note": "4,5% mức tiền lương, lương hưu... hoặc lương cơ sở"},
+"q3#881|naive|1": {"label": "contradicted", "evidence": "P1", "note": "HSSV được HỖ TRỢ tối thiểu 50% mức đóng, không phải mức đóng bằng 50%"},
+"q3#881|naive|2": {"label": "supported", "evidence": "P2", "note": "UBND tỉnh trình HĐND quyết định mức hỗ trợ cao hơn"},
+"q3#881|naive|3": {"label": "supported", "evidence": "P1", "note": ""},
+"q3#881|naive|4": {"label": "supported", "evidence": "P6", "note": ""},
+"q3#992|graph|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q3#992|graph|1": {"label": "supported", "evidence": "P3", "note": ""},
+"q3#992|graph|2": {"label": "supported", "evidence": "P4", "note": ""},
+"q3#992|graph|3": {"label": "supported", "evidence": "P2", "note": ""},
+"q3#992|naive|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q3#992|naive|1": {"label": "supported", "evidence": "P2", "note": ""},
+"q3#992|naive|2": {"label": "supported", "evidence": "P3", "note": ""},
+"q3#992|naive|3": {"label": "supported", "evidence": "P4", "note": ""}
+}

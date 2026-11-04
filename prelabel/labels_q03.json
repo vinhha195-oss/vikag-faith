@@ -1,0 +1,19 @@
+{
+"q1#57|graph|0": {"label": "supported", "evidence": "P2", "note": ""},
+"q1#57|graph|1": {"label": "supported", "evidence": "P1", "note": "Kiến nghị sau Kỳ họp thứ 7"},
+"q1#57|naive|0": {"label": "supported", "evidence": "P2", "note": ""},
+"q1#57|naive|1": {"label": "contradicted", "evidence": "P2", "note": "Cử tri muốn KHÔNG phải mua BHYT tại trường học (lỗi khi tách claim)"},
+"q1#57|naive|2": {"label": "unsupported", "evidence": "P1", "note": "Kiến nghị nói chung cho người tham gia BHYT, không riêng học sinh, sinh viên"},
+"q1#639|graph|0": {"label": "contradicted", "evidence": "P2,P3", "note": "Số lớn nhất là 7824 (Phương Đông); 6283 của Xuân Dược là nhỏ nhất"},
+"q1#639|graph|1": {"label": "supported", "evidence": "P2", "note": ""},
+"q1#639|graph|2": {"label": "contradicted", "evidence": "P1,P2", "note": "6950 không phải nhỏ nhất; 6283 nhỏ hơn"},
+"q1#639|graph|3": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#639|naive|0": {"label": "supported", "evidence": "P3", "note": "7824 lớn nhất trong các số 6283, 6950, 7824, 7329"},
+"q1#639|naive|1": {"label": "supported", "evidence": "P2", "note": ""},
+"q1#792|graph|0": {"label": "unsupported", "evidence": "P4", "note": "Nam Việt được quảng cáo trên mạng xã hội (facebook, Twitter...), không nêu Zalo/TikTok; trụ sở ở Khánh Hòa, không phải TP.HCM"},
+"q1#792|graph|1": {"label": "unsupported", "evidence": "P1", "note": "Danh sách phương tiện của Vạn Xuân không có email/SMS (email, SMS là của Mãi Mãi Hạnh Phúc)"},
+"q1#792|graph|2": {"label": "supported", "evidence": "P1,P2,P3,P4", "note": "Cả 4 giấy đều có báo chí/báo điện tử, mạng xã hội"},
+"q1#792|naive|0": {"label": "unsupported", "evidence": "P4", "note": "Như graph|0"},
+"q1#792|naive|1": {"label": "unsupported", "evidence": "P1", "note": "Như graph|1"},
+"q1#792|naive|2": {"label": "supported", "evidence": "P1,P2,P3,P4", "note": "CLAIM LỖI: thiếu vị từ; nội dung đúng với cả 4 giấy"}
+}

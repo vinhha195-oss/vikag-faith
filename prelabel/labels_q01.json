@@ -1,0 +1,16 @@
+{
+"q1#1266|graph|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#1266|naive|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#1347|graph|0": {"label": "supported", "evidence": "P3,P4", "note": ""},
+"q1#1347|graph|1": {"label": "supported", "evidence": "P3,P4", "note": "Đợt 8 ban hành năm 2023, đợt 17 năm 2024"},
+"q1#1347|naive|0": {"label": "supported", "evidence": "P3,P4", "note": ""},
+"q1#1347|naive|1": {"label": "unsupported", "evidence": "P1,P8", "note": "Khoảng \"từ ngày hết hiệu lực đến 31/12/2024\" là thời gian thuốc được tiếp tục sử dụng, không phải hiệu lực của quyết định"},
+"q1#1347|naive|2": {"label": "supported", "evidence": "P3,P4", "note": "Ngữ cảnh còn có đợt 3, 6 nhưng so sánh chỉ giữa đợt 8 và 17"},
+"q1#1347|naive|3": {"label": "supported", "evidence": "P3,P4", "note": ""},
+"q1#1437|graph|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#1437|graph|1": {"label": "supported", "evidence": "P3", "note": ""},
+"q1#1437|graph|2": {"label": "supported", "evidence": "P4", "note": "Bằng chứng nói rõ hơn: bác sĩ tại trạm y tế xã có CCHN chuyên khoa hệ nội, nội-nhi"},
+"q1#1437|naive|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#1437|naive|1": {"label": "supported", "evidence": "P3", "note": ""},
+"q1#1437|naive|2": {"label": "supported", "evidence": "P4", "note": ""}
+}

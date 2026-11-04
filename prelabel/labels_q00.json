@@ -1,0 +1,19 @@
+{
+"q1#1143|graph|0": {"label": "unsupported", "evidence": "P1,P2", "note": "CLAIM LỖI: gộp 5 ý; ý 1-2 có trong bằng chứng, ý 3-5 là khuyến nghị không có trong bằng chứng"},
+"q1#1143|naive|0": {"label": "supported", "evidence": "P1,P2", "note": "Khái quát, khớp nội dung kiến nghị"},
+"q1#1143|naive|1": {"label": "supported", "evidence": "P1", "note": "\"Chi phí khám chữa bệnh mà người dân phải chi trả vẫn còn ở mức cao\""},
+"q1#1143|naive|2": {"label": "supported", "evidence": "P1", "note": "\"hệ thống bảo hiểm y tế chưa thực sự bao phủ đầy đủ\""},
+"q1#1143|naive|3": {"label": "supported", "evidence": "P4", "note": "Suy ra từ kiến nghị bổ sung đối tượng hưởng trợ cấp xã hội (yếu)"},
+"q1#1143|naive|4": {"label": "unsupported", "evidence": "P3", "note": "Bằng chứng chỉ nói thiếu danh mục kỹ thuật cho bác sĩ đa khoa; \"chưa đủ linh hoạt\" là diễn giải"},
+"q1#12|graph|0": {"label": "supported", "evidence": "P2", "note": ""},
+"q1#12|graph|1": {"label": "contradicted", "evidence": "P2", "note": "Cục YDCT chỉ tiếp nhận, thẩm định và trình Bộ trưởng cấp"},
+"q1#12|graph|2": {"label": "unsupported", "evidence": "P1,P3", "note": "P3 chỉ nói Cục QLD tiếp nhận hồ sơ GSP; P1 nói Bộ Y tế và Sở Y tế cấp"},
+"q1#12|naive|0": {"label": "supported", "evidence": "P1,P2", "note": "Bộ Y tế có thẩm quyền; các cục tiếp nhận, thẩm định"},
+"q1#12|naive|1": {"label": "supported", "evidence": "P1", "note": "Bộ Y tế cấp phép XNK; vai trò của từng cục với giấy phép XNK không nêu rõ (yếu)"},
+"q1#1242|graph|0": {"label": "unsupported", "evidence": "P5", "note": "Chánh VP chỉ có tên trong danh sách thi hành quyết định; không nói tổ chức thẩm định giá"},
+"q1#1242|graph|1": {"label": "unsupported", "evidence": "P6", "note": "Như trên"},
+"q1#1242|graph|2": {"label": "unsupported", "evidence": "P2", "note": "Như trên"},
+"q1#1242|naive|0": {"label": "unsupported", "evidence": "P4,P5", "note": "Không nói Chánh VP thẩm định giá hay hướng dẫn thanh toán"},
+"q1#1242|naive|1": {"label": "supported", "evidence": "P6", "note": "CLAIM LỖI (mơ hồ); Chánh VP thuộc danh sách thi hành QĐ giá tại BV Cần Thơ"},
+"q1#1242|naive|2": {"label": "supported", "evidence": "P2", "note": "CLAIM LỖI (mơ hồ); như trên với BV Quân - Dân y Cà Mau"}
+}

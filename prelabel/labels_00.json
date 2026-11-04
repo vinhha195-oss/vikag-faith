@@ -1,0 +1,21 @@
+{
+"q1#111|graph|0": {"label": "supported", "evidence": "1", "note": "Mục III.1 liệt kê phụ nữ mang thai"},
+"q1#111|graph|1": {"label": "supported", "evidence": "1", "note": "\"Bà mẹ, người chăm sóc trẻ dưới 2 tuổi\""},
+"q1#111|graph|2": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|graph|3": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|graph|4": {"label": "supported", "evidence": "1", "note": "Bằng chứng ghi thêm \"tại xã có triển khai mô hình\""},
+"q1#111|naive|0": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|naive|1": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|naive|2": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|naive|3": {"label": "supported", "evidence": "1", "note": ""},
+"q1#111|naive|4": {"label": "supported", "evidence": "1", "note": ""},
+"q1#1116|graph|0": {"label": "supported", "evidence": "2", "note": "800x600 mm, lụa sa tanh đỏ, chỉ vàng, VnTime cỡ 140 (dòng 1-2)"},
+"q1#1116|graph|1": {"label": "supported", "evidence": "1", "note": "Chép gần nguyên văn mục 3.1"},
+"q1#1116|graph|2": {"label": "unsupported", "evidence": "5", "note": "Bằng chứng nêu hồi hộp đánh trống ngực cần phân biệt với bệnh tim mạch; không nhắc cường giáp"},
+"q1#1116|graph|3": {"label": "supported", "evidence": "3", "note": "Mục 5.3.4, sai chính tả \"lồng ấm\""},
+"q1#1116|naive|0": {"label": "supported", "evidence": "2", "note": ""},
+"q1#1116|naive|1": {"label": "supported", "evidence": "1", "note": ""},
+"q1#1116|naive|2": {"label": "unsupported", "evidence": "5", "note": "Không có cường giáp; cũng không có thông tin cơ sở ở Hải Phòng đang điều trị"},
+"q1#1134|graph|0": {"label": "contradicted", "evidence": "1,2", "note": "QĐ với Tiên Tiến căn cứ NĐ 71/2019 về hóa chất và vật liệu nổ, không phải lĩnh vực y tế"},
+"q1#1134|graph|1": {"label": "contradicted", "evidence": "1,2", "note": "Chỉ QĐ An Triết căn cứ NĐ 118/2021 và 117; QĐ Tiên Tiến căn cứ NĐ 71/2019"}
+}

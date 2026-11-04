@@ -1,0 +1,426 @@
+{
+ "mode": "C",
+ "exported": "2026-10-28T03:19:42.896Z",
+ "labels": {
+  "ddca332c7f6f": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "Tổng mức phạt tiền của nhóm các phòng khám (Đa khoa Medic - Chi Lăng, chuyên khoa Y học cổ truyền Sài Gòn, đa khoa quốc tế Thu Cúc) là 8 triệu đồng.,  Tổng số tiền Phòng khám Đa khoa Medic - Chi Lăng phải nộp phạt là: 4.000.000 đồng (Bốn triệu đồng chẵn).",
+   "confirmed": true
+  },
+  "e2c5223ce903": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "355b651ba26a": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "066192c3f045": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4c9574883ae2": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f3f6fa4cdfd7": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "31f0593e8919": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ca3dd677c6f3": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7f5298c8caa6": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "51f193aa636b": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4d9d507e48b2": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "999142c79565": {
+   "label": "unsupported",
+   "evidence": "Instagram",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "63cc562a186b": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e160be6c9206": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dbaac62edc72": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "5861de15fc02": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a028c9e14082": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "cf4dcc168ee9": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f8254dcf2f17": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "706dbf35e2e0": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "Cử ứr¡ đề nghị Chính phủ xem xét, sửa đổi Điều 5 Nghị định số 20/2021/NĐ-CP ngày 15/3/2021 của Chính phú, theo hướng bồ sung thêm nhóm đối tượng được hưởng trợ cấp xã hội hàng tháng vào là: “Phụ nữ mang thai thuộc hộ nghèo, hộ cận nghèo, hộ có hoàn cảnh khó khăn sống ở vùng núi, vùng hải đảo, vùng dân tộc thiểu số \"”",
+   "confirmed": true
+  },
+  "4bc032a247ef": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "be5a8cf39ad6": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fa18b6eeed44": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "11c5752e7457": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "bc4e241288f1": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b2d5d2eba97d": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a2e7ad436d8e": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "96e202384138": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8e5482a02d73": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fcfd69c02899": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "0e1b11a35a91": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "Cử ứr¡ đề nghị Chính phủ xem xét, sửa đổi Điều 5 Nghị định số 20/2021/NĐ-CP ngày 15/3/2021 của Chính phú, theo hướng bồ sung thêm nhóm đối tượng được hưởng trợ cấp xã hội hàng tháng vào là: “Phụ nữ mang thai thuộc hộ nghèo, hộ cận nghèo, hộ có hoàn cảnh khó khăn sống ở vùng núi, vùng hải đảo, vùng dân tộc thiểu số \"”",
+   "confirmed": true
+  },
+  "1f07a35eb631": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7ed65dc4d581": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f8cec356686d": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "af4757ba63cf": {
+   "label": "contradicted",
+   "evidence": " Tổng số tiền Phòng khám Đa khoa Medic - Chi Lăng phải nộp phạt là: 4.000.000 đồng (Bốn triệu đồng chẵn).",
+   "bad": false,
+   "note": " Tổng số tiền Phòng khám Đa khoa Medic - Chi Lăng phải nộp phạt là: 4.000.000 đồng (Bốn triệu đồng chẵn).",
+   "confirmed": true
+  },
+  "258eeaee2df9": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "87d1f0843143": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7998077ed850": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "97e99feb5d40": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "8fe610cabee2": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "dbe28bd19c16": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "661752392c65": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fa224571c65b": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "e62ef05cf777": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "fb2bc13147ea": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "f96bafb8c262": {
+   "label": "unsupported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "647485d2a418": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "4717e72ff5b6": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "không thấy Instagram",
+   "confirmed": true
+  },
+  "4ed007d460e8": {
+   "label": "contradicted",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "1eef10c688bf": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c8429c544df4": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "417f4f44bf95": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "3f06bee466aa": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "a9e1445ff924": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "361edeb4d593": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "c328090d2bf0": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "9e5d6685e73b": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "ce1fdc8dafce": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "7816ed32a34f": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  },
+  "b99b5b4bf323": {
+   "label": "supported",
+   "evidence": "",
+   "bad": false,
+   "note": "",
+   "confirmed": true
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{
+"q1#942|graph|0": {"label": "supported", "evidence": "P1", "note": ""},
+"q1#942|graph|1": {"label": "contradicted", "evidence": "P1,P2", "note": "Bệnh viện phải triển khai bệnh án điện tử chậm nhất 30/9/2025, trước 15/8/2028"},
+"q1#942|naive|0": {"label": "supported", "evidence": "P1,P2", "note": "Claim đảo ngược câu trả lời nhưng lại đúng: 15/8/2028 sau 30/9/2025"},
+"q1#942|naive|1": {"label": "supported", "evidence": "P5", "note": "CLAIM LỖI: lặp lại chính nó, có \"[?]\""},
+"q1#942|naive|2": {"label": "supported", "evidence": "P6", "note": "CLAIM LỖI: lặp lại chính nó"},
+"q1#942|naive|3": {"label": "supported", "evidence": "P5", "note": "CLAIM LỖI: có \"[?]\"; nội dung khớp: không áp dụng giá theo TT 21/2023 và 22/2023"},
+"q1#942|naive|4": {"label": "supported", "evidence": "P6", "note": "CLAIM LỖI: như trên"},
+"q2#1081|graph|0": {"label": "contradicted", "evidence": "P2,P5,P6", "note": "Medic 4 triệu, Thu Cúc 8 triệu, YHCT Sài Gòn có ít nhất 30 triệu"},
+"q2#1081|graph|1": {"label": "contradicted", "evidence": "P2,P5,P6", "note": "Medic 4 triệu là thấp nhất; YHCT Sài Gòn 30 triệu"},
+"q2#1081|naive|0": {"label": "contradicted", "evidence": "P2,P5,P6", "note": "Như graph|0"},
+"q2#1213|graph|0": {"label": "unsupported", "evidence": "", "note": "CLAIM LỖI: chỉ là câu dẫn, không có nội dung"},
+"q2#1213|graph|1": {"label": "supported", "evidence": "P4", "note": "Lấy từ sản phẩm vitamin B tương tự (AusNatures)"},
+"q2#1213|graph|2": {"label": "supported", "evidence": "P4", "note": ""},
+"q2#1213|graph|3": {"label": "unsupported", "evidence": "P2", "note": "\"Chứa cá và đậu nành\" là của Kids Smart Drops DHA, không liên quan sản phẩm vitamin B"},
+"q2#1213|naive|0": {"label": "unsupported", "evidence": "", "note": "CLAIM LỖI: câu dẫn"},
+"q2#1213|naive|1": {"label": "supported", "evidence": "P4", "note": "Đối tượng: người trưởng thành; \"không phù hợp trẻ em\" là suy ra"},
+"q2#1213|naive|2": {"label": "supported", "evidence": "P4", "note": ""},
+"q2#1213|naive|3": {"label": "supported", "evidence": "P4", "note": ""},
+"q2#1213|naive|4": {"label": "supported", "evidence": "P4", "note": ""}
+}

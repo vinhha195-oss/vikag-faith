@@ -1,0 +1,330 @@
+<title>AI có bịa không?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap">
+<style>
+/* Layout: one reading column with four tabs (what the project is / 4 guided cases / browse all 80 answers /
+   results). Every claim is shown the same way everywhere: text, verdict chip, and the four checkers' calls. */
+:root{
+  --bg:#f6f8f8; --surface:#ffffff; --sunk:#edf2f2; --line:#d7e0e1;
+  --fg:#16232a; --muted:#56656c; --accent:#0e5e6f; --accent-soft:#dcebee;
+  --ok:#22744f; --ok-bg:#e1f1e8; --bad:#b4432f; --bad-bg:#f8e4df; --warn:#9a6a08; --warn-bg:#f8eed2;
+  --mark:#f6d2c9; --mark-fg:#5a1a0f; --hl:#fff0a8; --hl-fg:#3d3200;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro",system-ui,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f171b; --surface:#152127; --sunk:#1b2a31; --line:#2b3d45;
+  --fg:#e3ecee; --muted:#9db0b6; --accent:#7cc4cf; --accent-soft:#1d3a41;
+  --ok:#6fcf9f; --ok-bg:#16352a; --bad:#f08e79; --bad-bg:#3d211c; --warn:#e8bf5a; --warn-bg:#382d12;
+  --mark:#5b2a20; --mark-fg:#ffd9cf; --hl:#4d4410; --hl-fg:#fff3b8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f171b; --surface:#152127; --sunk:#1b2a31; --line:#2b3d45;
+  --fg:#e3ecee; --muted:#9db0b6; --accent:#7cc4cf; --accent-soft:#1d3a41;
+  --ok:#6fcf9f; --ok-bg:#16352a; --bad:#f08e79; --bad-bg:#3d211c; --warn:#e8bf5a; --warn-bg:#382d12;
+  --mark:#5b2a20; --mark-fg:#ffd9cf; --hl:#4d4410; --hl-fg:#fff3b8; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body)}
+.wrap{max-width:900px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+h1{font:700 clamp(26px,4.5vw,36px)/1.2 var(--f-display);margin:0;text-wrap:balance}
+.lede{margin:6px 0 0;color:var(--muted);max-width:70ch}
+.lede b{color:var(--fg);font-weight:600}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);padding-bottom:12px}
+.tabs button,.pills button{font:500 14.5px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 15px;cursor:pointer}
+.tabs button[aria-selected="true"],.pills button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pills button{font-size:13.5px;padding:5px 12px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.eyebrow{font:600 12px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h2{font:700 22px/1.3 var(--f-display);margin:2px 0 0;text-wrap:balance}
+h3{font:600 16px/1.4 var(--f-body);margin:0 0 4px}
+p{margin:0}
+.small{font-size:13.5px;color:var(--muted)}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 14px var(--f-body);display:grid;place-items:center}
+.answer{background:var(--sunk);border-radius:8px;padding:12px 14px}
+mark{background:var(--mark);color:var(--mark-fg);border-radius:3px;padding:1px 3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+mark.w{background:var(--hl);color:var(--hl-fg);padding:0 1px}
+.quote{border-left:3px solid var(--ok);background:var(--ok-bg);border-radius:0 8px 8px 0;padding:10px 14px;margin:0 0 8px}
+.quote .src{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-body);border-radius:999px;padding:3px 11px;white-space:nowrap}
+.chip.supported{background:var(--ok-bg);color:var(--ok)}
+.chip.contradicted{background:var(--bad-bg);color:var(--bad)}
+.chip.unsupported{background:var(--warn-bg);color:var(--warn)}
+.chip.none{background:var(--sunk);color:var(--muted)}
+.checkers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:600px){.checkers{grid-template-columns:1fr}}
+.chk{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;align-items:start;border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 14px var(--f-body)}
+.yes .ic{background:var(--ok-bg);color:var(--ok)} .no .ic{background:var(--bad-bg);color:var(--bad)} .na .ic{background:var(--sunk);color:var(--muted)}
+.chk b{font-weight:600;display:block;font-size:14.5px}
+.chk span{font-size:13px;color:var(--muted)}
+.lesson{background:var(--accent-soft);border-radius:8px;padding:12px 14px}
+.lesson b{color:var(--accent)}
+.nav{display:flex;justify-content:space-between;gap:10px}
+.nav button{font:600 15px var(--f-body);border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.nav button.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.nav button:disabled{opacity:.4;cursor:default}
+/* intro */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.flow{grid-template-columns:1fr}}
+.flow div{background:var(--sunk);border-radius:10px;padding:12px}
+.flow b{display:block;font-size:14.5px;margin:6px 0 2px}
+.flow span{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stats div{display:flex;flex-direction:column}
+.stats b{font:700 30px/1.1 var(--f-display);color:var(--accent);font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted)}
+.qa{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:700px){.qa{grid-template-columns:1fr}}
+.qa div{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+/* browse */
+.picker{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+@media (max-width:600px){.picker{grid-template-columns:1fr}}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+select,input[type=search]{font:15px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+.claim{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.claim .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.claim .ct{font-weight:500;min-width:0;flex:1 1 300px}
+.calls{display:flex;flex-wrap:wrap;gap:6px}
+.call{font-size:12.5px;border:1px solid var(--line);border-radius:6px;padding:2px 8px;display:inline-flex;gap:5px;align-items:center}
+.call.yes{border-color:var(--ok);color:var(--ok)} .call.no{border-color:var(--bad);color:var(--bad)} .call.na{color:var(--muted)}
+.claim button.ev{align-self:flex-start;font:500 13.5px var(--f-body);background:none;border:none;color:var(--accent);cursor:pointer;padding:0}
+.psg{border-top:1px dashed var(--line);padding-top:8px}
+.psg .pt{font-weight:600;font-size:13.5px}
+.psg .tag{font:600 11px var(--f-body);color:var(--ok);background:var(--ok-bg);border-radius:4px;padding:1px 6px;margin-left:6px}
+.psg .px{font-size:13.5px;white-space:pre-wrap;max-height:220px;overflow:auto;background:var(--sunk);border-radius:6px;padding:8px 10px;margin-top:4px}
+.human{font-size:12.5px;color:var(--accent);font-weight:600}
+.rev{border-top:1px solid var(--line);padding-top:12px}
+/* results */
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(150px,230px) minmax(0,1fr) 70px;gap:10px;align-items:center;font-size:14px}
+@media (max-width:600px){.bar{grid-template-columns:minmax(0,1fr) 70px}.bar .track{grid-column:1/-1;grid-row:2}}
+.track{height:12px;background:var(--sunk);border-radius:6px;position:relative;overflow:hidden}
+.fill{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:6px}
+.fill.alt{background:var(--bad)}
+.bar .v{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--muted);font-size:12.5px}
+svg text{fill:var(--muted);font:12px var(--f-body)}
+.foot{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.card{animation:in .18s ease-out}@keyframes in{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>AI có bịa không? Máy chấm có bắt được không?</h1>
+    <p class="lede">Đề tài <b>ViKAG-Faith</b>: chatbot trả lời câu hỏi về văn bản pháp quy y tế; câu trả lời được tách thành từng ý và đối chiếu với văn bản gốc, để đo xem <b>các máy chấm tự động phát hiện ý sai tốt đến đâu</b> với tiếng Việt.</p>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs" aria-label="Phần"></nav>
+  <main id="view"></main>
+  <p class="foot">Dữ liệu: ViHERMES (văn bản pháp quy y tế). Câu trả lời do Qwen2.5-3B sinh. Nhãn đúng/sai chuẩn do Claude gán cho 284 ý; người kiểm tra mù lại <span id="n-human">một phần</span> (xem tab Kết quả), nên mọi con số là ước lượng. Chi tiết trong báo cáo ViKAG-Faith.</p>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const S = DATA.summary, P = DATA.passages;
+const VI = {supported: "Có căn cứ", contradicted: "Mâu thuẫn", unsupported: "Không có căn cứ"};
+const CHECKERS = [
+  ["j7", "AI giám khảo lớn", "Qwen2.5-7B đọc văn bản rồi phán"],
+  ["j3", "AI giám khảo nhỏ", "Qwen2.5-3B, cùng cách làm"],
+  ["v1", "Máy so khớp (NLI)", "mDeBERTa, chưa luyện thêm"],
+  ["ft", "Máy so khớp đã luyện", "mDeBERTa + ví dụ sai tự tạo"],
+];
+const SHORT = {j7: "Giám khảo 7B", j3: "Giám khảo 3B", v1: "So khớp", ft: "So khớp đã luyện"};
+const f = (x, d = 2) => x == null ? "–" : x.toFixed(d).replace(".", ",");
+const pct = (a, b) => Math.round(100 * a / b) + "%";
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const words = (s) => new Set((s.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).filter((w) => w.length > 2));
+const hl = (text, claim) => { const w = words(claim); return esc(text).replace(/[\p{L}\p{N}/.-]+/gu, (t) => w.has(t.toLowerCase()) ? `<mark class="w">${t}</mark>` : t); };
+// A checker "catches" a wrong claim when it does not call it supported; agreement is judged on right vs wrong only.
+const verdictOk = (call, gold) => call == null ? null : (call === "supported") === (gold === "supported");
+
+const CASES = [
+  {tab: "Cộng sai tiền phạt", kind: "Sai phép tính", title: "AI cộng sai tổng tiền phạt của ba phòng khám",
+   q: "Tổng mức phạt tiền của nhóm ba phòng khám (Đa khoa Medic - Chi Lăng, chuyên khoa Y học cổ truyền Sài Gòn, đa khoa quốc tế Thu Cúc) là bao nhiêu? (câu hỏi đã rút gọn)",
+   a: "Tổng mức phạt tiền của nhóm các phòng khám (Đa khoa Medic - Chi Lăng, chuyên khoa Y học cổ truyền Sài Gòn, đa khoa quốc tế Thu Cúc) <mark>là 8 triệu đồng</mark>. Không có thông tin về nhóm các công ty dược phẩm (Nam Hà, Hòa Bình) trong ngữ cảnh này.",
+   quotes: [["Quyết định xử phạt Phòng khám Đa khoa Medic - Chi Lăng", "Tổng số tiền Phòng khám Đa khoa Medic - Chi Lăng phải nộp phạt là: <strong>4.000.000 đồng</strong>"],
+            ["Quyết định xử phạt Phòng khám đa khoa quốc tế Thu Cúc", "Tổng số tiền Phòng khám đa khoa quốc tế Thu Cúc phải nộp phạt là: <strong>8.000.000 đồng</strong>"],
+            ["Quyết định xử phạt Phòng khám chuyên khoa Y học cổ truyền", "Phạt tiền, mức phạt: <strong>30.000.000 đồng</strong> (Ba mươi triệu đồng chẵn)"]],
+   note: "Riêng một phòng khám đã bị phạt 30 triệu, nên tổng không thể là 8 triệu.", gold: "contradicted",
+   got: {j7: [0, "cho là đúng"], j3: [0, "cho là đúng"], v1: [1, "báo mâu thuẫn"], ft: [1, "báo mâu thuẫn"]},
+   lesson: "Cả hai AI giám khảo đều bỏ sót vì phải tự cộng nhiều con số từ nhiều văn bản. Máy so khớp lại bắt được."},
+  {tab: "Phủ nhận sai", kind: "Nói ngược văn bản", title: "AI khẳng định Cục Dân số không làm thanh tra",
+   q: "Phòng ban nào thuộc Cục Dân số có chức năng liên quan đến thanh tra, xử lý vi phạm pháp luật? (một phần của câu hỏi)",
+   a: "… <mark>Cục Dân số không liên quan đến việc thanh tra, xử lý vi phạm pháp luật.</mark> Địa điểm lập biên bản vi phạm hành chính đối với Công ty Cổ phần Dược Danapha và Công ty TNHH Johnson &amp; Johnson (Việt Nam) không được cung cấp trong ngữ cảnh này.",
+   quotes: [["Kết luận thanh tra tại Cục Dân số", "… <strong>kiểm tra, thanh tra chuyên ngành</strong>, giải quyết khiếu nại, tố cáo và <strong>xử lý vi phạm pháp luật trong lĩnh vực dân số</strong> thuộc thẩm quyền theo quy định của pháp luật."]],
+   note: "Văn bản gốc là bản scan; đoạn trích đã sửa lỗi chính tả do nhận dạng chữ.", gold: "contradicted",
+   got: {j7: [1, "báo mâu thuẫn"], j3: [0, "cho là đúng"], v1: [1, "báo mâu thuẫn"], ft: [1, "báo mâu thuẫn"]},
+   lesson: "Ba trên bốn máy bắt được. AI giám khảo nhỏ (3B) bỏ sót: kích thước mô hình có ảnh hưởng."},
+  {tab: "Thêm thứ không có", kind: "Bịa thêm", title: "AI kể thêm Instagram, TikTok, YouTube…",
+   q: "Công ty TNHH Fine Việt Nam được phép quảng cáo trên những nền tảng mạng xã hội và thương mại điện tử nào?",
+   a: "Theo văn bản, Công ty TNHH Fine Việt Nam được phép quảng cáo trên các nền tảng mạng xã hội như Facebook, <mark>Instagram, TikTok, Pinterest, YouTube</mark> và trên các trang thương mại điện tử như Tiki, Shopee, Lazada.",
+   quotes: [["Giấy xác nhận quảng cáo của Công ty TNHH Fine Việt Nam", "… quảng cáo trên các báo điện tử, <strong>mạng xã hội, facebook, zalo</strong>."],
+            ["Giấy xác nhận quảng cáo khác của Công ty TNHH Fine Việt Nam", "… quảng cáo <strong>trên mạng xã hội facebook</strong>;"]],
+   note: "Instagram, TikTok, YouTube chỉ xuất hiện trong giấy xác nhận của một công ty khác, cũng nằm trong ngữ cảnh. Ở đây chấm ý về Instagram.", gold: "unsupported",
+   got: {j7: [1, "báo sai (gọi là mâu thuẫn)"], j3: [1, "báo không có căn cứ"], v1: [0, "cho là đúng"], ft: [1, "báo không có căn cứ"]},
+   lesson: "Máy so khớp chưa luyện bị lừa, có lẽ vì chữ “instagram” có trong văn bản của công ty khác. Sau khi luyện thêm thì nó bắt được."},
+  {tab: "Bịa ngày hiệu lực", kind: "Bịa thêm", title: "AI tự đưa ra một ngày hiệu lực không có trong văn bản",
+   q: "Thông tư về phương pháp chế biến dược liệu có hiệu lực từ ngày nào? (một phần của câu hỏi)",
+   a: "Doanh nghiệp … cần chú ý đến việc cập nhật công thức, quy trình sản xuất và thông tin liên quan về thuốc cổ truyền theo <mark>Thông tư số 30/2017/TT-BYT, có hiệu lực từ ngày 01/01/2018</mark>. Đối với thông tư về phân nhóm thiết bị y tế, không có thông tin cụ thể về thời điểm có hiệu lực…",
+   quotes: [["Thông tư hướng dẫn phương pháp chế biến dược liệu và vị thuốc cổ truyền", "Thông tư này có hiệu lực kể từ <strong>ngày 28 tháng 10 năm 2024</strong>. Thông tư số 30/2017/TT-BYT … <strong>hết hiệu lực</strong> kể từ ngày Thông tư này có hiệu lực."]],
+   note: "Văn bản không ghi ngày 01/01/2018. AI còn bỏ qua đúng thông tin câu hỏi cần (ngày 28/10/2024).", gold: "unsupported",
+   got: {j7: [1, "báo không có căn cứ"], j3: [1, "báo sai (gọi là mâu thuẫn)"], v1: [1, "báo không có căn cứ"], ft: [1, "báo không có căn cứ"]},
+   lesson: "Ngày tháng bịa ra là loại lỗi dễ bắt nhất: cả bốn máy đều phát hiện."},
+];
+
+const TABS = [["gioi-thieu", "Đề tài là gì"], ["vi-du", "4 ví dụ"], ["kham-pha", "Tự khám phá"], ["ket-qua", "Kết quả"]];
+const state = {tab: "gioi-thieu", ex: 0, q: 0, sys: "naive", hop: "", text: "", open: null};
+try { const h = location.hash.slice(1); if (TABS.some(([k]) => k === h)) state.tab = h; } catch (e) {}
+const tabs = document.getElementById("tabs"), view = document.getElementById("view");
+TABS.forEach(([k, t]) => { const b = document.createElement("button"); b.setAttribute("role", "tab"); b.dataset.k = k; b.textContent = t;
+  b.onclick = () => { state.tab = k; try { history.replaceState(null, "", "#" + k); } catch (e) {} render(); window.scrollTo(0, 0); }; tabs.appendChild(b); });
+
+function checkerGrid(got) {
+  return `<div class="checkers">${CHECKERS.map(([k, name, how]) => { const [ok, what] = got[k];
+    return `<div class="chk ${ok ? "yes" : "no"}"><span class="ic" aria-hidden="true">${ok ? "✓" : "✗"}</span><div><b>${name}</b><span>${ok ? "Phát hiện" : "Bỏ sót"}: ${what} · ${how}</span></div></div>`; }).join("")}</div>`;
+}
+
+// ---------- tab 1: what the project is ----------
+function intro() {
+  const n = S.n_claims, c = S.catch;
+  return `<section>
+  <div class="card"><div><div class="eyebrow">Vấn đề</div><h2>AI trả lời trôi chảy nhưng đôi khi sai một chi tiết</h2></div>
+    <p>Hỏi chatbot "Luật sửa đổi Luật Dược trình Quốc hội khi nào?", nó trả lời "tháng 10/2025", trong khi văn bản ghi <b>tháng 10/2022</b>. Với văn bản pháp luật, một ngày hay một con số sai là đủ gây hậu quả. Người ta thường dùng <b>máy chấm tự động</b> để phát hiện lỗi kiểu này, nhưng chưa ai kiểm tra các máy đó có đáng tin với tiếng Việt không.</p>
+    <div class="qa"><div><h3>Đề tài <u>không</u> làm</h3><p class="small">Xây chatbot mới hay làm chatbot trả lời giỏi hơn.</p></div>
+      <div><h3>Đề tài làm</h3><p class="small">Kiểm tra các máy chấm: đưa cho chúng những câu trả lời đã biết chỗ đúng chỗ sai, xem chúng phát hiện được bao nhiêu.</p></div></div></div>
+  <div class="card"><div><div class="eyebrow">Cách làm</div><h2>Năm bước</h2></div>
+    <div class="flow">
+      <div><span class="num">1</span><b>Hỏi</b><span>100 câu hỏi ViHERMES; 2 chatbot (Naive RAG, GraphRAG) trả lời</span></div>
+      <div><span class="num">2</span><b>Tách ý</b><span>Mỗi câu trả lời thành các ý nhỏ (claim)</span></div>
+      <div><span class="num">3</span><b>Tìm văn bản</b><span>Gom các đoạn văn bản gốc liên quan</span></div>
+      <div><span class="num">4</span><b>Gán đúng/sai</b><span>Có căn cứ · mâu thuẫn · không có căn cứ</span></div>
+      <div><span class="num">5</span><b>Chấm máy chấm</b><span>So kết luận của từng máy với nhãn đúng/sai</span></div></div></div>
+  <div class="card"><div><div class="eyebrow">Ba câu hỏi nghiên cứu</div><h2>Đề tài trả lời ba câu hỏi</h2></div>
+    <div class="step"><span class="num">1</span><div><h3>Máy chấm có sẵn bắt lỗi giỏi đến đâu?</h3><p class="small">Tốt nhất là AI giám khảo 7B, bắt được ${c.j7.caught}/${c.j7.wrong} ý sai. Chưa thay được người.</p></div></div>
+    <div class="step"><span class="num">2</span><div><h3>Cho máy thêm thông tin hoặc luyện thêm có giỏi hơn không?</h3><p class="small">Luyện thêm bằng ví dụ sai tự tạo có ích (${c.v1.caught} → ${c.ft.caught} ý sai bắt được). Thêm thông tin đồ thị văn bản thì không.</p></div></div>
+    <div class="step"><span class="num">3</span><div><h3>Bắt được lỗi rồi bảo AI tự sửa thì sao?</h3><p class="small">Ít ý sai hơn nhưng câu trả lời ngắn và thiếu hơn: AI xóa ý sai chứ chưa sửa cho đúng.</p></div></div>
+    <div class="stats"><div><b>100</b><span>câu hỏi</span></div><div><b>80</b><span>câu trả lời được chấm</span></div><div><b>${n}</b><span>ý (claim)</span></div><div><b>4</b><span>máy chấm so sánh</span></div></div></div>
+  <div class="nav"><span></span><button class="primary" onclick="state.tab='vi-du';render();window.scrollTo(0,0)">Xem 4 ví dụ →</button></div>
+  </section>`;
+}
+
+// ---------- tab 2: four guided cases ----------
+function examples() {
+  const c = CASES[state.ex];
+  const pills = CASES.map((x, i) => `<button aria-selected="${i === state.ex}" onclick="state.ex=${i};render()">${i + 1} · ${x.tab}</button>`).join("");
+  const quotes = c.quotes.map(([s, t]) => `<blockquote class="quote"><span class="src">${s}</span>${t}</blockquote>`).join("");
+  return `<section><div class="pills" role="tablist" aria-label="Chọn ví dụ">${pills}</div>
+  <article class="card"><div><div class="eyebrow">Ví dụ ${state.ex + 1}/${CASES.length} · ${c.kind}</div><h2>${c.title}</h2></div>
+    <div class="step"><span class="num">1</span><div><h3>Câu hỏi</h3><p>${c.q}</p></div></div>
+    <div class="step"><span class="num">2</span><div><h3>AI trả lời</h3><p class="answer">${c.a}</p></div></div>
+    <div class="step"><span class="num">3</span><div><h3>Văn bản gốc nói gì</h3>${quotes}<p class="small">${c.note}</p></div></div>
+    <div class="step"><span class="num">4</span><div><h3>Kết luận về phần tô đỏ</h3><span class="chip ${c.gold}">${VI[c.gold]}</span> <span class="human">✓ người kiểm tra đồng ý</span></div></div>
+    <div class="step"><span class="num">5</span><div><h3>Máy chấm tự động có phát hiện được không?</h3>${checkerGrid(c.got)}</div></div>
+    <p class="lesson"><b>Rút ra:</b> ${c.lesson}</p></article>
+  <div class="nav"><button ${state.ex === 0 ? "disabled" : ""} onclick="state.ex--;render()">← Ví dụ trước</button>
+    ${state.ex < CASES.length - 1 ? `<button class="primary" onclick="state.ex++;render()">Ví dụ tiếp →</button>` : `<button class="primary" onclick="state.tab='kham-pha';render();window.scrollTo(0,0)">Tự khám phá →</button>`}</div></section>`;
+}
+
+// ---------- tab 3: browse all answers ----------
+function browse() {
+  const items = DATA.items.filter((it) => (!state.hop || String(it.hop) === state.hop) &&
+    (!state.text || (it.question + " " + Object.values(it.sys).map((s) => s.answer).join(" ")).toLowerCase().includes(state.text.toLowerCase())));
+  if (!items.includes(DATA.items[state.q])) state.q = items.length ? DATA.items.indexOf(items[0]) : 0;
+  const it = DATA.items[state.q], d = it.sys[state.sys];
+  const opts = items.map((x) => `<option value="${DATA.items.indexOf(x)}" ${DATA.items.indexOf(x) === state.q ? "selected" : ""}>[${x.hop} hop] ${esc(x.question.slice(0, 110))}${x.question.length > 110 ? "…" : ""}</option>`).join("");
+  const sysPills = [["naive", "Chatbot 1: Naive RAG"], ["graph", "Chatbot 2: GraphRAG"]].map(([k, t]) => `<button aria-selected="${state.sys === k}" onclick="state.sys='${k}';state.open=null;render()">${t}</button>`).join("");
+  let body = `<p class="small">Không có ý nào cho câu trả lời này.</p>`;
+  if (d) {
+    const counts = {supported: 0, contradicted: 0, unsupported: 0};
+    d.claims.filter((c) => !c.bad).forEach((c) => counts[c.L.claude]++);
+    body = `<div class="answer">${esc(d.answer)}</div>
+    <p class="small">Câu trả lời có ${d.claims.length} ý: <b>${counts.supported}</b> có căn cứ · <b>${counts.contradicted}</b> mâu thuẫn · <b>${counts.unsupported}</b> không có căn cứ. Mỗi máy được đánh ✓ nếu kết luận đúng/sai của nó khớp với nhãn chuẩn.</p>
+    ${d.claims.map((c, j) => {
+      const calls = CHECKERS.map(([k]) => { const ok = verdictOk(c.L[k], c.L.claude);
+        return `<span class="call ${ok == null ? "na" : ok ? "yes" : "no"}" title="${SHORT[k]}: ${VI[c.L[k]] || "không có kết quả"}">${ok == null ? "–" : ok ? "✓" : "✗"} ${SHORT[k]}</span>`; }).join("");
+      const open = state.open === j;
+      const ev = open ? d.pool.map((pid, n) => { const p = P[pid];
+        return `<div class="psg"><div class="pt">[${n + 1}] ${esc(p.t)}${it.gold_ids.includes(pid) ? `<span class="tag">đoạn trả lời câu hỏi</span>` : ""}</div><div class="px">${hl(p.x, c.c)}</div></div>`; }).join("") : "";
+      return `<div class="claim"><div class="top"><span class="ct">${j + 1}. ${esc(c.c)}</span>
+          ${c.bad ? `<span class="chip none">ý tách lỗi, không chấm</span>` : `<span class="chip ${c.L.claude}">${VI[c.L.claude]}</span>`}</div>
+        ${c.L.human ? `<span class="human">Người kiểm tra: ${VI[c.L.human]}</span>` : ""}
+        ${c.bad ? "" : `<div class="calls">${calls}</div>`}
+        <button class="ev" onclick="state.open=${open ? "null" : j};render()">${open ? "Ẩn văn bản gốc ▲" : "Xem văn bản gốc ▼"} </button>${ev}</div>`; }).join("")}
+    ${d.rev ? `<div class="rev"><h3>Sau khi bảo AI tự sửa (${d.rev.rounds} vòng)</h3><p class="answer">${esc(d.rev.answer)}</p>
+      <div class="calls" style="margin-top:8px">${d.rev.claims.map((c, i) => `<span class="chip ${d.rev.labels[i] || "none"}" title="${esc(c)}">${i + 1}. ${VI[d.rev.labels[i]] || "–"}</span>`).join("")}</div>
+      <p class="small" style="margin-top:6px">Nhãn của câu trả lời đã sửa do AI giám khảo 7B chấm.</p></div>`
+      : `<p class="small rev">Không có ý nào bị AI giám khảo 7B gắn cờ, nên câu trả lời này không cần sửa.</p>`}`;
+  }
+  return `<section><div class="card">
+    <div class="picker"><label class="f" for="q-pick">Chọn câu hỏi (${items.length} câu)<select id="q-pick" onchange="state.q=+this.value;state.open=null;render()">${opts}</select></label>
+      <label class="f" for="hop-pick">Số hop<select id="hop-pick" onchange="state.hop=this.value;render()"><option value="">Tất cả</option>${[1, 2, 3, 4, 5].map((h) => `<option ${state.hop === String(h) ? "selected" : ""}>${h}</option>`).join("")}</select></label></div>
+    <label class="f" for="q-text">Tìm theo từ<input type="search" id="q-text" value="${esc(state.text)}" placeholder="vd: bảo hiểm y tế, phạt, 117/2020" oninput="state.text=this.value;clearTimeout(window._t);window._t=setTimeout(()=>{render();const e=document.getElementById('q-text');e.focus();e.setSelectionRange(e.value.length,e.value.length)},250)"></label>
+    <div><div class="eyebrow">Câu hỏi · ${it.hop} hop</div><h2 style="font-size:19px">${esc(it.question)}</h2></div>
+    <details><summary class="small" style="cursor:pointer">Đáp án tham khảo của ViHERMES</summary><p class="small" style="margin-top:6px">${esc(it.gold)}</p></details>
+    <div class="pills">${sysPills}</div>${body}</div></section>`;
+}
+
+// ---------- tab 4: results ----------
+function results() {
+  const c = S.catch, cl = S.claim, co = S.corr, a = S.audit, r1 = S.rounds["1"], r2 = S.rounds["2"], rv = S.revise;
+  const rows = [["j7", "AI giám khảo lớn (7B)"], ["ft", "Máy so khớp đã luyện"], ["j3", "AI giám khảo nhỏ (3B)"], ["v1", "Máy so khớp chưa luyện"]];
+  const catchBars = rows.map(([k, n]) => `<div class="bar"><span>${n}</span><span class="track"><span class="fill" style="width:${100 * c[k].caught / c[k].wrong}%"></span></span><span class="v">${c[k].caught}/${c[k].wrong}</span></div>`).join("");
+  const faBars = rows.map(([k, n]) => `<div class="bar"><span>${n}</span><span class="track"><span class="fill alt" style="width:${100 * c[k].false_alarm / c[k].right}%"></span></span><span class="v">${c[k].false_alarm}/${c[k].right}</span></div>`).join("");
+  const scoreRows = [["judge_7b", "AI giám khảo lớn (7B)"], ["nli_ft_v1", "Máy so khớp đã luyện"], ["judge_3b", "AI giám khảo nhỏ (3B)"],
+    ["nli_selfcheck", "SelfCheckGPT (không nhìn văn bản)"], ["nli_nosynth_v1", "Máy so khớp luyện chỉ bằng dữ liệu chung"], ["nli_zs_v1", "Máy so khớp chưa luyện"],
+    ["nli_zs_v2", "Máy so khớp chưa luyện + thông tin đồ thị"], ["majority_supported", "Luôn nói “có căn cứ” (mốc so sánh)"]]
+    .filter(([k]) => cl[k]).map(([k, n]) => `<tr><td>${n}</td><td>${f(cl[k].f1, 3)}</td><td>${S.sensitivity[k] ? f(S.sensitivity[k].macro_f1_vs_human, 3) : "–"}</td></tr>`).join("");
+  const corrRows = [["ragas_7b", "RAGAS (7B)"], ["judge_7b", "AI giám khảo lớn (7B)"], ["judge_3b", "AI giám khảo nhỏ (3B)"], ["nli_selfcheck", "SelfCheckGPT"], ["ragas_3b", "RAGAS (3B)"], ["nli_zs_v1", "Máy so khớp chưa luyện"]]
+    .map(([k, n]) => `<div class="bar"><span>${n}</span><span class="track"><span class="fill" style="width:${Math.max(0, co[k]) / 0.6 * 100}%"></span></span><span class="v">${f(co[k], 2)}</span></div>`).join("");
+  // GGF by hop: one scale for both lines, labels only on the axis
+  const W = 600, H = 220, L = 40, R = 16, T = 12, B = 30, hops = [1, 2, 3, 4, 5];
+  const x = (h) => L + (h - 1) * (W - L - R) / 4, y = (v) => T + (1 - v) * (H - T - B);
+  const line = (s) => hops.map((h, i) => `${i ? "L" : "M"}${x(h).toFixed(1)},${y(S.by_hop[s][h].GGF).toFixed(1)}`).join(" ");
+  const dots = (s, col) => hops.map((h) => `<circle cx="${x(h)}" cy="${y(S.by_hop[s][h].GGF)}" r="4" fill="${col}"><title>${h} hop: ${f(S.by_hop[s][h].GGF)}</title></circle>`).join("");
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Tỉ lệ ý có căn cứ theo số hop">
+    ${[0, 0.25, 0.5, 0.75, 1].map((v) => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${f(v, 2)}</text>`).join("")}
+    ${hops.map((h) => `<text x="${x(h)}" y="${H - 8}" text-anchor="middle">${h} hop</text>`).join("")}
+    <path d="${line("naive")}" fill="none" stroke="var(--muted)" stroke-width="2.5"/>${dots("naive", "var(--muted)")}
+    <path d="${line("graph")}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>${dots("graph", "var(--accent)")}</svg>`;
+  const sy = S.systems;
+  return `<section>
+  <div class="card"><div><div class="eyebrow">Câu hỏi 1</div><h2>Máy chấm có sẵn bắt lỗi giỏi đến đâu?</h2></div>
+    <h3>Số ý sai mỗi máy phát hiện được (tập kiểm tra)</h3><div class="bars">${catchBars}</div>
+    <h3 style="margin-top:6px">Số ý đúng bị báo nhầm là sai</h3><div class="bars">${faBars}</div>
+    <p class="small">Máy tốt là máy bắt được nhiều ý sai mà ít báo nhầm. Để gộp hai điều này thành một con số, báo cáo dùng điểm macro-F1 (0 đến 1, càng cao càng tốt):</p>
+    <div class="tbl"><table><tr><th>Máy chấm</th><th>Điểm theo nhãn Claude (${S.n_test} ý)</th><th>Điểm theo nhãn người (${a.n} ý)</th></tr>${scoreRows}</table></div>
+    <p class="small">Hai cột cho thứ hạng khác nhau: máy so khớp đã luyện đứng đầu theo nhãn Claude nhưng tụt xuống dưới AI giám khảo 7B theo nhãn người. Claude và người chỉ đồng ý ${pct(a.acc, 1)} (κ = ${f(a.kappa)}).</p>
+    <h3 style="margin-top:6px">Chấm cả câu trả lời: điểm của máy có đi cùng điểm thật không?</h3><div class="bars">${corrRows}</div>
+    <p class="small">Hệ số tương quan Spearman (0 = không liên quan, 1 = khớp hoàn toàn). RAGAS chạy với AI 7B khớp nhất, ở mức trung bình.</p></div>
+  <div class="card"><div><div class="eyebrow">Câu hỏi 2</div><h2>Cho thêm thông tin hoặc luyện thêm có giúp không?</h2></div>
+    <div class="step"><span class="num">+</span><div><h3>Luyện thêm bằng ví dụ sai tự tạo: có ích</h3><p class="small">Lấy câu thật trong văn bản rồi đổi con số, đổi ngày, thêm chữ “không” để tạo ví dụ sai. Điểm tăng ${f(cl.nli_zs_v1.f1, 3)} → ${f(cl.nli_ft_v1.f1, 3)}. Luyện chỉ bằng dữ liệu NLI tiếng Việt chung thì không tăng (${f(cl.nli_nosynth_v1.f1, 3)}).</p></div></div>
+    <div class="step"><span class="num">−</span><div><h3>Thêm thông tin đồ thị văn bản: làm kém đi</h3><p class="small">Ghi thêm tên văn bản và quan hệ sửa đổi/dẫn chiếu vào đầu đoạn văn làm điểm giảm ${f(cl.nli_zs_v1.f1, 3)} → ${f(cl.nli_zs_v2.f1, 3)}: máy thấy tên văn bản trùng là cho “có căn cứ”.</p></div></div>
+    <div class="step"><span class="num">=</span><div><h3>Luật kiểm tra con số, ngày tháng: gần như không đổi</h3><p class="small">Nhiều lỗi nằm ở chỗ gán nhầm cơ quan, nhầm văn bản, không phải ở con số.</p></div></div></div>
+  <div class="card"><div><div class="eyebrow">Câu hỏi 3</div><h2>Bắt được lỗi rồi bảo AI tự sửa thì sao?</h2></div>
+    <p class="small">AI giám khảo 7B gắn cờ ý sai, rồi chatbot viết lại câu trả lời từ cùng văn bản, tối đa 2 vòng. ${rv.revised}/${rv.answers} câu trả lời cần sửa.</p>
+    <div class="tbl"><table><tr><th></th><th>Ý có căn cứ</th><th>Ý mâu thuẫn</th><th>Độ giống đáp án (F1)</th><th>Số ý mỗi câu</th></tr>
+      <tr><td>Chưa sửa</td><td>${pct(rv.GGF_before, 1)}</td><td>${f(100 * rv.CR_before, 1)}%</td><td>${f(rv.answer_f1_before, 3)}</td><td>${f(rv.claims_before, 1)}</td></tr>
+      <tr><td>Sửa 1 vòng</td><td>${pct(r1.GGF_after, 1)}</td><td>${f(100 * r1.CR_after, 1)}%</td><td>${f(r1.answer_f1_after, 3)}</td><td>${f(r1.claims_after, 1)}</td></tr>
+      <tr><td>Sửa 2 vòng</td><td>${pct(r2.GGF_after, 1)}</td><td>${f(100 * r2.CR_after, 1)}%</td><td>${f(r2.answer_f1_after, 3)}</td><td>${f(r2.claims_after, 1)}</td></tr></table></div>
+    <p class="small">Ít ý sai hơn nhưng câu trả lời ngắn và thiếu hơn: AI chủ yếu xóa ý bị gắn cờ. Vòng 2 thêm rất ít. Kết quả sau sửa do chính AI giám khảo 7B chấm, nên mức cải thiện có thể bị đánh giá cao.</p></div>
+  <div class="card"><div><div class="eyebrow">Thêm</div><h2>Hai chatbot và độ khó của câu hỏi</h2></div>
+    ${svg}
+    <p class="small"><span style="color:var(--muted);font-weight:600">━ Naive RAG</span> (${pct(sy.naive.GGF, 1)} ý có căn cứ) · <span style="color:var(--accent);font-weight:600">━ GraphRAG</span> (${pct(sy.graph.GGF, 1)}). Hai chatbot không khác nhau rõ (p = ${f(S.p)}). Câu hỏi cần ghép 4–5 văn bản (4–5 hop) khó hơn hẳn: chỉ khoảng một nửa số ý có căn cứ.</p></div>
+  </section>`;
+}
+
+function render() {
+  [...tabs.children].forEach((b) => b.setAttribute("aria-selected", b.dataset.k === state.tab));
+  view.innerHTML = {"gioi-thieu": intro, "vi-du": examples, "kham-pha": browse, "ket-qua": results}[state.tab]();
+}
+try { document.getElementById("n-human").textContent = `${S.audit.n} ý (trùng ${pct(S.audit.acc, 1)})`; } catch (e) {}
+render();
+</script>
