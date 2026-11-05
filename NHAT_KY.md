@@ -66,6 +66,8 @@ Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22
 34. Đồng bộ lại toàn bộ: báo cáo, slide, demo, dataset, README.
 35. **Bản nộp cuối** (05/11): slide thiết kế lại, rút còn 14 trang; bài báo Times New Roman, A4, công thức Office (13 trang). Dọn dự án: bỏ báo cáo cũ và bộ slide cũ (còn trong commit `06f8888`), gom 3 file nộp vào `nop_bai/`; gộp hai demo thành một file `demo/vikag_faith_demo.html`.
 
+36. **Đợt 2** (05/11): 467 triple + mutual index, 19.992 cặp tổng hợp. Chạy được trên CPU: triple V3 zero-shot (0,423 theo silver, 0,328 theo nhãn người). Huấn luyện 20.000 cặp cần khoảng 17 giờ trên CPU nên chuyển sang Colab, cùng judge 14B, Qwen span, XLM-R (`colab/ViKAG_Faith_Dot2.ipynb`).
+
 ## Kết quả chính
 
 | Câu hỏi | Kết quả |

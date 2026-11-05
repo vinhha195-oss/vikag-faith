@@ -43,6 +43,8 @@ TH = R["thresholds"]
 N_CLAIMS_ALL = sum(1 for _ in open(ROOT / "outputs" / "claims.jsonl", encoding="utf-8"))
 _story = (ROOT / "demo" / "vikag_faith_demo.html").read_text(encoding="utf-8")  # catch counts come from make_demo.py
 _at = _story.index("const DATA = ") + 13
+D2 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot2.json", encoding="utf-8"))  # second round, separate file
+V3 = D2["methods"]["nli_zs_v3"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
 
@@ -521,7 +523,8 @@ equation(msub(mr("P"), mr("sup", True)) + mr("(c) = ") + mmax(mr("w"), mr("P(") 
 equation(msub(mr("P"), mr("con", True)) + mr("(c) = ") + mmax(mr("w ∈ ") + mr("top-2 overlap", True), mr("P(") + mr("contra", True) + mr(" | w, c)")), 4)
 para(f"Contradiction chỉ xét hai cửa sổ trùng từ nhiều nhất với claim, vì NLI hay gán “contradiction” cho văn bản không liên quan. Nhãn: supported "
      f"nếu P_sup ≥ τ_s, ngược lại contradicted nếu P_con ≥ τ_c, còn lại unsupported; (τ_s, τ_c) chọn trên tập dev (V1 zero-shot: {f(TH['zs_v1'][0], 2)}, "
-     f"{f(TH['zs_v1'][1], 2)}). Hai biến thể đầu vào: **V1** chỉ đoạn văn; **V2** thêm tên văn bản, số hiệu và quan hệ lấy từ đồ thị vào đầu mỗi cửa sổ.")
+     f"{f(TH['zs_v1'][1], 2)}). Hai biến thể đầu vào: **V1** chỉ đoạn văn; **V2** thêm tên văn bản, số hiệu và quan hệ lấy từ đồ thị vào đầu mỗi cửa sổ; "
+     f"**V3** chỉ thêm tối đa 3 triple có chung từ khóa với claim (từ 467 triple của đồ thị) và, qua mutual index, đoạn gốc của văn bản mà claim nêu số hiệu.")
 numbered([
     "**Fine-tune verifier bằng dữ liệu tổng hợp:** 12.000 cặp ViNLI [20] + 3.328 cặp tạo từ các đoạn *không* thuộc mẫu đánh giá: supported = câu "
     "gốc; contradicted = đổi một con số, ngày hoặc thêm phủ định (“không”); unsupported = câu của đoạn khác cùng văn bản. Huấn luyện 1 epoch, "
@@ -630,7 +633,8 @@ para("Accuracy cao không đồng nghĩa với metric tốt: “luôn đoán sup
 h3("6.2 RQ2 – Đồ thị, rule và fine-tune")
 para(f"**Đồ thị:** thêm thông tin đồ thị vào đầu cửa sổ (V2) làm macro-F1 của NLI zero-shot giảm {f(zs['macro_f1'])} → {f(CL['nli_zs_v2']['macro_f1'])}. "
      f"Ngưỡng tối ưu của V2 rất thấp (τ_s = {f(TH['zs_v2'][0], 2)}): khi tên văn bản đứng đầu mỗi cửa sổ, mô hình cho xác suất entail cao với mọi claim nhắc "
-     f"tới văn bản đó. **Rule số/ngày** gần như không đổi kết quả ({f(zs['macro_f1'])} → {f(CL['nli_zs_v1+rule']['macro_f1'])}); nhiều lỗi nằm ở việc gán "
+     f"tới văn bản đó. Khi chỉ nối các triple liên quan tới từng claim (V3), macro-F1 zero-shot tăng lên {f(V3['macro_f1'])}, cao hơn V2 nhưng không khác V1 có ý nghĩa (chênh {f(D2['paired_silver']['nli_zs_v3 - nli_zs_v1']['diff'])}, KTC [{f(D2['paired_silver']['nli_zs_v3 - nli_zs_v1']['ci95'][0], 2)}; {f(D2['paired_silver']['nli_zs_v3 - nli_zs_v1']['ci95'][1], 2)}]); theo nhãn người V3 lại thấp hơn V1 ({f(V3['macro_f1_human'])} so với {f(SENS['nli_zs_v1']['macro_f1_vs_human'])}). "
+     f"**Rule số/ngày** gần như không đổi kết quả ({f(zs['macro_f1'])} → {f(CL['nli_zs_v1+rule']['macro_f1'])}); nhiều lỗi nằm ở việc gán "
      f"sai chủ thể chứ không ở con số. **Fine-tune:** theo nhãn silver, fine-tune V1 hơn zero-shot (chênh {f(c_ft_zs['diff'])}, KTC 95% "
      f"[{f(c_ft_zs['ci95'][0], 2)}; {f(c_ft_zs['ci95'][1], 2)}]) và nhỉnh hơn judge 7B nhưng không có ý nghĩa (chênh {f(c_ft_j7['diff'])}, KTC "
      f"[{f(c_ft_j7['ci95'][0], 2)}; {f(c_ft_j7['ci95'][1], 2)}]). Ablation chỉ dùng ViNLI không cải thiện (chênh {f(c_ns_zs['diff'])}): phần tăng đến từ "
@@ -703,7 +707,7 @@ bullets([
     "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 7B (giới hạn Colab T4). Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
     "**Ngưỡng verifier chọn theo nhãn silver:** làm verifier fine-tune nghiêng theo Claude. Giảm thiểu: chọn ngưỡng trên nhãn người khi đủ dữ liệu.",
     "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
-    "**Đồ thị dạng văn bản:** thông tin đồ thị được nối vào chuỗi đầu vào thay vì triple có cấu trúc; chưa có ViEduReg, verifier Qwen trả span, toán tử Verify trong KAG.",
+    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản và mới thử với NLI zero-shot; chưa fine-tune với 20.000 cặp tổng hợp; chưa có ViEduReg, verifier Qwen trả span, toán tử Verify trong KAG.",
 ])
 
 # 8 ------------------------------------------------------------------

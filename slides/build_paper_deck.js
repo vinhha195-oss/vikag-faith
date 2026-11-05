@@ -40,6 +40,7 @@ const pct = (x) => Math.round(100 * x) + "%";
 const CL = R.claim_level, CO = R.answer_level_correlation, CMP = R.comparisons, REV = R.revise, SY = R.systems;
 const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG.sensitivity;
 const RA = REV.all, R1 = REV.by_max_rounds["1"], R2 = REV.by_max_rounds["2"];
+const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3;
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -244,7 +245,7 @@ s.addChart(pres.ChartType.bar, [
 ], { ...CHART_BASE(), x: 0.5, y: 1.85, w: 7.2, h: 5.0, barDir: "col", barGrouping: "clustered", chartColors: [DIM, MUTED, ACC],
   valAxisMinVal: 0, valAxisMaxVal: 600, dataLabelPosition: "outEnd", showLegend: true, legendPos: "b", objectName: "verifier" });
 [["+", "Dữ liệu tổng hợp", `+${f(c1.diff)} so với zero-shot (KTC ${f(c1.ci95[0], 2)}–${f(c1.ci95[1], 2)}). Bỏ dữ liệu này chỉ còn +${f(c2.diff)}.`, SUP],
- ["−", "Thông tin đồ thị", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL.nli_zs_v2.macro_f1)}: máy thấy tên văn bản trùng là cho supported.`, CON],
+ ["−", "Thông tin đồ thị", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL.nli_zs_v2.macro_f1)} khi nhét mọi thông tin đồ thị. Triple nối theo claim đạt ${f(V3.macro_f1)}, nhưng theo nhãn người chỉ ${f(V3.macro_f1_human)}.`, CON],
  ["=", "Rule số, ngày", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL["nli_zs_v1+rule"].macro_f1)}: nhiều lỗi nằm ở chủ thể, không ở con số.`, MUTED]].forEach(([g, h, d, col], i) => {
   const y = 2.05 + i * 1.5;
   text(s, g, { x: 8.1, y, w: 0.7, h: 0.8, fontSize: 40, bold: true, color: col, fontFace: MONO });
@@ -309,14 +310,14 @@ table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge 7B`, "KTC bootstrap, kiểm định ghép cặp"],
   [{ text: "Ngưỡng theo silver", options: { bold: true } }, "Verifier fine-tune nghiêng theo Claude", "Chọn ngưỡng trên nhãn người"],
   [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
-  [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Chưa dùng triple; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
+  [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple mới thử zero-shot; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });
 notes(s, "Chủ động nói hạn chế trước khi bị hỏi. So với đề cương: 20 đạt, 14 một phần, 5 chưa làm. Hướng tiếp theo: nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý; judge 14–32B; verifier đọc triple; thêm LightRAG, KAG, ViEduReg.");
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
 [["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS 7B tốt nhất, chỉ khớp mức trung bình.`],
- ["RQ2", "Dữ liệu tổng hợp giúp theo nhãn silver, không giữ được theo người. Đồ thị dạng văn bản và rule không giúp."],
+ ["RQ2", "Dữ liệu tổng hợp giúp theo nhãn silver, không giữ được theo người. Đồ thị, triple và rule chưa giúp được."],
  ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;
   text(s, k, { x: 0.6, y, w: 1.3, h: 0.85, fontSize: 24, bold: true, color: ACC, fontFace: MONO, valign: "middle" });

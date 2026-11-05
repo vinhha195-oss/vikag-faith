@@ -1,0 +1,2 @@
+transformers 4.46.3 torch 2.6.0+cu124 dtype torch.float32
+train rows 29993 -> C:\Users\Admin\vikag-faith\models\verifier_ft20

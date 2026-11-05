@@ -13,7 +13,7 @@ https://claude.ai/artifact/Ek3Puhkwvimrrbj97ojenf
 |---|---|
 | RQ1, mức claim | Trong các metric có sẵn, LLM-judge Qwen2.5-7B tốt nhất: macro-F1 0,476 (silver), 0,528 (nhãn người); SelfCheckGPT 0,409; judge 7B bắt được 41/64 claim sai |
 | RQ1, mức câu trả lời | RAGAS faithfulness 7B tương quan cao nhất với GGF chuẩn: Spearman 0,484 |
-| RQ2 | Verifier fine-tune (ViNLI + cặp tổng hợp) 0,521 > zero-shot 0,404 (silver, có ý nghĩa); ablation chỉ ViNLI 0,405; nhưng trên mẫu người fine-tune chỉ 0,381 < judge-7B 0,528. Graph trong NLI và rule số/ngày không giúp |
+| RQ2 | Verifier fine-tune (ViNLI + cặp tổng hợp) 0,521 > zero-shot 0,404 (silver, có ý nghĩa); ablation chỉ ViNLI 0,405; nhưng trên mẫu người fine-tune chỉ 0,381 < judge-7B 0,528. Graph trong NLI và rule số/ngày không giúp; triple nối theo claim (V3, zero-shot) đạt 0,423 theo silver, 0,328 theo nhãn người |
 | RQ3 | Verify-then-revise: GGF theo judge 7B 0,755 → 0,830 (p = 0,014) nhưng token F1 0,595 → 0,563; câu trả lời chủ yếu ngắn đi. Vòng 1 cho phần lớn mức tăng (GGF 0,801); vòng 2 không có ý nghĩa thống kê (p = 0,312). EM = 0 ở mọi cấu hình (đáp án ViHERMES dài ~115 từ) |
 | Hai hệ | Naive RAG và GraphRAG ngang nhau (GGF 0,694 và 0,638, p = 0,191); câu 4–5 hop giảm mạnh |
 | Độ tin cậy nhãn | Năm lượt kiểm định mù do người gán (C: 60 claim phân tầng; G–J: 4 × 30 claim ngẫu nhiên, còn 105): gộp 165 claim (58% bộ dữ liệu), Claude trùng người 65%, κ = 0,29, tương quan thứ hạng metric 0,46. Theo nhãn người, judge-7B tốt nhất (0,528); verifier fine-tune (0,381) không hơn zero-shot (0,409) |
@@ -49,6 +49,7 @@ Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (c
 | `make_colab.py` | Sinh `colab/ViKAG_Faith_Colab.ipynb` (bước 1–5, 8, 9 và ablation verifier trên Colab T4, kết quả lưu Drive) |
 | `make_paper.py` | Bài báo (A4, lề 2,5 cm, Times New Roman 12, công thức Office): `nop_bai/ViKAG-Faith_BaiBao.docx` |
 | `slides/build_paper_deck.js` | Slide thuyết trình cho bài báo, thiết kế riêng (14 trang): `nop_bai/ViKAG-Faith_BaiBao_slide.pptx` (PDF xuất từ PowerPoint) |
+| `src/s3b_triples.py`, `src/s10_dot2.py`, `make_colab_dot2.py` | Đợt 2: triple + mutual index, phân tích riêng (`results_dot2.json`), notebook cho phần cần GPU |
 | `make_demo.py` | Cập nhật số liệu thẳng vào `demo/vikag_faith_demo.html` (không có file khuôn riêng) |
 | `make_dataset.py` | Đóng gói `dataset/ViFaithKAG` (claims/answers/passages JSONL + README, ghi nguồn ViHERMES MIT) |
 | `prelabel/` | Nhãn Claude theo từng nhóm (nguồn của `outputs/prelabels.json`) |
