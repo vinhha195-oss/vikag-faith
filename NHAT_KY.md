@@ -1,6 +1,6 @@
 # Nhật ký dự án ViKAG-Faith
 
-Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22/10 – 31/10/2026).
+Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22/10 – 05/11/2026).
 
 ## Giai đoạn 1 · Chọn đề tài và đề cương (22/10)
 
@@ -54,7 +54,7 @@ Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22
 29. Gộp C + G = 84 claim nhãn người: Claude trùng 60%, κ = 0,25.
 29b. **Lượt H** (31/10): thêm 30 claim ngẫu nhiên, gán thật trong 12,7 phút. Gộp C + G + H = **114 claim nhãn người**: Claude trùng 61%, κ = 0,28. Theo nhãn người, judge 7B tốt nhất (0,527); fine-tune (0,398) không hơn zero-shot (0,410).
 29c. **Lượt I** (01/11): thêm 30 claim, gán thật trong 10,8 phút. Gộp C + G + H + I = **139 claim nhãn người** (49% bộ dữ liệu): Claude trùng 63%, κ = 0,28. Theo nhãn người, judge 7B tốt nhất (0,553); fine-tune (0,379) ngang zero-shot (0,377).
-29d. **Lượt J** (01/11): thêm 30 claim, gán thật trong 8,8 phút. Gộp C + G + H + I + J = **165 claim nhãn người** (58% bộ dữ liệu): Claude trùng 66%, κ = 0,29. Theo nhãn người, judge 7B tốt nhất (0,528); fine-tune (0,381) không hơn zero-shot (0,409).
+29d. **Lượt J** (01/11): thêm 30 claim, gán thật trong 8,8 phút. Gộp C + G + H + I + J = **165 claim nhãn người** (58% bộ dữ liệu): Claude trùng 65%, κ = 0,29. Theo nhãn người, judge 7B tốt nhất (0,528); fine-tune (0,381) không hơn zero-shot (0,409).
 
 ## Giai đoạn 6 · Sản phẩm cuối (29–31/10)
 
@@ -64,24 +64,24 @@ Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22
 33. **Demo kể chuyện** 4 tab (`story_template.html`): đề tài là gì, 4 ví dụ đã được người kiểm tra, tự khám phá 80 câu trả lời, kết quả bằng lời thường.
 34b. **Bài báo theo mẫu môn học** (02–03/11): `make_paper.py` dựng `report/ViKAG-Faith_BaiBao.docx` (12 trang, 4 hình, 11 bảng, 21 tài liệu tham khảo) theo cấu trúc file mẫu; slide 21 trang theo mẫu (`slides/build_paper_deck.js`). Tên tác giả và môn học để trống `[Họ và tên]`, `[Môn học]`.
 34. Đồng bộ lại toàn bộ: báo cáo, slide, demo, dataset, README.
+35. **Bản nộp cuối** (05/11): slide thiết kế lại, rút còn 14 trang; bài báo Times New Roman, A4, công thức Office (13 trang). Dọn dự án: bỏ báo cáo cũ và bộ slide cũ (còn trong commit `06f8888`), gom 3 file nộp vào `nop_bai/`; gộp hai demo thành một file `demo/vikag_faith_demo.html`.
 
 ## Kết quả chính
 
 | Câu hỏi | Kết quả |
 |---|---|
-| RQ1 | Judge 7B tốt nhất ở mức claim, RAGAS 7B tốt nhất ở mức câu trả lời; chỉ khớp mức trung bình. Máy tốt nhất bắt được khoảng 2/3 số ý sai |
+| RQ1 | Judge 7B tốt nhất ở mức claim, RAGAS 7B tốt nhất ở mức câu trả lời; chỉ khớp mức trung bình. Máy bắt nhiều nhất được 41/64 ý sai (judge 7B, nhãn silver) |
 | RQ2 | Dữ liệu tổng hợp giúp theo nhãn silver (0,404 → 0,521) nhưng không giữ được theo nhãn người (165 claim: 0,381 so với 0,409); thông tin graph và rule không giúp |
 | RQ3 | Sửa giảm claim mâu thuẫn (8,8% → 4,1%) nhưng câu trả lời ngắn và thiếu hơn |
-| Hai hệ | Naive RAG và GraphRAG ngang nhau (p = 0,19); câu 4–5 hop khó hơn rõ |
+| Hai hệ | Naive RAG và GraphRAG ngang nhau (p = 0,191); câu 4–5 hop khó hơn rõ |
 
 ## Sản phẩm
 
 | Loại | Vị trí |
 |---|---|
-| Báo cáo | `report/bao_cao_ViKAG-Faith.pdf`, `.docx` |
-| Slide | `slides/ViKAG-Faith_slides.pptx` |
-| Demo kể chuyện | https://claude.ai/artifact/Hav1SviyP3Q9rQcBY8dGHG |
-| Demo tra cứu | https://claude.ai/artifact/WpaWPBgdzeQgxe9jmwVeQ4 |
+| Bài báo Word | `nop_bai/ViKAG-Faith_BaiBao.docx` |
+| Slide | `nop_bai/ViKAG-Faith_BaiBao_slide.pptx`, `.pdf` (14 trang) |
+| Demo | `demo/vikag_faith_demo.html` (https://claude.ai/artifact/Hav1SviyP3Q9rQcBY8dGHG) |
 | Bộ dữ liệu | `dataset/ViFaithKAG/` |
 | Mã nguồn | `src/`, notebook Colab `colab/ViKAG_Faith_Colab.ipynb` |
 

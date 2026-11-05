@@ -7,8 +7,8 @@ y tế, xây trong đề tài ViKAG-Faith. Quy mô pilot: 40 câu hỏi ViHERMES
 ## Nguồn nhãn (đọc trước khi dùng)
 
 - `silver_label`: do **Claude (Anthropic) gán** cho mọi claim, kèm lý do `silver_note`. Đây **không phải nhãn người**.
-- `human_label`: chỉ có ở **169 claim** của các lượt kiểm định mù do 1 người gán, không thấy nhãn Claude, không biết hệ
-  (`human_pass`: `C` = 60 claim phân tầng, xem toàn đoạn văn; `G`, `H` = mỗi lượt 30 claim ngẫu nhiên, xem câu trích, một số bị bỏ qua).
+- `human_label`: có ở **165 claim** hợp lệ (thêm 4 claim tách hỏng cũng có nhãn nhưng không tính) của các lượt kiểm định mù do 1 người gán, không thấy nhãn Claude, không biết hệ
+  (`human_pass`: `C` = 60 claim phân tầng, xem toàn đoạn văn; `G`, `H`, `I`, `J` = mỗi lượt 30 claim ngẫu nhiên, xem câu trích, một số bị bỏ qua).
   Gộp các lượt, Claude trùng với người 65%, Cohen's κ = 0,29: Claude khắt khe hơn người.
 - `malformed = true`: claim bị tách hỏng, đã loại khỏi mọi phép đo.
 
@@ -30,4 +30,4 @@ y tế, xây trong đề tài ViKAG-Faith. Quy mô pilot: 40 câu hỏi ViHERMES
 - Câu trả lời do Qwen2.5-3B-Instruct sinh; nhãn silver do Claude gán; các điểm tự động do Qwen2.5 và mDeBERTa-v3-base-xnli tính.
 - Phần do đề tài tạo ra (claim, nhãn, điểm) phát hành theo MIT, giữ nguyên thông báo bản quyền của ViHERMES.
 
-Chi tiết phương pháp và kết quả: `report/bao_cao_ViKAG-Faith.pdf`.
+Chi tiết phương pháp và kết quả: `nop_bai/ViKAG-Faith_BaiBao.docx`.

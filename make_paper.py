@@ -1,7 +1,7 @@
-"""Build report/ViKAG-Faith_BaiBao.docx: the project written as a 12-14 page paper in the course template
+"""Build nop_bai/ViKAG-Faith_BaiBao.docx: the project written as a 12-14 page paper in the course template
 (title, author line, Tên đề tài / English, Abstract + key findings, 1. Introduction ... 8. Kết luận, Caveats, References).
 
-Layout follows the template file: US Letter, 1.524 cm margins, Segoe UI 11 pt, section headings with a rule above.
+Layout: A4, 2.5 cm margins, Times New Roman 13 pt, native Office equations, section headings with a rule above.
 Every number is read from outputs/analysis/results.json. Run after s7_analysis.py.
 """
 
@@ -18,7 +18,7 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 from docx import Document  # noqa: E402
 from docx.enum.table import WD_TABLE_ALIGNMENT  # noqa: E402
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT  # noqa: E402
-from docx.oxml import OxmlElement  # noqa: E402
+from docx.oxml import OxmlElement, parse_xml  # noqa: E402
 from docx.oxml.ns import qn  # noqa: E402
 from docx.shared import Cm, Pt, RGBColor  # noqa: E402
 
@@ -27,11 +27,12 @@ COURSE = "Xử lý ngôn ngữ tự nhiên nâng cao"     # điền tên môn h�
 
 ROOT = Path(__file__).resolve().parent
 R = json.load(open(ROOT / "outputs" / "analysis" / "results.json", encoding="utf-8"))
-OUT = ROOT / "report" / "ViKAG-Faith_BaiBao.docx"
+OUT = ROOT / "nop_bai" / "ViKAG-Faith_BaiBao.docx"
 FIG = ROOT / "report" / "paper_figs"
 FIG.mkdir(parents=True, exist_ok=True)
-FONT = "Segoe UI"
-TEAL, ORANGE, GREY, RED, LIGHT = "#0E5E6F", "#C4741B", "#6B7A8F", "#B4432F", "#9CC9C9"
+FONT = "Times New Roman"
+BODY_PT = 13
+TEAL, ORANGE, GREY, RED, LIGHT = "#1F3A5F", "#B0763A", "#6B7280", "#A23B3B", "#B8C4D3"
 plt.rcParams.update({"font.family": FONT, "font.size": 9, "axes.edgecolor": "#888888"})
 
 CL, CO, CMP, REV, SY, QA = R["claim_level"], R["answer_level_correlation"], R["comparisons"], R["revise"], R["systems"], R["qa"]
@@ -40,10 +41,13 @@ AC, AQ, ACG = AG["audit"], AG["audit_G"], AG["audit_CG"]
 SENS = ACG["sensitivity"]
 TH = R["thresholds"]
 N_CLAIMS_ALL = sum(1 for _ in open(ROOT / "outputs" / "claims.jsonl", encoding="utf-8"))
+_story = (ROOT / "demo" / "vikag_faith_demo.html").read_text(encoding="utf-8")  # catch counts come from make_demo.py
+_at = _story.index("const DATA = ") + 13
+CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
 
 def f(x, d=3):
-    return "–" if x is None else f"{x:.{d}f}".replace(".", ",")
+    return "–" if x is None else f"{x:.{d}f}".replace(".", ",").replace("-", "−")
 
 
 def pct(x, d=0):
@@ -162,7 +166,7 @@ def fig_hop():
     for h in hops:
         a, b = SY["by_hop"]["naive"][h]["GGF"], SY["by_hop"]["graph"][h]["GGF"]
         for v, col, up in ((a, GREY, a >= b), (b, TEAL, b > a)):
-            ax.text(int(h), v + (0.045 if up else -0.06), f(v, 2), ha="center", va="bottom" if up else "top", fontsize=7, color=col)
+            ax.text(int(h), v + (0.045 if up else -0.06), f(v), ha="center", va="bottom" if up else "top", fontsize=7, color=col)
     ax.set_xticks([1, 2, 3, 4, 5])
     ax.set_xlabel("Số hop của câu hỏi")
     ax.set_ylabel("GGF trung bình")
@@ -177,13 +181,13 @@ def fig_hop():
 # ---------------------------------------------------------------- docx helpers
 doc = Document()
 sec = doc.sections[0]
-sec.page_width, sec.page_height = Cm(21.59), Cm(27.94)
+sec.page_width, sec.page_height = Cm(21.0), Cm(29.7)
 for side in ("left_margin", "right_margin", "top_margin", "bottom_margin"):
-    setattr(sec, side, Cm(1.524))
-TEXT_W = Cm(21.59 - 2 * 1.524)
+    setattr(sec, side, Cm(2.5))
+TEXT_W = Cm(21.0 - 2 * 2.5)
 
 normal = doc.styles["Normal"]
-normal.font.name, normal.font.size = FONT, Pt(11)
+normal.font.name, normal.font.size = FONT, Pt(BODY_PT)
 normal.font.color.rgb = RGBColor(0, 0, 0)
 normal._element.rPr.rFonts.set(qn("w:eastAsia"), FONT)
 normal.paragraph_format.space_after = Pt(5)
@@ -202,15 +206,53 @@ for name, size, before, after in (("Heading 1", 24, 0, 10), ("Heading 2", 18, 18
     s.paragraph_format.space_before, s.paragraph_format.space_after = Pt(before), Pt(after)
 for name in ("List Bullet", "List Paragraph"):
     doc.styles[name].font.name = FONT
-    doc.styles[name].font.size = Pt(11)
+    doc.styles[name].font.size = Pt(BODY_PT)
 
-TOKEN = re.compile(r"(\*\*.+?\*\*|\*.+?\*|`.+?`)")
+TOKEN = re.compile(r"(\*\*.+?\*\*|\*.+?\*|`.+?`|P_sup|P_con|τ_s|τ_c|κ|ρ|∪|(?<![\w/.-])p(?= = )|(?<=tập claim )C(?=:)|(?<=Với claim )c(?= và)|(?<=cửa sổ )w(?=:))")
+INLINE_MATH = {"P_sup", "P_con", "τ_s", "τ_c", "κ", "ρ", "∪", "p", "C", "c", "w"}
+M_NS = ('xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" '
+        'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"')
+
+
+def mr(t, plain=False, size=None):
+    """One OMML run: italic maths by default, upright for names and words, always Cambria Math."""
+    sty = '<m:rPr><m:sty m:val="p"/></m:rPr>' if plain else ""
+    sz = f'<w:sz w:val="{int(size * 2)}"/>' if size else ""
+    return (f'<m:r>{sty}<w:rPr><w:rFonts w:ascii="Cambria Math" w:hAnsi="Cambria Math"/>{sz}</w:rPr>'
+            f'<m:t xml:space="preserve">{t}</m:t></m:r>')
+
+
+def msub(base, sub):
+    return f"<m:sSub><m:e>{base}</m:e><m:sub>{sub}</m:sub></m:sSub>"
+
+
+def mfrac(num, den):
+    return f"<m:f><m:num>{num}</m:num><m:den>{den}</m:den></m:f>"
+
+
+def mmax(under, arg):
+    return (f'<m:func><m:fName><m:limLow><m:e>{mr("max", True)}</m:e><m:lim>{under}</m:lim></m:limLow></m:fName>'
+            f"<m:e>{arg}</m:e></m:func>")
+
+
+def omath(body):
+    return parse_xml(f"<m:oMath {M_NS}>{body}</m:oMath>")
+
+
+def inline_math(tok, size=None):
+    if "_" in tok:
+        a, b = tok.split("_")
+        return msub(mr(a, size=size), mr(b, len(b) > 1, size))
+    return mr(tok, size=size)
 
 
 def rich(p, text, size=None, bold=False, italic=False):
     """Add runs to p; **bold**, *italic* and `code` spans are honoured."""
     for part in TOKEN.split(text):
         if not part:
+            continue
+        if part in INLINE_MATH:
+            p._p.append(omath(inline_math(part, size)))
             continue
         b, i, code = bold, italic, False
         if part.startswith("**"):
@@ -222,8 +264,8 @@ def rich(p, text, size=None, bold=False, italic=False):
         r = p.add_run(part)
         r.bold, r.italic = b or None, i or None
         if code:
-            r.font.name = "Consolas"
-            r.font.size = Pt((size or 11) - 1)
+            r.font.name = FONT
+            r.font.size = Pt(size or BODY_PT)
         elif size:
             r.font.size = Pt(size)
     return p
@@ -275,14 +317,24 @@ def numbered(items, start=1):
         p.paragraph_format.space_after = Pt(4)
 
 
-def equation(expr, n):
-    p = doc.add_paragraph()
-    p.paragraph_format.tab_stops.add_tab_stop(TEXT_W // 2, WD_TAB_ALIGNMENT.CENTER)
-    p.paragraph_format.tab_stops.add_tab_stop(TEXT_W, WD_TAB_ALIGNMENT.RIGHT)
-    p.add_run("\t")
-    rich(p, expr, italic=True)
-    p.add_run(f"\t({n})")
-    p.paragraph_format.space_after = Pt(4)
+def equation(body, n):
+    """Numbered display equation: native OMML centred in a borderless table, number flush right."""
+    t = doc.add_table(rows=1, cols=2)
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    t.autofit = False
+    for c, width in zip(t.rows[0].cells, (TEXT_W - Cm(1.2), Cm(1.2))):
+        c.width = width
+    left, right = t.rows[0].cells
+    p = left.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p._p.append(parse_xml(f"<m:oMathPara {M_NS}><m:oMath>{body}</m:oMath></m:oMathPara>"))
+    q = right.paragraphs[0]
+    q.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    q.add_run(f"({n})")
+    right.vertical_alignment = 1  # centre
+    after = doc.add_paragraph()
+    after.paragraph_format.space_after = Pt(0)
+    after.paragraph_format.line_spacing = Pt(4)
 
 
 FIGN, TABN = [0], [0]
@@ -290,7 +342,7 @@ FIGN, TABN = [0], [0]
 
 def figure(path, caption, width=Cm(16.5)):
     FIGN[0] += 1
-    doc.add_picture(str(path), width=width)
+    doc.add_picture(str(path), width=min(width, TEXT_W))
     doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
     doc.paragraphs[-1].paragraph_format.keep_with_next = True
     p = doc.add_paragraph()
@@ -310,7 +362,7 @@ def shade(cell, fill):
     tcpr.append(shd)
 
 
-def table(caption, header, rows, widths, align=None, size=9.5, bold_rows=()):
+def table(caption, header, rows, widths, align=None, size=10.5, bold_rows=()):
     """Caption above the table, header bold on a light fill; align: 'l'/'c'/'r' per column."""
     TABN[0] += 1
     p = doc.add_paragraph()
@@ -326,12 +378,15 @@ def table(caption, header, rows, widths, align=None, size=9.5, bold_rows=()):
     al = {"l": WD_ALIGN_PARAGRAPH.LEFT, "c": WD_ALIGN_PARAGRAPH.CENTER, "r": WD_ALIGN_PARAGRAPH.RIGHT}
     total = sum(widths)
     for ri, row in enumerate([header] + rows):
-        cells = t.add_row().cells
+        new_row = t.add_row()
+        new_row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
+        cells = new_row.cells
         for ci, val in enumerate(row):
             c = cells[ci]
             c.width = int(TEXT_W * widths[ci] / total)
             c.paragraphs[0].text = ""
             rich(c.paragraphs[0], str(val), size=size, bold=ri == 0 or (ri - 1) in bold_rows)
+            c.paragraphs[0].paragraph_format.keep_with_next = ri < len(rows)  # keep the table on one page
             c.paragraphs[0].alignment = al["c" if ri == 0 and ci > 0 else align[ci]]
             c.paragraphs[0].paragraph_format.space_after = Pt(1)
             if ri == 0:
@@ -389,7 +444,7 @@ rich(p, f"**Abstract.** Hệ hỏi đáp RAG/GraphRAG tiếng Việt thường �
 p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 bullets([
     f"**LLM-judge 7B là metric đáng tin nhất khi so với người.** Trên {ACG['n']} claim có nhãn người, judge Qwen2.5-7B đạt macro-F1 {f(hj7)}, "
-    f"cao hơn rõ các verifier NLI ({f(hzs)}–{f(hft)}); ở mức câu trả lời, RAGAS 7B tương quan cao nhất với GGF chuẩn (ρ = {f(CO['ragas_7b']['spearman'])}).",
+    f"cao hơn các verifier NLI ({f(hzs)}–{f(hft)}); ở mức câu trả lời, RAGAS 7B tương quan cao nhất với GGF chuẩn (ρ = {f(CO['ragas_7b']['spearman'])}).",
     f"**Fine-tune với dữ liệu tổng hợp chỉ tốt hơn theo nhãn silver.** Verifier fine-tune đạt {f(ft['macro_f1'])} so với {f(zs['macro_f1'])} của "
     f"zero-shot trên nhãn Claude, nhưng theo nhãn người hai bản ngang nhau ({f(hft)} và {f(hzs)}); thông tin đồ thị dạng văn bản làm verifier kém đi.",
     f"**Verify-then-revise đổi độ đầy đủ lấy độ trung thực.** Tỉ lệ claim mâu thuẫn giảm {pct(RA['CR_before'], 1)} → {pct(RA['CR_after'], 1)} nhưng "
@@ -399,6 +454,7 @@ bullets([
 ])
 
 # 1 ------------------------------------------------------------------
+para("**Keywords:** GraphRAG, faithfulness, claim-level verification, tiếng Việt, ViHERMES.", after=8)
 h2("1. Introduction")
 bullets([
     "*Bối cảnh:* GraphRAG và KAG [3]–[6] đưa đồ thị tri thức vào bước truy xuất để trả lời câu hỏi nhiều bước. ViHERMES [1] xây benchmark "
@@ -451,15 +507,18 @@ numbered([
     "phản ánh chất lượng metric chứ không phải chất lượng truy xuất.",
     "**Nhãn và metric câu trả lời:** mỗi claim mang một nhãn supported / contradicted / unsupported. Với câu trả lời có tập claim C:",
 ])
-equation("GGF = |{c ∈ C : c supported}| / |C|", 1)
-equation("CR = |{c : contradicted}| / |C|,   UR = |{c : unsupported}| / |C|", 2)
+CARD = mr("|C|")
+equation(mr("GGF", True) + mr(" = ", True) + mfrac(mr("|{c ∈ C : c") + mr(" supported", True) + mr("}|"), CARD), 1)
+equation(mr("CR", True) + mr(" = ", True) + mfrac(mr("|{c ∈ C : c") + mr(" contradicted", True) + mr("}|"), CARD) + mr(" ,     ", True)
+         + mr("UR", True) + mr(" = ", True) + mfrac(mr("|{c ∈ C : c") + mr(" unsupported", True) + mr("}|"), CARD), 2)
 numbered([
     "**Metric dựa trên LLM:** RAGAS faithfulness tái hiện theo hai prompt gốc của thư viện (tách statement, rồi phán xét NLI theo lô) và LLM-judge "
     "mức claim gán 3 nhãn cho các claim của đề tài; cả hai chạy với Qwen2.5-3B và 7B qua Ollama. Đầu ra không đọc được được loại khỏi phép đo, "
     "không mặc định thành một nhãn.",
     f"**Verifier NLI:** mDeBERTa-v3-base-xnli-multilingual [13], [14] chạy trên cửa sổ 900 ký tự (bước 700). Với claim c và các cửa sổ w:",
 ], start=5)
-equation("P_sup(c) = max_w P(entail | w, c),   P_con(c) = max_{w ∈ top-2 overlap} P(contra | w, c)", 3)
+equation(msub(mr("P"), mr("sup", True)) + mr("(c) = ") + mmax(mr("w"), mr("P(") + mr("entail", True) + mr(" | w, c)")), 3)
+equation(msub(mr("P"), mr("con", True)) + mr("(c) = ") + mmax(mr("w ∈ ") + mr("top-2 overlap", True), mr("P(") + mr("contra", True) + mr(" | w, c)")), 4)
 para(f"Contradiction chỉ xét hai cửa sổ trùng từ nhiều nhất với claim, vì NLI hay gán “contradiction” cho văn bản không liên quan. Nhãn: supported "
      f"nếu P_sup ≥ τ_s, ngược lại contradicted nếu P_con ≥ τ_c, còn lại unsupported; (τ_s, τ_c) chọn trên tập dev (V1 zero-shot: {f(TH['zs_v1'][0], 2)}, "
      f"{f(TH['zs_v1'][1], 2)}). Hai biến thể đầu vào: **V1** chỉ đoạn văn; **V2** thêm tên văn bản, số hiệu và quan hệ lấy từ đồ thị vào đầu mỗi cửa sổ.")
@@ -491,7 +550,7 @@ table("Thống kê dữ liệu", ["Thành phần", "Giá trị"], [
     ["Phân bố nhãn silver (claim dùng được)", f"supported {gd['supported']} · contradicted {gd['contradicted']} · unsupported {gd['unsupported']}"],
     ["Tập dev / test (theo câu hỏi, 20% dev)", f"{R['claims_dev']} / {R['claims_test']} claim"],
     ["Dữ liệu huấn luyện verifier", "12.000 cặp ViNLI + 3.328 cặp tổng hợp (ngoài mẫu đánh giá)"],
-], [5, 7], align=["l", "l"])
+], [4, 8], align=["l", "l"])
 bullets([
     "*Dữ liệu huấn luyện verifier:* cặp tổng hợp lấy từ các đoạn không thuộc mẫu đánh giá, nên không rò rỉ sang tập test; dev gồm 1.000 cặp ViNLI "
     "và 10% cặp tổng hợp. Bảng 2 cho thấy fine-tune với dữ liệu tổng hợp tăng mạnh độ chính xác trên cặp tổng hợp, còn bản chỉ dùng ViNLI hầu như "
@@ -508,7 +567,7 @@ bullets([
     f"*Nhãn người (kiểm định mù):* một người gán trên trang HTML ngoại tuyến, không thấy nhãn hay lý do của Claude và không biết câu trả lời "
     f"thuộc hệ nào (mã claim được ẩn danh). Lượt C: 60 claim chọn phân tầng theo nhãn Claude (30/15/15), xem toàn bộ đoạn văn. Lượt {quick_txt}: "
     f"mỗi lượt 30 claim ngẫu nhiên không trùng lượt trước, mỗi màn hình một claim kèm 4 câu bằng chứng trùng từ nhiều nhất (có thể mở toàn đoạn). "
-    f"Lượt duyệt có gợi ý (284 claim xác nhận trong ~10 phút, 0 thay đổi) và hai lượt có file xuất không tạo qua trang gán nhãn bị loại (Bảng 2).",
+    f"Lượt duyệt có gợi ý (284 claim xác nhận trong ~10 phút, 0 thay đổi) và hai lượt có file xuất không tạo qua trang gán nhãn bị loại (Bảng 3).",
 ])
 table("Các lượt gán nhãn người", ["Lượt", "Cách chọn / hiển thị", "Claim dùng được", "Trùng Claude", "κ"], [
     ["C", "Phân tầng 30/15/15 · toàn đoạn văn", AC["n"], pct(AC["acc"]), f(AC["kappa"], 2)],
@@ -517,13 +576,13 @@ table("Các lượt gán nhãn người", ["Lượt", "Cách chọn / hiển th�
     ["Bị loại", "Duyệt có gợi ý (A); file không tạo qua trang (D, E)", "–", "–", "–"],
 ], [2, 7, 3, 3, 2], bold_rows=(2,))
 bullets([
-    "*Ví dụ claim:* Bảng 3 trích ba claim có nhãn người trùng nhãn Claude, đại diện ba loại lỗi thường gặp.",
+    "*Ví dụ claim:* Bảng 4 trích ba claim có nhãn người trùng nhãn Claude, đại diện ba loại lỗi thường gặp.",
 ])
 table("Ví dụ claim và bằng chứng", ["Claim", "Bằng chứng (trích)", "Nhãn"], [
     ["“Tổng mức phạt của nhóm ba phòng khám là 8 triệu đồng.”", "Medic – Chi Lăng: 4.000.000 đ; Thu Cúc: 8.000.000 đ; phòng khám YHCT: 30.000.000 đ", "contradicted"],
     ["“Cục Dân số không liên quan đến thanh tra, xử lý vi phạm pháp luật.”", "Cục có nhiệm vụ “kiểm tra, thanh tra chuyên ngành … xử lý vi phạm pháp luật trong lĩnh vực dân số”", "contradicted"],
     ["“Thông tư 30/2017/TT-BYT có hiệu lực từ ngày 01/01/2018.”", "Thông tư mới có hiệu lực từ 28/10/2024; TT 30/2017 hết hiệu lực từ ngày đó (không nêu ngày 01/01/2018)", "unsupported"],
-], [6, 7, 2.4], align=["l", "l", "c"], size=9)
+], [6, 7, 2.4], align=["l", "l", "c"], size=10)
 
 # 5 ------------------------------------------------------------------
 h2("5. Experimental Setup")
@@ -531,7 +590,7 @@ bullets([
     "*Cấu hình so sánh:* LLM-judge 3B/7B; RAGAS 3B/7B; NLI zero-shot V1/V2; NLI fine-tune V1/V2; NLI fine-tune chỉ ViNLI (ablation dữ liệu tổng hợp); "
     "mỗi biến thể NLI có và không có rule (ablation rule); SelfCheckGPT-NLI; rule đơn lẻ; mốc “luôn đoán supported”.",
     "*Metrics:* mức claim: macro-F1 3 nhãn, F1 từng nhãn, AUROC phát hiện claim không supported (NLI dùng 1 − P_sup); mức câu trả lời: Spearman và "
-    "Kendall giữa điểm tự động và GGF chuẩn trên 63 câu trả lời test; revise: thay đổi GGF, CR, UR, token F1, EM và token recall so với đáp án ViHERMES.",
+    "Kendall giữa điểm tự động và GGF chuẩn trên 61–63 câu trả lời test (tùy số câu có đầu ra hợp lệ); revise: thay đổi GGF, CR, UR, token F1, EM và token recall so với đáp án ViHERMES.",
     "*Thống kê:* KTC 95% bootstrap 1.000 lần; bootstrap ghép cặp cho hiệu số macro-F1; Wilcoxon cặp cho so sánh hai hệ và trước/sau khi sửa; "
     "Cohen's κ cho độ đồng thuận Claude–người.",
     "*Phần cứng:* Google Colab T4 16GB cho mọi bước dùng mô hình (Ollama, Q4_K_M; PyTorch float32); máy cá nhân chỉ cho phân tích và báo cáo, "
@@ -556,8 +615,8 @@ figure(F2, "Macro-F1 mức claim trên tập test. Xanh: LLM-judge; cam: verifie
 
 h3("6.1 RQ1 – Các metric có sẵn")
 para(f"Trong nhóm không cần huấn luyện, LLM-judge 7B tốt nhất ở mức claim (macro-F1 {f(j7['macro_f1'])}, AUROC {f(j7['auroc_not_supported'])}), "
-     f"hơn judge 3B ({f(CL['judge_3b']['macro_f1'])}) và NLI zero-shot ({f(zs['macro_f1'])}). Mọi phương pháp đều yếu ở hai nhãn lỗi: F1 của judge 7B cho "
-     f"contradicted và unsupported chỉ {f(j7['f1_per_class']['contradicted'], 2)} và {f(j7['f1_per_class']['unsupported'], 2)}. SelfCheckGPT-NLI đạt "
+     f"hơn judge 3B ({f(CL['judge_3b']['macro_f1'])}) và NLI zero-shot ({f(zs['macro_f1'])}). Judge 7B bắt được {CATCH['j7']['caught']}/{CATCH['j7']['wrong']} claim sai và báo nhầm {CATCH['j7']['false_alarm']}/{CATCH['j7']['right']} claim đúng. Mọi phương pháp đều yếu ở hai nhãn lỗi: F1 của judge 7B cho "
+     f"contradicted và unsupported chỉ {f(j7['f1_per_class']['contradicted'])} và {f(j7['f1_per_class']['unsupported'])}. SelfCheckGPT-NLI đạt "
      f"{f(CL['nli_selfcheck']['macro_f1'])}, ngang NLI zero-shot dù không nhìn bằng chứng, nhưng độ chính xác thấp ({f(CL['nli_selfcheck']['acc'])}) vì nó coi "
      f"claim đúng là đáng ngờ khi các câu trả lời lấy mẫu diễn đạt khác nhau. Ở mức câu trả lời, RAGAS 7B tương quan cao nhất với GGF chuẩn "
      f"(ρ = {f(CO['ragas_7b']['spearman'])}), trong khi RAGAS 3B chỉ đạt {f(CO['ragas_3b']['spearman'])}: kích thước judge quyết định nhiều hơn công thức metric.")
@@ -566,7 +625,7 @@ table("F1 theo từng nhãn trên tập test (nhãn silver)", ["Phương pháp",
       [[NAMES[k], f(CL[k]["f1_per_class"]["supported"]), f(CL[k]["f1_per_class"]["contradicted"]), f(CL[k]["f1_per_class"]["unsupported"]), f(CL[k]["acc"])]
        for k in pc_keys], [6, 2.4, 2.4, 2.4, 2.2])
 para("Accuracy cao không đồng nghĩa với metric tốt: “luôn đoán supported” đạt accuracy "
-     f"{f(CL['majority_supported']['acc'])} vì {pct(gd['supported'] / sum(gd.values()))} claim là supported, nên bài dùng macro-F1 làm chỉ số chính.")
+     f"{f(CL['majority_supported']['acc'])} vì {pct(CL['majority_supported']['acc'])} claim test là supported, nên bài dùng macro-F1 làm chỉ số chính.")
 
 h3("6.2 RQ2 – Đồ thị, rule và fine-tune")
 para(f"**Đồ thị:** thêm thông tin đồ thị vào đầu cửa sổ (V2) làm macro-F1 của NLI zero-shot giảm {f(zs['macro_f1'])} → {f(CL['nli_zs_v2']['macro_f1'])}. "
@@ -583,8 +642,8 @@ table("So sánh ghép cặp macro-F1 trên tập test (bootstrap 1.000 lần, nh
       [[cmp_label[k], f(v["diff"]), f"{f(v['ci95'][0], 2)}; {f(v['ci95'][1], 2)}", f(v["p_le_0"])] for k, v in CMP.items()], [7, 2.2, 3, 2.2])
 para(f"**Kiểm định với nhãn người** (Hình 3) đảo kết luận về fine-tune: trên {ACG['n']} claim, fine-tune V1 đạt {f(hft)}, ngang zero-shot ({f(hzs)}) và thấp "
      f"hơn rõ judge 7B ({f(hj7)}); tương quan thứ hạng các metric giữa hai bộ nhãn chỉ ρ = {f(ACG['rank_spearman'], 2)}. Ngưỡng của verifier được chọn "
-     f"theo nhãn Claude, nên mô hình fine-tune có thể đã học cách gán nhãn khắt khe của Claude: ma trận nhầm lẫn cho thấy người gán supported cho phần "
-     f"lớn claim mà Claude gán contradicted hoặc unsupported.")
+     f"theo nhãn Claude, nên mô hình fine-tune có thể đã học cách gán nhãn khắt khe của Claude: ma trận nhầm lẫn cho thấy người gán supported cho gần "
+     f"một nửa số claim mà Claude gán contradicted hoặc unsupported.")
 figure(F3, f"Macro-F1 của các metric trên {ACG['n']} claim có nhãn người, chấm theo nhãn người và theo nhãn Claude.", width=Cm(15.5))
 cm = ACG["confusion_claude_rows_human_cols"]
 LB = ["supported", "contradicted", "unsupported"]
@@ -613,7 +672,7 @@ table("Ví dụ verify-then-revise (câu hỏi 3 hop, Naive RAG; trích nguyên 
     "lĩnh vực y tế được ban hành vào tháng 12/2021. Thời điểm các bệnh viện tự chủ được tự quyết định mua sắm thuốc theo Luật số 90/2025/QH15 "
     "là từ ngày 01/7/2025.",
     "Không tìm thấy thông tin về thời điểm dự kiến trình Quốc hội Luật sửa đổi Luật Dược. Thời điểm ban hành Nghị định 124/2021/NĐ-CP và thời "
-    "điểm các bệnh viện tự chủ được tự quyết định mua sắm thuốc theo Luật số 90/2025/QH15 *được nêu rõ trong ngữ cảnh*."]], [1, 1], align=["l", "l"], size=9)
+    "điểm các bệnh viện tự chủ được tự quyết định mua sắm thuốc theo Luật số 90/2025/QH15 *được nêu rõ trong ngữ cảnh*."]], [1, 1], align=["l", "l"], size=10)
 para("Judge 7B gắn cờ hai claim đầu (văn bản ghi Luật Dược trình Quốc hội tháng 10/2022). Câu trả lời mới đạt GGF = 1 theo judge nhưng đã bỏ cả ba "
      "mốc thời gian, kể cả mốc 01/7/2025 mà judge và Claude đều gán supported, và thay bằng câu chung chung “được nêu rõ trong ngữ cảnh”. Đây là dạng "
      "điển hình khiến GGF tăng trong khi token recall giảm.")
@@ -625,13 +684,13 @@ table("Chất lượng hỏi đáp và độ trung thực của hai hệ", ["H�
 ], [3, 3, 3, 2, 2, 2])
 para(f"Hai hệ không khác nhau có ý nghĩa (Wilcoxon cặp trên GGF, p = {f(SY['wilcoxon_GGF_p'])}). Đồ thị phát hành của ViHERMES khá thô (mỗi đoạn chủ yếu gắn "
      f"với văn bản gốc, ít cạnh sửa đổi), nên lan truyền thêm được ít đoạn vàng. Độ trung thực giảm rõ ở câu 4–5 hop (Hình 4).")
-figure(F4, "GGF trung bình theo số hop (8 câu hỏi mỗi mức, mỗi hệ; nhãn silver).", width=Cm(13))
+figure(F4, "GGF trung bình theo số hop (8 câu hỏi mỗi mức; GraphRAG mức 5 hop có 7 câu trả lời có claim; nhãn silver).", width=Cm(13))
 
 h3("6.5 Phân tích lỗi")
 bullets([
     "**Sai mốc thời gian:** “Luật sửa đổi Luật Dược trình Quốc hội tháng 10/2025” trong khi tờ trình ghi tháng 10/2022; mốc 10/2025 thuộc Luật An toàn thực phẩm.",
     "**Gán sai chủ thể:** nhiệm vụ truyền thông cải cách hành chính của Văn phòng Bộ bị gán cho Viện Chiến lược và Chính sách y tế. Rule số/ngày không bắt được loại lỗi này.",
-    "**Sai phép tổng hợp:** cộng tiền phạt của nhiều quyết định (Bảng 3). Cả hai LLM-judge bỏ sót vì phải tự cộng số từ nhiều văn bản; NLI lại bắt được.",
+    "**Sai phép tổng hợp:** cộng tiền phạt của nhiều quyết định (Bảng 4). Cả hai LLM-judge bỏ sót vì phải tự cộng số từ nhiều văn bản; NLI lại bắt được.",
     "**Bịa thêm danh sách:** liệt kê Instagram, TikTok, YouTube trong khi giấy xác nhận quảng cáo chỉ ghi facebook, zalo; NLI zero-shot bị lừa vì một văn bản khác trong ngữ cảnh có chữ “instagram”.",
     f"**Từ chối sai và lỗi tách claim:** “không có thông tin” dù bằng chứng ghi rõ ngày hiệu lực; {R['claims_bad']} claim bị tách hỏng (đảo nghĩa, chèn tên không có trong câu trả lời).",
 ])
@@ -696,8 +755,8 @@ REFS = [
 for i, ref in enumerate(REFS, 1):
     p = doc.add_paragraph()
     r = p.add_run(f"[{i}]\t")
-    r.font.size = Pt(9.5)
-    rich(p, ref, size=9.5)
+    r.font.size = Pt(10)
+    rich(p, ref, size=10)
     p.paragraph_format.left_indent = Cm(0.9)
     p.paragraph_format.first_line_indent = Cm(-0.9)
     p.paragraph_format.tab_stops.add_tab_stop(Cm(0.9))

@@ -1,5 +1,5 @@
-"""Build demo/vikag_faith_demo.html: an offline explorer of the 80 sampled answers, their claims and
-every metric's label, with the evidence passages. All data comes from outputs/ (same as the report)."""
+"""Refresh demo/vikag_faith_demo.html, the single demo page: the data line of the page is rewritten in place
+from outputs/ (same numbers as the paper). There is no separate template."""
 
 import json
 from pathlib import Path
@@ -93,8 +93,9 @@ summary["comparisons"] = res["comparisons"]
 summary["sensitivity"] = res["agreement"].get("audit_CG", res["agreement"]["audit"])["sensitivity"]
 
 data = {"items": sorted(items.values(), key=lambda x: (x["hop"], x["q"])), "passages": passages, "summary": summary}
-for tpl_name, out_name in (("template.html", "vikag_faith_demo.html"), ("story_template.html", "vikag_faith_story.html")):
-    tpl = (ROOT / "demo" / tpl_name).read_text(encoding="utf-8")
-    out = ROOT / "demo" / out_name
-    out.write_text(tpl.replace("/*__DATA__*/null", json.dumps(data, ensure_ascii=False)), encoding="utf-8")
-    print(out, f"{out.stat().st_size / 1e6:.2f} MB", len(items), "questions")
+page = ROOT / "demo" / "vikag_faith_demo.html"
+lines = page.read_text(encoding="utf-8").split("\n")
+at = next(i for i, line in enumerate(lines) if line.startswith("const DATA = "))
+lines[at] = "const DATA = " + json.dumps(data, ensure_ascii=False) + ";"
+page.write_text("\n".join(lines), encoding="utf-8")
+print(page, f"{page.stat().st_size / 1e6:.2f} MB", len(items), "questions")

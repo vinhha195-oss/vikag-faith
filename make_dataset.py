@@ -34,9 +34,11 @@ judges = {}
 for j in R("judges.jsonl"):
     judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
 
+licence = (DST / "LICENSE_ViHERMES").read_bytes() if (DST / "LICENSE_ViHERMES").exists() else (ROOT / "external" / "ViHERMES" / "LICENSE").read_bytes()
 if DST.exists():
     shutil.rmtree(DST)
 DST.mkdir(parents=True)
+(DST / "LICENSE_ViHERMES").write_bytes(licence)
 
 claims = []
 for c in R("claims.jsonl"):
@@ -73,7 +75,8 @@ W("answers.jsonl", rows)
 W("passages.jsonl", sorted(passages.values(), key=lambda p: p["id"]))
 json.dump({"thresholds_tuned_on_dev_silver": res["thresholds"]}, open(DST / "thresholds.json", "w", encoding="utf-8"), indent=1)
 
-n_h = sum(c["human_label"] is not None for c in claims)
+n_h = sum(c["human_label"] is not None and not c["malformed"] for c in claims)
+n_h_bad = sum(c["human_label"] is not None and c["malformed"] for c in claims)
 cg = res["agreement"].get("audit_CG", res["agreement"]["audit"])
 pct_h, kappa_h = f"{100 * cg['acc']:.0f}%", f"{cg['kappa']:.2f}".replace(".", ",")
 (DST / "README.md").write_text(f"""# ViFaithKAG (pilot)
@@ -85,8 +88,8 @@ y tế, xây trong đề tài ViKAG-Faith. Quy mô pilot: 40 câu hỏi ViHERMES
 ## Nguồn nhãn (đọc trước khi dùng)
 
 - `silver_label`: do **Claude (Anthropic) gán** cho mọi claim, kèm lý do `silver_note`. Đây **không phải nhãn người**.
-- `human_label`: chỉ có ở **{n_h} claim** của các lượt kiểm định mù do 1 người gán, không thấy nhãn Claude, không biết hệ
-  (`human_pass`: `C` = 60 claim phân tầng, xem toàn đoạn văn; `G`, `H` = mỗi lượt 30 claim ngẫu nhiên, xem câu trích, một số bị bỏ qua).
+- `human_label`: có ở **{n_h} claim** hợp lệ (thêm {n_h_bad} claim tách hỏng cũng có nhãn nhưng không tính) của các lượt kiểm định mù do 1 người gán, không thấy nhãn Claude, không biết hệ
+  (`human_pass`: `C` = 60 claim phân tầng, xem toàn đoạn văn; `G`, `H`, `I`, `J` = mỗi lượt 30 claim ngẫu nhiên, xem câu trích, một số bị bỏ qua).
   Gộp các lượt, Claude trùng với người {pct_h}, Cohen's κ = {kappa_h}: Claude khắt khe hơn người.
 - `malformed = true`: claim bị tách hỏng, đã loại khỏi mọi phép đo.
 
@@ -108,6 +111,6 @@ y tế, xây trong đề tài ViKAG-Faith. Quy mô pilot: 40 câu hỏi ViHERMES
 - Câu trả lời do Qwen2.5-3B-Instruct sinh; nhãn silver do Claude gán; các điểm tự động do Qwen2.5 và mDeBERTa-v3-base-xnli tính.
 - Phần do đề tài tạo ra (claim, nhãn, điểm) phát hành theo MIT, giữ nguyên thông báo bản quyền của ViHERMES.
 
-Chi tiết phương pháp và kết quả: `report/bao_cao_ViKAG-Faith.pdf`.
+Chi tiết phương pháp và kết quả: `nop_bai/ViKAG-Faith_BaiBao.docx`.
 """, encoding="utf-8")
 print(DST, len(claims), "claims", len(rows), "answers", len(passages), "passages", n_h, "human labels")
