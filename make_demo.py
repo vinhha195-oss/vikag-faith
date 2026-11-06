@@ -92,6 +92,10 @@ summary["by_hop"] = res["systems"]["by_hop"]
 summary["comparisons"] = res["comparisons"]
 summary["sensitivity"] = res["agreement"].get("audit_CG", res["agreement"]["audit"])["sensitivity"]
 
+dot2 = json.load(open(OUT / "analysis" / "results_dot2.json", encoding="utf-8"))
+summary["dot2"] = {"methods": {k: dot2["methods"][k] for k in ("judge_14b", "nli_ft20_v1", "nli_ft20full_v1", "nli_xzs_v1", "nli_xft_v1", "qwen3b_span")},
+                   "ragas14": dot2["corr_ragas_14b"]["spearman"], "ragas14_n": dot2["corr_ragas_14b"]["n"]}
+
 data = {"items": sorted(items.values(), key=lambda x: (x["hop"], x["q"])), "passages": passages, "summary": summary}
 page = ROOT / "demo" / "vikag_faith_demo.html"
 lines = page.read_text(encoding="utf-8").split("\n")

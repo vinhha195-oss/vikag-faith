@@ -11,7 +11,7 @@ https://claude.ai/artifact/Ek3Puhkwvimrrbj97ojenf
 
 | Câu hỏi | Kết quả |
 |---|---|
-| RQ1, mức claim | Trong các metric có sẵn, LLM-judge Qwen2.5-7B tốt nhất: macro-F1 0,476 (silver), 0,528 (nhãn người); SelfCheckGPT 0,409; judge 7B bắt được 41/64 claim sai. Đợt 2 judge 14B đạt 0,541 (silver), 0,439 (nhãn người), bắt được 45/65; chênh với 7B không có ý nghĩa ở cả hai bộ nhãn |
+| RQ1, mức claim | Đợt 1, trong các metric có sẵn, LLM-judge Qwen2.5-7B tốt nhất: macro-F1 0,476 (silver), 0,528 (nhãn người); SelfCheckGPT 0,409; judge 7B bắt được 41/64 claim sai. Đợt 2 judge 14B đạt 0,541 (silver), 0,439 (nhãn người), bắt được 45/65; chênh với 7B không có ý nghĩa ở cả hai bộ nhãn |
 | RQ1, mức câu trả lời | RAGAS faithfulness tương quan cao nhất với GGF chuẩn: Spearman 0,484 với 7B, 0,644 với 14B (61 câu trả lời, chưa kiểm định chênh lệch) |
 | RQ2 | Verifier fine-tune (ViNLI + cặp tổng hợp) 0,521 > zero-shot 0,404 (silver, có ý nghĩa); ablation chỉ ViNLI 0,405; nhưng trên mẫu người fine-tune chỉ 0,381 < judge-7B 0,528. Graph trong NLI và rule số/ngày không giúp; triple nối theo claim (V3, zero-shot) đạt 0,423 theo silver, 0,328 theo nhãn người. Đợt 2 fine-tune với khoảng 20.000 cặp tổng hợp không tốt hơn: V1 0,441, V3 0,501 theo silver, 0,371 và 0,404 theo nhãn người; AUROC 0,753 so với 0,738 của đợt 1, không khác có ý nghĩa (premise 450 ký tự, 200 token do GPU 4 GB). Huấn luyện lại với 900 ký tự, 320 token: V1 0,572 theo silver, cao nhất, không hơn đợt 1 có ý nghĩa, 0,356 theo nhãn người. XLM-R zero-shot V1 đạt 0,532 theo silver, 0,354 theo nhãn người; XLM-R fine-tune V1 đạt 0,500 và 0,463 (hơn zero-shot theo nhãn người, KTC 0,02–0,20, nhưng báo nhầm 64/153), V3 có AUROC 0,821; Qwen 3B trả span đạt 0,361 và 0,399, 130/263 nhãn kèm span chép đúng từ bằng chứng |
 | RQ3 | Verify-then-revise: GGF theo judge 7B 0,755 → 0,830 (p = 0,014) nhưng token F1 0,595 → 0,563; câu trả lời chủ yếu ngắn đi. Vòng 1 cho phần lớn mức tăng (GGF 0,801); vòng 2 không có ý nghĩa thống kê (p = 0,312). EM = 0 ở mọi cấu hình (đáp án ViHERMES dài ~115 từ) |
@@ -49,7 +49,7 @@ Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (c
 | `make_colab.py` | Sinh `colab/ViKAG_Faith_Colab.ipynb` (bước 1–5, 8, 9 và ablation verifier trên Colab T4, kết quả lưu Drive) |
 | `make_paper.py` | Bài báo (A4, lề 2,5 cm, Times New Roman 12, công thức Office): `nop_bai/ViKAG-Faith_BaiBao.docx` |
 | `slides/build_paper_deck.js` | Slide thuyết trình cho bài báo, thiết kế riêng (14 trang): `nop_bai/ViKAG-Faith_BaiBao_slide.pptx` (PDF xuất từ PowerPoint) |
-| `src/s3b_triples.py`, `src/s10_dot2.py`, `make_colab_dot2.py` | Đợt 2: triple + mutual index, phân tích riêng (`results_dot2.json`), notebook Colab cho judge 14B, Qwen span và XLM-R |
+| `src/s3b_triples.py`, `src/s10_dot2.py`, `make_colab_dot2.py` | Đợt 2: triple + mutual index, phân tích riêng (`results_dot2.json`), notebook Colab cho judge 14B, Qwen span, XLM-R và fine-tune 900 ký tự |
 | `make_demo.py` | Cập nhật số liệu thẳng vào `demo/vikag_faith_demo.html` (không có file khuôn riêng) |
 | `make_dataset.py` | Đóng gói `dataset/ViFaithKAG` (claims/answers/passages JSONL + README, ghi nguồn ViHERMES MIT) |
 | `prelabel/` | Nhãn Claude theo từng nhóm (nguồn của `outputs/prelabels.json`) |

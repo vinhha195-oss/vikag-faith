@@ -452,7 +452,7 @@ rich(p, f"**Abstract.** Hệ hỏi đáp RAG/GraphRAG tiếng Việt thường �
 p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
 bullets([
     f"**LLM-judge 7B là metric đáng tin nhất khi so với người.** Trên {ACG['n']} claim có nhãn người, judge Qwen2.5-7B đạt macro-F1 {f(hj7)}, "
-    f"cao hơn các verifier NLI ({f(hzs)}–{f(hft)}); ở mức câu trả lời, RAGAS tương quan cao nhất với GGF chuẩn (ρ = {f(CO['ragas_7b']['spearman'])} với 7B, {f(R14['spearman'])} với 14B).",
+    f"cao hơn mọi verifier NLI (cao nhất {f(XF1['macro_f1_human'])}); ở mức câu trả lời, RAGAS tương quan cao nhất với GGF chuẩn (ρ = {f(CO['ragas_7b']['spearman'])} với 7B, {f(R14['spearman'])} với 14B).",
     f"**Fine-tune với dữ liệu tổng hợp chỉ tốt hơn theo nhãn silver.** Verifier fine-tune đạt {f(ft['macro_f1'])} so với {f(zs['macro_f1'])} của "
     f"zero-shot trên nhãn Claude, nhưng theo nhãn người hai bản ngang nhau ({f(hft)} và {f(hzs)}); thông tin đồ thị dạng văn bản làm verifier kém đi.",
     f"**Verify-then-revise đổi độ đầy đủ lấy độ trung thực.** Tỉ lệ claim mâu thuẫn giảm {pct(RA['CR_before'], 1)} → {pct(RA['CR_after'], 1)} nhưng "
@@ -477,7 +477,7 @@ bullets([
     "*RQ2:* verifier dùng thông tin đồ thị, rule số/ngày và fine-tune bằng dữ liệu tổng hợp trong miền có phát hiện claim sai tốt hơn verifier NLI chung không?",
     "*RQ3:* vòng verify-then-revise giảm tỉ lệ claim không được hỗ trợ bao nhiêu, và có làm giảm chất lượng trả lời không?",
     f"*Contributions:* (C1) quy trình đánh giá mức claim tái lập được trên ViHERMES (7 bước, chạy trên Colab T4); (C2) bộ dữ liệu ViFaithKAG bản "
-    f"pilot: {R['claims_total']} claim có nhãn silver, {ACG['n']} claim có nhãn người, kèm điểm của mọi metric; (C3) meta-evaluation 12 biến thể metric "
+    f"pilot: {R['claims_total']} claim có nhãn silver, {ACG['n']} claim có nhãn người, kèm điểm của mọi metric; (C3) meta-evaluation 24 biến thể metric "
     f"kèm ablation đồ thị, rule, dữ liệu tổng hợp và số vòng sửa; (C4) phân tích độ tin cậy của nhãn LLM so với người, cho thấy thứ hạng metric "
     f"phụ thuộc vào nguồn nhãn.",
 ])
@@ -598,13 +598,13 @@ table("Ví dụ claim và bằng chứng", ["Claim", "Bằng chứng (trích)", 
 # 5 ------------------------------------------------------------------
 h2("5. Experimental Setup")
 bullets([
-    "*Cấu hình so sánh:* LLM-judge 3B/7B; RAGAS 3B/7B; NLI zero-shot V1/V2; NLI fine-tune V1/V2; NLI fine-tune chỉ ViNLI (ablation dữ liệu tổng hợp); "
+    "*Cấu hình so sánh (đợt 1, 12 biến thể; đợt 2 thêm 12, xem Bảng 9):* LLM-judge 3B/7B; RAGAS 3B/7B; NLI zero-shot V1/V2; NLI fine-tune V1/V2; NLI fine-tune chỉ ViNLI (ablation dữ liệu tổng hợp); "
     "mỗi biến thể NLI có và không có rule (ablation rule); SelfCheckGPT-NLI; rule đơn lẻ; mốc “luôn đoán supported”.",
     "*Metrics:* mức claim: macro-F1 3 nhãn, F1 từng nhãn, AUROC phát hiện claim không supported (NLI dùng 1 − P_sup); mức câu trả lời: Spearman và "
     "Kendall giữa điểm tự động và GGF chuẩn trên 61–63 câu trả lời test (tùy số câu có đầu ra hợp lệ); revise: thay đổi GGF, CR, UR, token F1, EM và token recall so với đáp án ViHERMES.",
     "*Thống kê:* KTC 95% bootstrap 1.000 lần; bootstrap ghép cặp cho hiệu số macro-F1; Wilcoxon cặp cho so sánh hai hệ và trước/sau khi sửa; "
     "Cohen's κ cho độ đồng thuận Claude–người.",
-    "*Phần cứng:* Google Colab T4 16GB cho mọi bước dùng mô hình (Ollama, Q4_K_M; PyTorch float32); máy cá nhân chỉ cho phân tích và báo cáo, "
+    "*Phần cứng:* Google Colab T4 16GB cho các bước dùng mô hình (Ollama, Q4_K_M; PyTorch float32), trừ zero-shot V3 (CPU) và fine-tune premise ngắn (GTX 1650) của đợt 2; máy cá nhân dùng cho phân tích và báo cáo, "
     "vì GPU cá nhân (4GB) treo máy khi chạy mô hình.",
 ])
 
@@ -625,7 +625,7 @@ table(f"Kết quả tổng hợp. Macro-F1, KTC và AUROC trên {R['claims_test'
 figure(F2, "Macro-F1 mức claim trên tập test. Xanh: LLM-judge; cam: verifier NLI; xám: SelfCheckGPT, rule và mốc tham chiếu.", width=Cm(15.5))
 
 h3("6.1 RQ1 – Các metric có sẵn")
-para(f"Trong nhóm không cần huấn luyện, LLM-judge 7B tốt nhất ở mức claim (macro-F1 {f(j7['macro_f1'])}, AUROC {f(j7['auroc_not_supported'])}), "
+para(f"Ở đợt 1, trong nhóm không cần huấn luyện, LLM-judge 7B tốt nhất ở mức claim (macro-F1 {f(j7['macro_f1'])}, AUROC {f(j7['auroc_not_supported'])}), "
      f"hơn judge 3B ({f(CL['judge_3b']['macro_f1'])}) và NLI zero-shot ({f(zs['macro_f1'])}). Judge 7B bắt được {CATCH['j7']['caught']}/{CATCH['j7']['wrong']} claim sai và báo nhầm {CATCH['j7']['false_alarm']}/{CATCH['j7']['right']} claim đúng. Mọi phương pháp đều yếu ở hai nhãn lỗi: F1 của judge 7B cho "
      f"contradicted và unsupported chỉ {f(j7['f1_per_class']['contradicted'])} và {f(j7['f1_per_class']['unsupported'])}. SelfCheckGPT-NLI đạt "
      f"{f(CL['nli_selfcheck']['macro_f1'])}, ngang NLI zero-shot dù không nhìn bằng chứng, nhưng độ chính xác thấp ({f(CL['nli_selfcheck']['acc'])}) vì nó coi "
@@ -762,7 +762,7 @@ h2("Caveats")
 bullets([
     f"Mọi số liệu trên tập test dùng nhãn silver do Claude gán; số liệu theo nhãn người tính trên {ACG['n']} claim do một người gán.",
     "Các lần fine-tune đầu tiên trên Colab bị loss NaN do checkpoint mDeBERTa lưu ở float16 và thư viện mới giữ nguyên dtype; kết quả trong bài là sau khi sửa.",
-    "Môi trường Colab dùng transformers 5.x, máy cá nhân dùng 4.46; Ollama chạy mô hình lượng tử hóa Q4_K_M.",
+    "Colab đợt 1 dùng transformers 5.x, đợt 2 và máy cá nhân dùng 4.46; Ollama chạy mô hình lượng tử hóa Q4_K_M.",
     "Ba lượt gán nhãn có gợi ý sẵn hoặc file sai nguồn bị loại khỏi mọi phép đo.",
     "Một số tài liệu tham khảo là preprint arXiv.",
 ])

@@ -35,7 +35,7 @@ const RULE = "D1D5DB", MONO = "Times New Roman";
 const M_YEL = "F1E9C9", M_CON = "F4DADA", M_UNS = "E4DFF0", M_SUP = "D9EBE0";
 
 const K = (v) => Math.round(v * 1000), P = (v) => Math.round(v * 100);
-const f = (x, d = 3) => (x == null ? "–" : x.toFixed(d).replace(".", ","));
+const f = (x, d = 3) => (x == null ? "–" : x.toFixed(d).replace(".", ",").replace("-", "−"));
 const pct = (x) => Math.round(100 * x) + "%";
 const CL = R.claim_level, CO = R.answer_level_correlation, CMP = R.comparisons, REV = R.revise, SY = R.systems;
 const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG.sensitivity;
@@ -158,7 +158,7 @@ s = page("CÂU HỎI NGHIÊN CỨU", "Đề tài không xây chatbot mới, mà 
 rule(s, 0.6, 4.5, 12.13);
 text(s, "ĐÓNG GÓP", { x: 0.6, y: 4.7, w: 4, h: 0.3, fontSize: 13, bold: true, color: ACC, fontFace: MONO });
 [["Quy trình", "đánh giá mức claim tái lập được trên ViHERMES"], ["Dữ liệu", `ViFaithKAG pilot: ${R.claims_total} claim silver, ${ACG.n} claim nhãn người`],
- ["Meta-evaluation", "12 biến thể metric và ablation đồ thị, rule, số vòng sửa"], ["Độ tin cậy nhãn", "nhãn LLM so với người: thứ hạng metric đổi theo bộ nhãn"]].forEach(([h, d], i) => {
+ ["Meta-evaluation", "24 biến thể metric và ablation đồ thị, rule, số vòng sửa"], ["Độ tin cậy nhãn", "nhãn LLM so với người: thứ hạng metric đổi theo bộ nhãn"]].forEach(([h, d], i) => {
   text(s, [{ text: h + ": ", options: { bold: true } }, { text: d, options: { color: SOFT } }], { x: 0.6 + (i % 2) * 6.2, y: 5.15 + Math.floor(i / 2) * 0.82, w: 5.9, h: 0.72, fontSize: 15 });
 });
 notes(s, "Điểm dễ nhầm: đề tài không làm chatbot trả lời giỏi hơn. Đối tượng được đánh giá là các máy chấm. Tách câu trả lời thành claim, đối chiếu với tập bằng chứng chung, đo mức khớp của từng metric với nhãn chuẩn.");
@@ -215,7 +215,7 @@ text(s, "Lượt A, D, E bị loại: duyệt có gợi ý hoặc file không t�
 text(s, pct(ACG.n / R.claims_total), { x: 8.7, y: 1.9, w: 4, h: 1.5, fontSize: 80, bold: true, color: ACC });
 text(s, `bộ dữ liệu có nhãn người (${ACG.n}/${R.claims_total})`, { x: 8.7, y: 3.45, w: 4, h: 0.7, fontSize: 16 });
 text(s, "Người gán không thấy nhãn hay lý do của Claude và không biết câu trả lời thuộc hệ nào.", { x: 8.7, y: 4.3, w: 4, h: 1.1, fontSize: 15, color: SOFT });
-notes(s, `Phải nói rõ: nhãn chuẩn chính là silver do Claude gán, không phải nhãn người. Người gán mù lại qua ${NPASS} lượt. Các lượt có gợi ý hoặc không gán thật đều bị loại khỏi phân tích. Thiết lập: ${R.claims_dev} claim dev chọn ngưỡng, ${R.claims_test} claim test báo cáo; macro-F1, AUROC, Spearman; KTC 95% bootstrap 1.000 lần, Wilcoxon cặp, Cohen's κ; mọi mô hình chạy trên Colab T4.`);
+notes(s, `Phải nói rõ: nhãn chuẩn chính là silver do Claude gán, không phải nhãn người. Người gán mù lại qua ${NPASS} lượt. Các lượt có gợi ý hoặc không gán thật đều bị loại khỏi phân tích. Thiết lập: ${R.claims_dev} claim dev chọn ngưỡng, ${R.claims_test} claim test báo cáo; macro-F1, AUROC, Spearman; KTC 95% bootstrap 1.000 lần, Wilcoxon cặp, Cohen's κ; các mô hình chạy trên Colab T4, riêng zero-shot V3 chạy CPU và fine-tune premise ngắn chạy GTX 1650.`);
 
 // ---------- 8. RQ1 waffle ----------
 pres.addSection({ title: "Kết quả" });
