@@ -41,6 +41,7 @@ const CL = R.claim_level, CO = R.answer_level_correlation, CMP = R.comparisons, 
 const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG.sensitivity;
 const RA = REV.all, R1 = REV.by_max_rounds["1"], R2 = REV.by_max_rounds["2"];
 const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3, J14 = D2.methods.judge_14b, XZ1 = D2.methods.nli_xzs_v1, FF1 = D2.methods.nli_ft20full_v1, PFF = D2.paired_silver["nli_ft20full_v1 - nli_ft_v1"], PFS = D2.paired_silver["nli_ft20full_v1 - nli_ft20_v1"], XF1 = D2.methods.nli_xft_v1, XF3 = D2.methods.nli_xft_v3, PXF = D2.paired_human["nli_xft_v1 - nli_xzs_v1"], QSP = D2.methods.qwen3b_span, R14 = D2.corr_ragas_14b, SPN = D2.span, PS14 = D2.paired_silver["judge_14b - judge_7b"], PH14 = D2.paired_human["judge_14b - judge_7b"];
+const HT = require(path.join(ROOT, "outputs", "analysis", "ieee_extra.json")).human_tuned.ft_v1;
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -296,7 +297,7 @@ const cm = ACG.confusion_claude_rows_human_cols, notSup = cm[1].reduce((a, b) =>
 text(s, `Claude trùng người ${pct(ACG.acc)}, κ = ${f(ACG.kappa, 2)}, khắt khe hơn người: ${humanSup}/${notSup} ý Claude cho là sai, người gán supported. Tương quan thứ hạng ρ = ${f(ACG.rank_spearman, 2)}.`, { x: 8.9, y: 5.2, w: 3.8, h: 1.5, fontSize: 15, color: SOFT });
 notes(s, `NÓI: Đây là phát hiện quan trọng nhất. Chỉ đổi đáp án từ nhãn Claude sang nhãn người, bảng xếp hạng đổi theo.
 Máy so khớp đã luyện đạt ${f(SENS.nli_ft_v1.macro_f1_vs_claude)} theo Claude, nhưng chỉ ${f(SENS.nli_ft_v1.macro_f1_vs_human)} theo người, không hơn bản chưa luyện. Judge 7B đứng đầu theo người với ${f(SENS.judge_7b.macro_f1_vs_human)}.
-Lý do: Claude khắt khe hơn người. Có ${humanSup}/${notSup} ý Claude cho là sai mà người lại cho là đúng. Máy được chọn ngưỡng theo nhãn Claude nên có thể đã học theo cách chấm của Claude.
+Lý do: Claude khắt khe hơn người. Có ${humanSup}/${notSup} ý Claude cho là sai mà người lại cho là đúng. Máy được chọn ngưỡng theo nhãn Claude nên có thể đã học theo cách chấm của Claude, nhưng chọn lại ngưỡng theo nhãn người cũng không cải thiện (${f(HT.silver_tuned)} → ${f(HT.human_tuned)}), nên ngưỡng chưa giải thích được hết.
 Ý nghĩa: nếu dùng nhãn do AI gán để đánh giá AI, kết luận có thể đổi.
 LƯU Ý: chỉ có một người gán và không phải chuyên gia pháp lý, nên đây là phép kiểm định, không phải đáp án tuyệt đối.`);
 
@@ -349,7 +350,7 @@ table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Nhãn chuẩn là silver", options: { bold: true } }, `Claude trùng người ${pct(ACG.acc)}`, "Báo cáo song song theo nhãn người"],
   [{ text: "Một người gán", options: { bold: true } }, "Không phải chuyên gia pháp lý; lượt nhanh chỉ xem 4 câu", "Hai người gán, đo κ người–người"],
   [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge lớn nhất 14B`, "KTC bootstrap, kiểm định ghép cặp"],
-  [{ text: "Ngưỡng theo silver", options: { bold: true } }, "Verifier fine-tune nghiêng theo Claude", "Chọn ngưỡng trên nhãn người"],
+  [{ text: "Ngưỡng kém ổn định", options: { bold: true } }, `Chọn trên ${R.claims_dev} claim; theo nhãn người cũng không cải thiện`, "Thêm nhãn người, so thêm AUROC"],
   [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
   [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });

@@ -51,6 +51,7 @@ J14, XZ1, XZ3, QSP = D2["methods"]["judge_14b"], D2["methods"]["nli_xzs_v1"], D2
 XF1, XF3 = D2["methods"]["nli_xft_v1"], D2["methods"]["nli_xft_v3"]
 FF1, FF3 = D2["methods"]["nli_ft20full_v1"], D2["methods"]["nli_ft20full_v3"]
 R14, JC14, SPN = D2["corr_ragas_14b"], D2["corr_judge_14b"], D2["span"]
+HT = json.load(open(ROOT / "outputs" / "analysis" / "ieee_extra.json", encoding="utf-8"))["human_tuned"]["ft_v1"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
 
@@ -663,8 +664,9 @@ table(f"Ma trận nhầm lẫn giữa nhãn Claude (hàng) và nhãn người (c
       ["Claude \\ Người", "supported", "contradicted", "unsupported", "Người đồng ý"],
       [[LB[i]] + [str(x) for x in row] + [pct(row[i] / sum(row)) if sum(row) else "–"] for i, row in enumerate(cm)], [4, 2.5, 2.5, 2.5, 2.8])
 para(f"Claude gán contradicted hoặc unsupported cho {sum(cm[1]) + sum(cm[2])} claim, người chỉ đồng ý ở {cm[1][1] + cm[2][2]} claim và gán supported cho "
-     f"{cm[1][0] + cm[2][0]} claim trong số đó. Ngược lại, khi Claude gán supported, người đồng ý {pct(cm[0][0] / sum(cm[0]))}. Độ lệch có hướng này giải "
-     f"thích vì sao metric được tối ưu theo nhãn Claude (verifier fine-tune với ngưỡng chọn trên dev silver) bị đánh giá thấp hơn khi đổi sang nhãn người.")
+     f"{cm[1][0] + cm[2][0]} claim trong số đó. Ngược lại, khi Claude gán supported, người đồng ý {pct(cm[0][0] / sum(cm[0]))}. Độ lệch này có thể "
+     f"góp phần làm verifier fine-tune tụt điểm, nhưng chọn lại ngưỡng theo nhãn người (5-fold theo câu hỏi) không cải thiện "
+     f"({f(HT['silver_tuned'])} → {f(HT['human_tuned'])}, KTC của chênh lệch [{f(HT['ci95'][0], 2)}; {f(HT['ci95'][1], 2)}]).")
 para(f"**Đợt 2 – mô hình lớn hơn:** judge 14B đạt {f(J14['macro_f1'])} theo silver (AUROC {f(J14['auroc_not_supported'])}), chênh với judge 7B không có ý nghĩa "
      f"({f(PS['judge_14b - judge_7b']['diff'])}, KTC [{f(PS['judge_14b - judge_7b']['ci95'][0], 2)}; {f(PS['judge_14b - judge_7b']['ci95'][1], 2)}]); theo nhãn người lại thấp hơn "
      f"({f(J14['macro_f1_human'])} so với {f(hj7)}, KTC của chênh lệch [{f(PH['judge_14b - judge_7b']['ci95'][0], 2)}; {f(PH['judge_14b - judge_7b']['ci95'][1], 2)}]). "
@@ -740,7 +742,7 @@ bullets([
     f"**Nhãn chuẩn là silver:** Claude trùng người {pct(ACG['acc'])} (κ = {f(ACG['kappa'], 2)}). Giảm thiểu: báo cáo song song theo nhãn người; mở rộng nhãn người, hai người gán và bước thống nhất.",
     "**Một người gán, không phải chuyên gia pháp lý;** các lượt nhanh chỉ hiển thị 4 câu bằng chứng nên có thể bỏ sót bằng chứng ở xa. Giảm thiểu: lượt C dùng toàn đoạn văn và được báo cáo riêng.",
     "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 14B (giới hạn Colab T4). Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
-    "**Ngưỡng verifier chọn theo nhãn silver:** làm verifier fine-tune nghiêng theo Claude. Giảm thiểu: chọn ngưỡng trên nhãn người khi đủ dữ liệu.",
+    f"**Ngưỡng verifier kém ổn định:** chọn trên {R['claims_dev']} claim silver; chọn theo nhãn người cũng không cải thiện trên mẫu này. Giảm thiểu: thêm nhãn người, so thêm AUROC.",
     "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
     "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; chưa có ViEduReg, toán tử Verify trong KAG.",
 ])
@@ -752,7 +754,7 @@ para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulnes
      f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp không hơn có ý nghĩa; XLM-R fine-tune tăng theo nhãn người nhưng báo nhầm nhiều. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
      f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
 numbered([
-    "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người; chọn ngưỡng verifier trên nhãn người.",
+    "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người.",
     "Thử judge 32B; fine-tune verifier Qwen 1,5–4B để nhãn đi kèm span bằng chứng chép đúng từ văn bản.",
     "Đưa thông tin đồ thị vào verifier dưới dạng triple có cấu trúc; mở rộng sang LightRAG, HippoRAG 2, KAG và bộ quy chế đào tạo ViEduReg.",
     "Chấm câu trả lời đã sửa bằng người hoặc metric độc lập; dùng bộ sinh lớn hơn cho bước sửa.",
@@ -762,9 +764,8 @@ h2("Caveats")
 bullets([
     f"Mọi số liệu trên tập test dùng nhãn silver do Claude gán; số liệu theo nhãn người tính trên {ACG['n']} claim do một người gán.",
     "Các lần fine-tune đầu tiên trên Colab bị loss NaN do checkpoint mDeBERTa lưu ở float16 và thư viện mới giữ nguyên dtype; kết quả trong bài là sau khi sửa.",
-    "Colab đợt 1 dùng transformers 5.x, đợt 2 và máy cá nhân dùng 4.46; Ollama chạy mô hình lượng tử hóa Q4_K_M.",
+    "Colab đợt 1 dùng transformers 5.x, đợt 2 và máy cá nhân dùng 4.46.",
     "Ba lượt gán nhãn có gợi ý sẵn hoặc file sai nguồn bị loại khỏi mọi phép đo.",
-    "Một số tài liệu tham khảo là preprint arXiv.",
 ])
 
 h2("References")
