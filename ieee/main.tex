@@ -264,7 +264,7 @@ Judge 7B $-$ SelfCheckGPT & 0.065 & [$-$0.05, 0.17] & 0.120 \\
 \end{tabular}
 \end{table}
 
-\textbf{Human labels.} Fig.~\ref{fig:labels} reverses the conclusion on fine-tuning. On 165 claims, fine-tuned V1 reaches 0.381, level with zero-shot (0.409) and clearly below the 7B judge (0.528). The rank correlation of metrics between the two label sets is only $\rho=0.46$. Verifier thresholds are chosen on Claude's labels, so the fine-tuned model may have learnt Claude's strict labelling. Table~\ref{tab:confusion} supports this: Claude labels 59 claims contradicted or unsupported, and the human agrees on only 18 and labels 29 of them supported, whereas 85\% of Claude's supported labels are confirmed.
+\textbf{Human labels.} Fig.~\ref{fig:labels} reverses the conclusion on fine-tuning. On 165 claims, fine-tuned V1 reaches 0.381, level with zero-shot (0.409) and clearly below the 7B judge (0.528). The rank correlation of metrics between the two label sets is only $\rho=0.46$. Verifier thresholds are chosen on Claude's labels, so one explanation is that the fine-tuned model learnt Claude's strict labelling; Section~\ref{sec:posthoc} tests this. Table~\ref{tab:confusion} supports this: Claude labels 59 claims contradicted or unsupported, and the human agrees on only 18 and labels 29 of them supported, whereas 85\% of Claude's supported labels are confirmed.
 
 \begin{figure}[t]
 \centering
@@ -306,9 +306,12 @@ Judge 7B & 0.476 & [0.40, 0.55] & 0.748 & 41/64 & 22/153 & 0.528 \\
 Judge 14B & 0.541 & [0.46, 0.62] & 0.761 & 45/65 & 26/153 & 0.439 \\
 Fine-tuned V1, round 1 & 0.521 & [0.44, 0.60] & 0.738 & 34/65 & 37/153 & 0.381 \\
 Fine-tuned V1, 450 chars & 0.441 & [0.36, 0.53] & 0.753 & 16/65 & 15/153 & 0.371 \\
+Fine-tuned V3, 450 chars & 0.501 & [0.41, 0.58] & 0.745 & 32/65 & 31/153 & 0.404 \\
 Fine-tuned V1, 900 chars & 0.572 & [0.48, 0.64] & 0.754 & 44/65 & 48/153 & 0.356 \\
 Fine-tuned V3, 900 chars & 0.559 & [0.48, 0.63] & 0.734 & 50/65 & 57/153 & 0.346 \\
+Zero-shot V3 & 0.423 & [0.35, 0.49] & 0.558 & 28/65 & 51/153 & 0.328 \\
 XLM-R zero-shot V1 & 0.532 & [0.45, 0.61] & 0.743 & 33/65 & 36/153 & 0.354 \\
+XLM-R zero-shot V3 & 0.516 & [0.42, 0.59] & 0.758 & 34/65 & 38/153 & 0.370 \\
 XLM-R fine-tuned V1 & 0.500 & [0.42, 0.57] & 0.798 & 58/65 & 64/153 & 0.463 \\
 XLM-R fine-tuned V3 & 0.477 & [0.40, 0.55] & 0.821 & 60/65 & 62/153 & 0.433 \\
 Qwen 3B with spans & 0.361 & [0.30, 0.43] & 0.601 & 23/65 & 23/151 & 0.399 \\
@@ -317,7 +320,7 @@ Qwen 3B with spans & 0.361 & [0.30, 0.43] & 0.601 & 23/65 & 23/151 & 0.399 \\
 \end{table*}
 
 \subsection{RQ3: Verify-then-revise}
-Of 80 answers, 42 have flagged claims (Table~\ref{tab:revise}). GGF rises from 0.755 to 0.830 (Wilcoxon $p=0.014$) and CR halves, but token F1 falls from 0.595 to 0.563 ($p=0.001$), claims per answer fall from 3.55 to 2.44, and 7 answers become ``no information found''. Round 1 of revision gives most of the gain. Exact match is 0 in every configuration because ViHERMES answers are long (about 115 words), so token recall measures content loss. The GGF gain is an upper bound, since the 7B judge both flags and rescores.
+Of 80 answers, 42 have flagged claims (Table~\ref{tab:revise}). GGF rises from 0.755 to 0.830 (Wilcoxon $p=0.014$) and CR halves, but token F1 falls from 0.595 to 0.563 ($p=0.001$), claims per answer fall from 3.55 to 2.44, and 7 answers become ``no information found''. The first revision round gives most of the gain: on the 27 answers that needed a second round, GGF moves from 0.491 to 0.540 without significance ($p=0.312$). Exact match is 0 in every configuration because ViHERMES answers are long (about 115 words), so token recall measures content loss. The GGF gain is an upper bound, since the 7B judge both flags and rescores.
 
 \begin{table}[t]
 \caption{Verify-then-revise on 80 answers. GGF, CR and UR from the 7B judge; F1, recall and EM against ViHERMES answers}
@@ -336,7 +339,39 @@ At most 2 rounds & 0.830 & 0.041 & 0.129 & 0.563 & 0.535 & 0.000 & 2.44 \\
 \end{tabular}
 \end{table}
 
-In one 3-hop example, the 7B judge flagged the claim that the amended Pharmacy Law would go to the National Assembly in 10/2025, while the document says 10/2022. The new answer reached GGF of 1 by the judge but dropped all three dates, including the correct 01/07/2025 date that both the judge and Claude labelled supported, and replaced them with a generic sentence saying the dates are stated in the context. This pattern explains how GGF rises while token recall falls.
+Table~\ref{tab:revsys} splits the loop by system. Both systems gain GGF and lose token F1, so the trade-off does not depend on the retrieval method.
+
+\begin{table}[t]
+\caption{Verify-then-revise by system, at most 2 rounds}
+\label{tab:revsys}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+System & Revised & GGF before & After & F1 before & After & Refused \\
+\midrule
+Naive RAG & 22/40 & 0.707 & 0.810 & 0.601 & 0.552 & 4 \\
+GraphRAG & 20/40 & 0.802 & 0.849 & 0.590 & 0.574 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:revex} gives one 3-hop example. The 7B judge flagged the claim that the amended Pharmacy Law would go to the National Assembly in 10/2025, while the document says 10/2022. The new answer reached GGF of 1 by the judge but dropped all three dates, including the correct 01/07/2025 date that both the judge and Claude labelled supported, and replaced them with a generic sentence saying the dates are stated in the context. This pattern explains how GGF rises while token recall falls.
+
+\begin{table}[t]
+\caption{Verify-then-revise example (3 hops, Naive RAG, translated)}
+\label{tab:revex}
+\centering
+\footnotesize
+\begin{tabular}{p{0.45\columnwidth}p{0.45\columnwidth}}
+\toprule
+Before revision & After one round \\
+\midrule
+The amended Pharmacy Law is expected to go to the National Assembly in 10/2025. Decree 124/2021/ND-CP on administrative penalties in health was issued in 12/2021. Autonomous hospitals may decide drug procurement under Law 90/2025/QH15 from 01/07/2025. & No information was found on when the amended Pharmacy Law is expected to go to the National Assembly. The issuing date of Decree 124/2021/ND-CP and the date autonomous hospitals may decide drug procurement under Law 90/2025/QH15 are stated clearly in the context. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Systems and hop difficulty}
 The two systems do not differ significantly (paired Wilcoxon on GGF, $p=0.191$; Table~\ref{tab:systems}). The released ViHERMES graph is coarse, with few amendment edges, so propagation adds few gold passages. Faithfulness falls clearly at 4 and 5 hops (Fig.~\ref{fig:hops}).
@@ -372,6 +407,217 @@ GraphRAG & 0.563 & 47.9\% & 0.638 & 0.199 & 0.163 \\
 \item \textbf{False refusals and extraction errors:} answers claim there is no information when the evidence is explicit, and 15 claims were malformed by extraction.
 \end{itemize}
 
+Table~\ref{tab:cases} shows four of these errors with the verdict of each checker. The fine-tuned verifier matches the silver label on all four, the 7B judge on two and the 3B judge on one. The 7B judge misses the wrong sum and flags the invented item under another label.
+
+\begin{table*}[t]
+\caption{Four claims and the verdict of each checker (S supported, C contradicted, U unsupported; translated)}
+\label{tab:cases}
+\centering
+\footnotesize
+\begin{tabular}{p{0.11\textwidth}p{0.3\textwidth}p{0.3\textwidth}ccccc}
+\toprule
+Error type & Claim & Evidence & Silver & 7B & 3B & Zero-shot & Fine-tuned \\
+\midrule
+Wrong sum & The total fine of the three clinics is 8 million VND. & One clinic alone was fined 30 million VND. & C & S & S & C & C \\
+False denial & The Population Department has no role in inspection or handling violations. & Its duties include specialised inspection and handling violations in the population field. & C & C & S & C & C \\
+Invented item & Fine Vietnam Co. may advertise on Instagram. & Instagram appears only in the certificate of another company in the context. & U & C & U & S & U \\
+Invented date & Circular 30/2017/TT-BYT takes effect on 01/01/2018. & The evidence gives no such date. & U & U & C & U & U \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Post hoc analyses}
+\label{sec:posthoc}
+The analyses in this subsection were designed after the main results, on the same data, so they suggest explanations and do not confirm them.
+
+\textbf{Difficulty by hop.} Table~\ref{tab:hop} shows that the share of non-supported silver labels grows from 19\% at 1 hop to 54\% at 4 hops. Claude and the human also agree less at 3 and 4 hops (59\% and 53\%) than at 1 and 2 hops (73\% and 75\%), so hard questions are also hard to label. Table~\ref{tab:dethop} shows that the 7B judge detects 27/37 wrong claims at 1--3 hops but only 25/47 at 4--5 hops. A faithfulness score is therefore least reliable on the questions where wrong claims are most frequent.
+
+\begin{table}[t]
+\caption{Profile by hop on usable claims: silver error share, Claude--human agreement, mean GGF and CR for Naive RAG (N) and GraphRAG (G)}
+\label{tab:hop}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ccccccccc}
+\toprule
+Hop & Claims & Wrong & Human & Agree & GGF N & GGF G & CR N & CR G \\
+\midrule
+1 & 62 & 19\% & 44 & 73\% & 0.85 & 0.85 & 0.04 & 0.04 \\
+2 & 48 & 19\% & 24 & 75\% & 0.81 & 0.84 & 0.12 & 0.12 \\
+3 & 52 & 31\% & 29 & 59\% & 0.83 & 0.61 & 0.17 & 0.21 \\
+4 & 56 & 54\% & 34 & 53\% & 0.41 & 0.40 & 0.33 & 0.32 \\
+5 & 51 & 35\% & 34 & 68\% & 0.56 & 0.46 & 0.25 & 0.31 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Detection of non-supported claims by hop group, all usable claims, silver labels}
+\label{tab:dethop}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{1--3 hops} & \multicolumn{2}{c}{4--5 hops} \\
+Checker & Caught & False al. & Caught & False al. \\
+\midrule
+Judge 7B & 27/37 & 19/125 & 25/47 & 4/59 \\
+Judge 14B & 30/37 & 20/125 & 25/48 & 7/59 \\
+Fine-tuned V1 & 26/37 & 32/125 & 22/48 & 13/59 \\
+XLM-R fine-tuned & 34/37 & 54/125 & 43/48 & 27/59 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{The silver--human gap.} Fig.~\ref{fig:gap} places both scores side by side. The gap has no single direction: LLM-judge 7B scores higher on human labels, while the verifiers tuned on silver labels fall. Table~\ref{tab:hl} gives per-label results on human labels, using all 165 claims. The human labelled 119 claims supported, 27 unsupported and 19 contradicted, so the contradicted F1 rests on few examples. XLM-R fine-tuned has the best contradicted F1, and the 7B judge the best supported and unsupported F1.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{gap.pdf}
+\caption{Macro-F1 on silver labels (test split) and human labels for selected checkers.}
+\label{fig:gap}
+\end{figure}
+
+\begin{table}[t]
+\caption{Per-label F1 and detection on human labels}
+\label{tab:hl}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lccccc}
+\toprule
+Checker & Supp. & Contra. & Unsup. & Caught & False al. \\
+\midrule
+Judge 7B & 0.834 & 0.350 & 0.400 & 28/46 & 21/119 \\
+Judge 14B & 0.821 & 0.143 & 0.353 & 27/46 & 23/119 \\
+Judge 3B & 0.794 & 0.000 & 0.255 & 13/44 & 20/118 \\
+Fine-tuned V1 & 0.750 & 0.140 & 0.254 & 25/46 & 35/119 \\
+Fine-tuned 20k & 0.673 & 0.158 & 0.238 & 27/46 & 49/119 \\
+XLM-R fine-tuned & 0.639 & 0.444 & 0.306 & 35/46 & 58/119 \\
+Zero-shot V1 & 0.747 & 0.205 & 0.276 & 19/46 & 32/119 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Discrimination without thresholds.} Fig.~\ref{fig:roc} shows ROC curves for detecting non-supported claims. On silver labels, fine-tuned verifiers separate from zero-shot, with AUROC 0.738 against 0.545. On human labels the gap narrows but remains (0.650 against 0.568), and XLM-R fine-tuned reaches 0.678. So fine-tuning keeps some ranking signal under human labels even though macro-F1 at the chosen threshold does not improve. At their fixed operating points, both judges lie above the verifier curves on both label sets, so at the same false alarm rate they detect more wrong claims.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{roc.pdf}
+\caption{ROC curves for detecting non-supported claims. Dots mark the fixed operating points of the 7B and 14B judges.}
+\label{fig:roc}
+\end{figure}
+
+\textbf{Threshold sensitivity.} Fig.~\ref{fig:threshold} varies the support threshold. For fine-tuned V1, the dev thresholds give 0.521, while the best grid point on test gives 0.596; for XLM-R fine-tuned the figures are 0.500 and 0.599. Those best points are oracle values, not results, but they show that 51 dev claims select thresholds with an error of up to about 0.1 in macro-F1. Differences of this size between verifiers should not be over-interpreted, and AUROC is the safer comparison.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{threshold.pdf}
+\caption{Macro-F1 against the support threshold. Solid: silver labels on test; dashed: human labels.}
+\label{fig:threshold}
+\end{figure}
+
+\textbf{Tuning thresholds on human labels.} If thresholds tuned on silver labels caused the drop, tuning on human labels should recover it. We ran grouped five-fold cross-validation over the 165 human-labelled claims, keeping claims of one question in one fold, and pooled the held-out predictions (Table~\ref{tab:ht}). Fine-tuned V1 does not improve (0.381 to 0.360, CI of the difference [$-$0.08, 0.04]), and no verifier improves significantly. Thresholds alone therefore do not explain the gap on this sample, although each fold trains on only about 130 claims and the chosen thresholds vary between folds.
+
+\begin{table}[t]
+\caption{Macro-F1 on human labels: thresholds from silver dev against grouped five-fold thresholds from human labels}
+\label{tab:ht}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Verifier & Silver & Human & Diff. & 95\% CI \\
+\midrule
+mDeBERTa zero-shot & 0.409 & 0.332 & $-$0.077 & [$-$0.14, $-$0.02] \\
+Fine-tuned V1 & 0.381 & 0.360 & $-$0.022 & [$-$0.08, 0.04] \\
+Fine-tuned 20k & 0.356 & 0.373 & 0.017 & [$-$0.04, 0.07] \\
+XLM-R zero-shot & 0.354 & 0.354 & 0.001 & [$-$0.01, 0.02] \\
+XLM-R fine-tuned & 0.463 & 0.445 & $-$0.018 & [$-$0.09, 0.05] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Agreement between checkers.} Fig.~\ref{fig:kappa} gives pairwise Cohen's $\kappa$ on the human-labelled claims. The human agrees more with the 7B judge ($\kappa=0.34$) than with the silver labels ($\kappa=0.29$) or the 14B judge ($\kappa=0.26$). Agreement with the human is low for every checker, and the 7B judge and the verifiers also agree little with one another, which suggests that they make different errors.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\columnwidth]{kappa.pdf}
+\caption{Pairwise Cohen's $\kappa$ on the human-labelled claims.}
+\label{fig:kappa}
+\end{figure}
+
+\textbf{Combining two checkers.} Because the 7B judge and XLM-R fine-tuned disagree often ($\kappa=0.24$), we tested two simple rules on the binary task of flagging a claim (Table~\ref{tab:combo}). Flagging when either checker objects catches 61/64 wrong claims on silver labels at the cost of 72/153 false alarms. Flagging only when both object cuts false alarms to 14/153 and still catches 37. Neither rule beats the 7B judge alone on flag F1, but they offer two useful operating points.
+
+\begin{table}[t]
+\caption{Flagging rules from the 7B judge and XLM-R fine-tuned V1; ``F1'' is for the flag class}
+\label{tab:combo}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{Silver, test} & \multicolumn{3}{c}{Human} \\
+Rule & Caught & False al. & F1 & Caught & False al. & F1 \\
+\midrule
+7B only & 41/64 & 22/153 & 0.646 & 28/46 & 21/119 & 0.589 \\
+XLM-R only & 57/64 & 64/153 & 0.616 & 35/46 & 58/119 & 0.504 \\
+either flags & 61/64 & 72/153 & 0.619 & 39/46 & 63/119 & 0.527 \\
+both flag & 37/64 & 14/153 & 0.643 & 24/46 & 16/119 & 0.558 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Effect of the audit pass.} Table~\ref{tab:pass} compares pass C, stratified with full passages, against the random quick passes. The 7B judge leads in both, so the main finding does not depend on the display condition. Pass C oversamples errors, so scores between the two columns are not directly comparable.
+
+\begin{table}[t]
+\caption{Macro-F1 on human labels by audit pass}
+\label{tab:pass}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Checker & Pass C (60) & G--J (105) & All (165) \\
+\midrule
+Judge 7B & 0.525 & 0.528 & 0.528 \\
+Fine-tuned V1 & 0.452 & 0.331 & 0.381 \\
+Zero-shot V1 & 0.510 & 0.330 & 0.409 \\
+Judge 3B & 0.380 & 0.328 & 0.349 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Cost.} Table~\ref{tab:cost} lists wall-clock times of round 2. They come from file timestamps of a single run, so they are indicative only. The 14B judge with RAGAS took about 2.8 hours for 80 answers, roughly 30 times the 3B span run, without a significant claim-level gain.
+
+\begin{table}[t]
+\caption{Wall-clock time of round 2 jobs (single run)}
+\label{tab:cost}
+\centering
+\footnotesize
+\begin{tabular}{p{0.6\columnwidth}cc}
+\toprule
+Job & GPU & Time \\
+\midrule
+Judge and RAGAS 14B, 80 answers & T4 & about 2.8 h \\
+Qwen 3B with spans, 80 answers & T4 & 5 min \\
+XLM-R zero-shot, 284 claims, V1 and V3 & T4 & 6.5 min \\
+XLM-R fine-tune, 16,000 pairs, with scoring & T4 & 69 min \\
+mDeBERTa fine-tune, 29,993 pairs, 900 chars, with scoring & T4 & 53 min \\
+mDeBERTa fine-tune, 29,993 pairs, 450 chars & GTX 1650 & about 2 h \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+\textbf{Which checker should a practitioner use?} On this data, the 7B judge is the most defensible default. It leads on human labels, is not significantly below the best verifier on silver labels, and needs no training. Moving to 14B brings a clear gain only at answer level, where RAGAS reaches $\rho=0.644$, and even that gain is untested. A team that wants one faithfulness number per answer can use RAGAS 14B, while a team that needs to locate wrong claims should stay with a claim-level judge. For regulations, where missing a wrong claim costs more than reviewing a correct one, the either-flags rule is a reasonable triage step: it passes few wrong claims but sends close to half of the correct claims to a human reader. It supports human review and does not replace it.
+
+\textbf{Why do silver and human labels disagree?} We can see the size of the disagreement but not who is right. Claude labels 59 claims as non-supported and the human confirms 18 of them. Three explanations are plausible. Claude may be stricter about implicit inferences. The annotator, who is not a legal expert, may accept claims that a lawyer would reject. The quick passes may also hide distant evidence, although Table~\ref{tab:pass} shows the same leading checker in both conditions. Adjudication by two legal experts is the only way to separate these. Until then, both label sets should be reported, because a ranking from one source does not transfer to the other.
+
+\textbf{What does fine-tuning learn?} Accuracy on synthetic dev pairs reaches about 0.9, far above any score on real claims. Synthetic errors change a number, a date or a negation, or borrow a sentence from elsewhere. Real errors in our sample also include wrong subjects, wrong aggregation across documents and invented list items, which these perturbations do not produce. A verifier can thus master the synthetic task without learning the real one. This fits the flat AUROC from 15,000 to 30,000 pairs: adding more pairs of the same kind does not help. Future synthetic data should reproduce the observed error types, for example by swapping the responsible agency between passages of one document.
+
+\textbf{Why did graph input not help?} Prepending metadata to each window makes every claim that names a document look entailed. Selective triples avoid part of this, but the released graph is coarse and is passed as plain text. Our result concerns this form of graph input on this graph, and it does not show that graphs cannot help verification.
+
+\textbf{What does revision really do?} A faithfulness score alone rewards deletion. An answer that says less contains fewer wrong claims, so GGF improves as content disappears. Any revision loop should therefore be scored by faithfulness and completeness together, with an independent scorer. With a 3B generator the loop mostly removes content, and a larger generator may behave differently.
+
 \section{Threats to Validity}
 \textbf{Silver reference.} Claude agrees with the human on 65\% of claims ($\kappa=0.29$). We therefore report both label sets; more human labels and a second annotator with adjudication are needed.
 
@@ -379,16 +625,149 @@ GraphRAG & 0.563 & 47.9\% & 0.638 & 0.199 & 0.163 \\
 
 \textbf{Small scale.} We evaluate 2 systems, 284 claims and judges up to 14B. Bootstrap intervals and paired tests accompany the main comparisons, without multiple-comparison correction.
 
-\textbf{Thresholds tuned on silver labels.} This biases fine-tuned verifiers toward Claude, and only 51 dev claims are available. Thresholds should be selected on human labels when enough exist.
+\textbf{Thresholds tuned on silver labels.} Only 51 dev claims are available, and thresholds tuned on silver labels may lean toward Claude. Tuning on human labels did not improve scores in our cross-validation (Table~\ref{tab:ht}), but that sample is small.
 
 \textbf{Self-scored revision.} Revised answers are scored only by the judge that flagged them. Rescoring by humans or an independent metric is needed.
 
 \textbf{Graph as text.} Triples are appended as text, so verifiers do not read graph structure. ViEduReg and the KAG Verify operator are not covered.
 
+\textbf{Post hoc and multiple comparisons.} Many comparisons were run without correction, and the analyses in Section~\ref{sec:posthoc} were chosen after seeing the main results. Intervals that barely exclude zero should be read as hints.
+
+\textbf{Implementation.} Early fine-tuning runs produced NaN loss because the mDeBERTa checkpoint is stored in float16; all reported runs use float32. Round 1 on Colab used transformers 5.x, and round 2 used 4.46. Ollama runs Q4\_K\_M quantised models, so results may differ from full-precision weights.
+
 \section{Conclusion}
-On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Meta-evaluation with LLM labels can therefore change metric rankings. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
+On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
 
 Future work includes full human labelling by two annotators with legal expertise and threshold selection on human labels; a 32B judge and a fine-tuned small Qwen verifier whose spans are copied from the evidence; structured triple input for verifiers and extension to LightRAG, HippoRAG 2, KAG and ViEduReg; and independent scoring of revised answers with a larger generator. Code and data are available at \url{https://github.com/vinhha195-oss/vikag-faith}.
+
+\appendices
+
+\section{Prompts}
+The RAGAS prompts follow the library. The statement prompt reads: ``Given a question, an answer, and sentences from the answer analyze the complexity of each sentence given under `sentences' and break down each sentence into one or more fully understandable statements while also ensuring no pronouns are used in each statement.'' The verdict prompt reads: ``Your task is to judge the faithfulness of a series of statements based on a given context. For each statement you must return verdict as 1 if the statement can be directly inferred based on the context or 0 if the statement can not be directly inferred based on the context.'' Both ask for JSON output, and the first keeps the language of the answer.
+
+The remaining prompts are in Vietnamese; these are English translations.
+
+\textbf{Generator.} ``You are an assistant answering questions about Vietnamese healthcare legal documents. Use only information in the CONTEXT. Answer in Vietnamese in 2--5 sentences, naming documents when available. If the context is insufficient, say clearly that no information was found.''
+
+\textbf{Claim extraction.} ``Split the answer into atomic claims. Each claim states ONE fact with one main predicate. Each claim must be self-contained: replace pronouns with specific names. Keep numbers, dates and document identifiers as in the answer. Add nothing beyond the answer, and drop sentences that only say no information was found.'' Two worked examples follow.
+
+\textbf{LLM-judge.} ``You are a fact checker. For each claim, compare with the EVIDENCE and assign exactly one label. supported: the evidence implies the claim. contradicted: the evidence says the opposite (wrong figure, date, document name, negation, and so on). unsupported: the evidence does not mention it or is not enough to conclude.'' The span verifier adds: ``For each claim, copy verbatim one short sentence from the EVIDENCE as the basis in the span field; if there is none, leave the string empty.''
+
+\section{Full Results}
+Table~\ref{tab:full} lists every round 1 configuration. Table~\ref{tab:corr} lists answer-level correlations, Table~\ref{tab:th} the dev thresholds, and Table~\ref{tab:pairfull} the paired comparisons of round 2.
+
+\begin{table*}[t]
+\caption{All round 1 configurations on 218 test claims (silver labels), with macro-F1 on human labels}
+\label{tab:full}
+\centering
+\footnotesize
+\begin{tabular}{lcccccccc}
+\toprule
+Method & Macro-F1 & 95\% CI & Acc. & AUROC & F1 supp. & F1 contra. & F1 unsup. & Human \\
+\midrule
+LLM-judge 7B & 0.476 & [0.40, 0.55] & 0.687 & 0.748 & 0.853 & 0.321 & 0.254 & 0.528 \\
+LLM-judge 3B & 0.439 & [0.37, 0.53] & 0.692 & 0.643 & 0.825 & 0.129 & 0.364 & 0.349 \\
+Fine-tuned V1 & 0.521 & [0.44, 0.60] & 0.656 & 0.738 & 0.773 & 0.379 & 0.410 & 0.381 \\
+Fine-tuned V1 + rule & 0.502 & [0.42, 0.58] & 0.638 & 0.631 & 0.761 & 0.355 & 0.390 & 0.382 \\
+Fine-tuned V2 & 0.465 & [0.39, 0.54] & 0.633 & 0.735 & 0.784 & 0.226 & 0.385 & 0.336 \\
+Fine-tuned V2 + rule & 0.457 & [0.38, 0.53] & 0.619 & 0.662 & 0.771 & 0.215 & 0.385 & 0.338 \\
+ViNLI only V1 & 0.405 & [0.33, 0.47] & 0.624 & 0.649 & 0.766 & 0.345 & 0.105 & 0.395 \\
+ViNLI only V1 + rule & 0.396 & [0.33, 0.46] & 0.610 & 0.546 & 0.755 & 0.328 & 0.105 & 0.391 \\
+ViNLI only V2 & 0.332 & [0.28, 0.38] & 0.619 & 0.644 & 0.766 & 0.230 & 0.000 & 0.346 \\
+ViNLI only V2 + rule & 0.326 & [0.28, 0.37] & 0.606 & 0.516 & 0.760 & 0.219 & 0.000 & 0.355 \\
+Zero-shot V1 & 0.404 & [0.33, 0.47] & 0.592 & 0.545 & 0.737 & 0.308 & 0.167 & 0.409 \\
+Zero-shot V1 + rule & 0.401 & [0.33, 0.47] & 0.587 & 0.534 & 0.733 & 0.302 & 0.167 & 0.413 \\
+Zero-shot V2 & 0.329 & [0.27, 0.39] & 0.693 & 0.534 & 0.815 & 0.171 & 0.000 & 0.295 \\
+Zero-shot V2 + rule & 0.322 & [0.27, 0.38] & 0.679 & 0.520 & 0.812 & 0.154 & 0.000 & 0.314 \\
+SelfCheckGPT-NLI & 0.409 & [0.34, 0.48] & 0.463 & 0.600 & 0.565 & 0.400 & 0.262 & 0.336 \\
+Rule only & 0.274 & [0.26, 0.29] & 0.688 & 0.513 & 0.822 & 0.000 & 0.000 & 0.310 \\
+Always supported & 0.275 & [0.26, 0.29] & 0.702 & 0.500 & 0.825 & 0.000 & 0.000 & 0.279 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\caption{Paired macro-F1 differences of round 2 methods with 95\% CI (1,000 bootstrap resamples, not corrected for multiple comparisons)}
+\label{tab:pairfull}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Method & Silver, $-$ fine-tuned V1 & Silver, $-$ judge 7B & Human, $-$ fine-tuned V1 & Human, $-$ judge 7B \\
+\midrule
+Judge 14B & 0.020 [$-$0.07, 0.11] & 0.069 [$-$0.05, 0.18] & 0.058 [$-$0.03, 0.14] & $-$0.089 [$-$0.20, 0.03] \\
+Zero-shot V3 & $-$0.098 [$-$0.19, $-$0.01] & $-$0.051 [$-$0.14, 0.04] & $-$0.053 [$-$0.13, 0.03] & $-$0.200 [$-$0.30, $-$0.09] \\
+20k, 450 chars V1 & $-$0.080 [$-$0.16, 0.00] & $-$0.033 [$-$0.15, 0.08] & $-$0.011 [$-$0.08, 0.06] & $-$0.158 [$-$0.27, $-$0.05] \\
+20k, 450 chars V3 & $-$0.020 [$-$0.08, 0.04] & 0.027 [$-$0.09, 0.14] & 0.022 [$-$0.04, 0.08] & $-$0.124 [$-$0.25, 0.00] \\
+20k, 900 chars V1 & 0.051 [$-$0.02, 0.12] & 0.098 [$-$0.02, 0.22] & $-$0.025 [$-$0.06, 0.01] & $-$0.172 [$-$0.28, $-$0.05] \\
+20k, 900 chars V3 & 0.038 [$-$0.05, 0.12] & 0.085 [$-$0.03, 0.19] & $-$0.035 [$-$0.08, 0.01] & $-$0.182 [$-$0.30, $-$0.07] \\
+XLM-R zero-shot V1 & 0.011 [$-$0.08, 0.11] & 0.052 [$-$0.05, 0.15] & $-$0.028 [$-$0.10, 0.05] & $-$0.174 [$-$0.29, $-$0.07] \\
+XLM-R zero-shot V3 & $-$0.005 [$-$0.10, 0.10] & 0.036 [$-$0.07, 0.14] & $-$0.012 [$-$0.08, 0.06] & $-$0.158 [$-$0.27, $-$0.05] \\
+XLM-R fine-tuned V1 & $-$0.021 [$-$0.12, 0.08] & 0.020 [$-$0.07, 0.11] & 0.082 [$-$0.02, 0.18] & $-$0.065 [$-$0.17, 0.04] \\
+XLM-R fine-tuned V3 & $-$0.044 [$-$0.14, 0.05] & $-$0.003 [$-$0.09, 0.09] & 0.052 [$-$0.05, 0.15] & $-$0.095 [$-$0.19, 0.01] \\
+Qwen 3B with spans & $-$0.163 [$-$0.26, $-$0.06] & $-$0.129 [$-$0.22, $-$0.04] & 0.017 [$-$0.10, 0.13] & $-$0.133 [$-$0.22, $-$0.06] \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table}[t]
+\caption{Answer-level correlation with reference GGF on the test split, sorted by Spearman $\rho$; $n$ is the number of answers with valid output}
+\label{tab:corr}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Metric & Spearman & Kendall & $n$ \\
+\midrule
+RAGAS 14B & 0.644 & 0.527 & 61 \\
+LLM-judge 14B & 0.597 & 0.533 & 63 \\
+RAGAS 7B & 0.484 & 0.396 & 62 \\
+LLM-judge 7B & 0.418 & 0.387 & 63 \\
+Fine-tuned V2 & 0.383 & 0.318 & 63 \\
+LLM-judge 3B & 0.367 & 0.322 & 61 \\
+SelfCheckGPT-NLI & 0.270 & 0.230 & 63 \\
+RAGAS 3B & 0.258 & 0.214 & 62 \\
+Zero-shot V2 & 0.161 & 0.145 & 63 \\
+Rule only & 0.147 & 0.132 & 63 \\
+Fine-tuned V1 & 0.142 & 0.121 & 63 \\
+Zero-shot V1 & 0.003 & 0.007 & 63 \\
+ViNLI only V1 & $-$0.005 & 0.000 & 63 \\
+ViNLI only V2 & $-$0.029 & $-$0.019 & 63 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Thresholds chosen on the dev split}
+\label{tab:th}
+\centering
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Verifier & $\tau_s$ & $\tau_c$ \\
+\midrule
+Zero-shot V1 & 0.65 & 0.45 \\
+Zero-shot V2 & 0.15 & 0.10 \\
+Zero-shot V3 & 0.75 & 0.15 \\
+Fine-tuned V1 & 0.35 & 0.10 \\
+Fine-tuned V2 & 0.30 & 0.10 \\
+ViNLI only V1 & 0.35 & 0.25 \\
+ViNLI only V2 & 0.20 & 0.10 \\
+SelfCheckGPT & 0.80 & 0.15 \\
+20k, 450 chars V1 & 0.10 & 0.10 \\
+20k, 450 chars V3 & 0.15 & 0.30 \\
+20k, 900 chars V1 & 0.50 & 0.40 \\
+20k, 900 chars V3 & 0.55 & 0.40 \\
+XLM-R zero-shot V1 & 0.65 & 0.10 \\
+XLM-R zero-shot V3 & 0.80 & 0.65 \\
+XLM-R fine-tuned V1 & 0.65 & 0.10 \\
+XLM-R fine-tuned V3 & 0.65 & 0.10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Reproducibility}
+The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, and \texttt{s11\_ieee\_extra} computes the post hoc analyses of this paper. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
 
 \begin{thebibliography}{99}
 \bibitem{kag} L. Liang \emph{et al.}, ``KAG: Boosting LLMs in professional domains via knowledge augmented generation,'' 2024, arXiv:2409.13731.

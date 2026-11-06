@@ -22,6 +22,7 @@ R = json.load(open(ROOT / "outputs" / "analysis" / "results.json", encoding="utf
 D2 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot2.json", encoding="utf-8"))
 _s = (ROOT / "demo" / "vikag_faith_demo.html").read_text(encoding="utf-8")
 _a = _s.index("const DATA = ") + 13
+E = json.load(open(ROOT / "outputs" / "analysis" / "ieee_extra.json", encoding="utf-8"))
 CATCH = json.loads(_s[_a:_s.index("\n", _a)].strip().rstrip(";"))["summary"]["catch"]
 
 CL, CO, CMP, REV, SY, QA = R["claim_level"], R["answer_level_correlation"], R["comparisons"], R["revise"], R["systems"], R["qa"]
@@ -29,6 +30,7 @@ AG = R["agreement"]
 AC, AQ, ACG = AG["audit"], AG["audit_G"], AG["audit_CG"]
 SENS, TH = ACG["sensitivity"], R["thresholds"]
 RA, R1, R2 = REV["all"], REV["by_max_rounds"]["1"], REV["by_max_rounds"]["2"]
+P2 = REV["by_max_rounds"]["round2_vs_round1"]
 M, PS, PH, AP = D2["methods"], D2["paired_silver"], D2["paired_human"], D2["auroc_paired"]
 J14, XZ1, XF1, XF3, QSP = M["judge_14b"], M["nli_xzs_v1"], M["nli_xft_v1"], M["nli_xft_v3"], M["qwen3b_span"]
 FT1, FF1, FF3, V3 = M["nli_ft20_v1"], M["nli_ft20full_v1"], M["nli_ft20full_v3"], M["nli_zs_v3"]
@@ -132,6 +134,70 @@ def fig_hops():
     fig.savefig(IEEE / "figures" / "hops.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
 
 
+def fig_roc():
+    fig, axes = plt.subplots(1, 2, figsize=(3.45, 1.85), sharey=True)
+    series = [("zs_v1", "mDeBERTa zero-shot", MUTE), ("ft_v1", "Fine-tuned V1", ALT), ("ft20full_v1", "Fine-tuned 20k", "#7a3e9d"), ("xft_v1", "XLM-R fine-tuned", ACC)]
+    for ax, tag, title in zip(axes, ("silver", "human"), ("Silver labels, test", "Human labels")):
+        for k, lab, c in series:
+            r = E["roc"][f"{k}|{tag}"]
+            ax.plot(r["fpr"], r["tpr"], color=c, lw=1, label=f"{lab}")
+        for j, mark in (("j7", "o"), ("j14", "s")):
+            q = E["roc_points"][f"{j}|{tag}"]
+            ax.plot(q["false_alarm"] / q["right"], q["caught"] / q["wrong"], mark, color="black", ms=3.5, label=f"Judge {j[1:]}B")
+        ax.plot([0, 1], [0, 1], color="#cccccc", lw=0.6)
+        ax.set_title(title, fontsize=8); ax.set_xlabel("False alarm rate")
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+    axes[0].set_ylabel("Detection rate")
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, frameon=False, fontsize=6.3, ncol=3, loc="upper center", bbox_to_anchor=(0.5, 1.17))
+    fig.savefig(IEEE / "figures" / "roc.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
+
+
+def fig_threshold():
+    fig, ax = plt.subplots(figsize=(3.45, 1.85))
+    for k, lab, c in (("ft_v1", "Fine-tuned V1", ALT), ("ft20full_v1", "Fine-tuned 20k", "#7a3e9d"), ("xft_v1", "XLM-R fine-tuned", ACC)):
+        cu = E["threshold"][k]["curve"]
+        ax.plot([x["ts"] for x in cu], [x["silver"] for x in cu], color=c, lw=1, label=f"{lab}, silver")
+        ax.plot([x["ts"] for x in cu], [x["human"] for x in cu], color=c, lw=1, ls="--", label=f"{lab}, human")
+    ax.set_xlabel(r"Support threshold $\tau_s$ ($\tau_c$ fixed at the dev choice)"); ax.set_ylabel("Macro-F1")
+    ax.legend(frameon=False, fontsize=6, ncol=2, loc="upper center", bbox_to_anchor=(0.5, 1.28)); ax.grid(axis="y", lw=0.3)
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
+    fig.savefig(IEEE / "figures" / "threshold.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
+
+
+def fig_kappa():
+    names, vals = E["kappa"]["names"], E["kappa"]["values"]
+    lab = {"human": "Human", "silver": "Silver", "j7": "Judge 7B", "j14": "Judge 14B", "j3": "Judge 3B", "ft_v1": "Fine-tuned V1", "ft20full_v1": "Fine-tuned 20k", "xft_v1": "XLM-R fine-t."}
+    fig, ax = plt.subplots(figsize=(3.45, 2.75))
+    m = [[vals[f"{a}|{b}"] for b in names] for a in names]
+    ax.imshow(m, cmap="Blues", vmin=0, vmax=1)
+    ax.set_xticks(range(len(names))); ax.set_yticks(range(len(names)))
+    ax.set_xticklabels([lab[x] for x in names], rotation=45, ha="right"); ax.set_yticklabels([lab[x] for x in names])
+    for i, row in enumerate(m):
+        for j, v in enumerate(row):
+            ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=6.3, color="white" if v > 0.6 else INK)
+    fig.savefig(IEEE / "figures" / "kappa.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
+
+
+def fig_gap():
+    rows = [("Judge 7B", CL["judge_7b"]["macro_f1"], SENS["judge_7b"]["macro_f1_vs_human"]), ("Judge 14B", J14["macro_f1"], J14["macro_f1_human"]),
+            ("Fine-tuned V1, round 1", CL["nli_ft_v1"]["macro_f1"], SENS["nli_ft_v1"]["macro_f1_vs_human"]), ("Fine-tuned V1, 20k", FF1["macro_f1"], FF1["macro_f1_human"]),
+            ("Zero-shot V1", CL["nli_zs_v1"]["macro_f1"], SENS["nli_zs_v1"]["macro_f1_vs_human"]), ("XLM-R zero-shot V1", XZ1["macro_f1"], XZ1["macro_f1_human"]),
+            ("XLM-R fine-tuned V1", XF1["macro_f1"], XF1["macro_f1_human"]), ("Qwen 3B with spans", QSP["macro_f1"], QSP["macro_f1_human"])]
+    fig, ax = plt.subplots(figsize=(3.45, 2.1))
+    for i, (lab, a, b) in enumerate(reversed(rows)):
+        ax.plot([a, b], [i, i], color="#bbbbbb", lw=1.2, zorder=1)
+        ax.scatter(a, i, s=14, color=MUTE, zorder=2, label="Silver" if i == 0 else None)
+        ax.scatter(b, i, s=14, color=ACC, zorder=2, label="Human" if i == 0 else None)
+    ax.set_yticks(range(len(rows))); ax.set_yticklabels([r[0] for r in reversed(rows)]); ax.set_xlabel("Macro-F1"); ax.grid(axis="x", lw=0.3); ax.set_axisbelow(True)
+    ax.legend(frameon=False, fontsize=7, loc="upper center", bbox_to_anchor=(0.5, 1.13), ncol=2)
+    for sp in ("top", "right"):
+        ax.spines[sp].set_visible(False)
+    fig.savefig(IEEE / "figures" / "gap.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
+
+
 # ---------- table rows ----------
 def row_main(name, k, ragas=False):
     if ragas:
@@ -173,12 +239,62 @@ def base_row(name, k, c, auroc):
 R2_ROWS = "\n".join([
     base_row("Judge 7B", "judge_7b", CATCH["j7"], CL["judge_7b"]["auroc_not_supported"]), row2("Judge 14B", J14),
     base_row("Fine-tuned V1, round 1", "nli_ft_v1", CATCH["ft"], AP["ft20_v1 - ft_v1 silver"]["b"]),
-    row2("Fine-tuned V1, 450 chars", FT1), row2("Fine-tuned V1, 900 chars", FF1), row2("Fine-tuned V3, 900 chars", FF3),
-    row2("XLM-R zero-shot V1", XZ1), row2("XLM-R fine-tuned V1", XF1), row2("XLM-R fine-tuned V3", XF3), row2("Qwen 3B with spans", QSP)])
+    row2("Fine-tuned V1, 450 chars", FT1), row2("Fine-tuned V3, 450 chars", M["nli_ft20_v3"]), row2("Fine-tuned V1, 900 chars", FF1), row2("Fine-tuned V3, 900 chars", FF3), row2("Zero-shot V3", V3),
+    row2("XLM-R zero-shot V1", XZ1), row2("XLM-R zero-shot V3", M["nli_xzs_v3"]), row2("XLM-R fine-tuned V1", XF1), row2("XLM-R fine-tuned V3", XF3), row2("Qwen 3B with spans", QSP)])
 REV_ROWS = "\n".join(f"{name} & {n(g)} & {n(c)} & {n(u)} & {n(f1)} & {n(rc)} & {n(em)} & {n(cl, 2)} \\\\" for name, g, c, u, f1, rc, em, cl in (
     ("No revision", RA["GGF_before"], RA["CR_before"], RA["UR_before"], RA["answer_f1_before"], RA["answer_recall_before"], RA["answer_em_before"], RA["claims_before"]),
     ("At most 1 round", R1["GGF_after"], R1["CR_after"], R1["UR_after"], R1["answer_f1_after"], R1["answer_recall_after"], R1["answer_em_after"], R1["claims_after"]),
     ("At most 2 rounds", R2["GGF_after"], R2["CR_after"], R2["UR_after"], R2["answer_f1_after"], R2["answer_recall_after"], R2["answer_em_after"], R2["claims_after"])))
+FULL_NAMES = {"judge_7b": "LLM-judge 7B", "judge_3b": "LLM-judge 3B", "nli_ft_v1": "Fine-tuned V1", "nli_ft_v1+rule": "Fine-tuned V1 + rule", "nli_ft_v2": "Fine-tuned V2",
+              "nli_ft_v2+rule": "Fine-tuned V2 + rule", "nli_nosynth_v1": "ViNLI only V1", "nli_nosynth_v1+rule": "ViNLI only V1 + rule", "nli_nosynth_v2": "ViNLI only V2",
+              "nli_nosynth_v2+rule": "ViNLI only V2 + rule", "nli_zs_v1": "Zero-shot V1", "nli_zs_v1+rule": "Zero-shot V1 + rule", "nli_zs_v2": "Zero-shot V2", "nli_zs_v2+rule": "Zero-shot V2 + rule",
+              "nli_selfcheck": "SelfCheckGPT-NLI", "rule_only": "Rule only", "majority_supported": "Always supported"}
+
+
+def row_full(k):
+    v = CL[k]; c = v.get("f1_per_class", {}); h = SENS.get(k, {}).get("macro_f1_vs_human")
+    return f"{FULL_NAMES[k]} & {n(v['macro_f1'])} & {ci(v)} & {n(v['acc'])} & {n(v['auroc_not_supported'])} & {n(c.get('supported'))} & {n(c.get('contradicted'))} & {n(c.get('unsupported'))} & {n(h)} \\\\"
+
+
+FULL_ROWS = "\n".join(row_full(k) for k in FULL_NAMES)
+CORR_NAMES = {**FULL_NAMES, "ragas_7b": "RAGAS 7B", "ragas_3b": "RAGAS 3B"}
+_corr = [(CORR_NAMES[k], v) for k, v in CO.items() if "+rule" not in k and k in CORR_NAMES] + [("RAGAS 14B", R14), ("LLM-judge 14B", JC14)]
+CORR_ROWS = "\n".join(f"{a} & {n(v['spearman'])} & {n(v['kendall'])} & {v['n']} \\\\" for a, v in sorted(_corr, key=lambda x: -x[1]["spearman"]))
+TH_NAMES = {"zs_v1": "Zero-shot V1", "zs_v2": "Zero-shot V2", "zs_v3": "Zero-shot V3", "ft_v1": "Fine-tuned V1", "ft_v2": "Fine-tuned V2", "nosynth_v1": "ViNLI only V1", "nosynth_v2": "ViNLI only V2",
+            "selfcheck": "SelfCheckGPT", "ft20_v1": "20k, 450 chars V1", "ft20_v3": "20k, 450 chars V3", "ft20full_v1": "20k, 900 chars V1", "ft20full_v3": "20k, 900 chars V3",
+            "xzs_v1": "XLM-R zero-shot V1", "xzs_v3": "XLM-R zero-shot V3", "xft_v1": "XLM-R fine-tuned V1", "xft_v3": "XLM-R fine-tuned V3"}
+_th = {**TH, **D2["thresholds"]}
+TH_ROWS = "\n".join(f"{TH_NAMES[k]} & {n(_th[k][0], 2)} & {n(_th[k][1], 2)} \\\\" for k in TH_NAMES)
+PAIR_NAMES = {"judge_14b": "Judge 14B", "nli_zs_v3": "Zero-shot V3", "nli_ft20_v1": "20k, 450 chars V1", "nli_ft20_v3": "20k, 450 chars V3", "nli_ft20full_v1": "20k, 900 chars V1", "nli_ft20full_v3": "20k, 900 chars V3",
+              "nli_xzs_v1": "XLM-R zero-shot V1", "nli_xzs_v3": "XLM-R zero-shot V3", "nli_xft_v1": "XLM-R fine-tuned V1", "nli_xft_v3": "XLM-R fine-tuned V3", "qwen3b_span": "Qwen 3B with spans"}
+
+
+def _pc(d, a, b):
+    v = d[f"{a} - {b}"]
+    return f"{n(v['diff'])} {ci(v)}"
+
+
+PAIR_ROWS = "\n".join(f"{v} & {_pc(PS, k, 'nli_ft_v1')} & {_pc(PS, k, 'judge_7b')} & {_pc(PH, k, 'nli_ft_v1')} & {_pc(PH, k, 'judge_7b')} \\\\" for k, v in PAIR_NAMES.items())
+HOP_ROWS = "\n".join(
+    f"{h} & {b['claims']} & {pc(b['not_supported'] / b['claims'])} & {b['human']} & {pc(b['agree'] / b['human'])} & {n(SY['by_hop']['naive'][h]['GGF'], 2)} & {n(SY['by_hop']['graph'][h]['GGF'], 2)} & {n(SY['by_hop']['naive'][h]['CR'], 2)} & {n(SY['by_hop']['graph'][h]['CR'], 2)} \\\\"
+    for h, b in E["by_hop"].items())
+REV_SYS = "\n".join(f"{name} & {v['revised']}/{v['answers']} & {n(v['GGF_before'])} & {n(v['GGF_after'])} & {n(v['answer_f1_before'])} & {n(v['answer_f1_after'])} & {v['abstained_after']} \\\\"
+                    for name, v in (("Naive RAG", REV["naive"]), ("GraphRAG", REV["graph"])))
+_hl = {"j7": "Judge 7B", "j14": "Judge 14B", "j3": "Judge 3B", "ft_v1": "Fine-tuned V1", "ft20full_v1": "Fine-tuned 20k", "xft_v1": "XLM-R fine-tuned", "zs_v1": "Zero-shot V1"}
+HL_ROWS = "\n".join(f"{_hl[k]} & {n(v['supported'])} & {n(v['contradicted'])} & {n(v['unsupported'])} & {v['catch']['caught']}/{v['catch']['wrong']} & {v['catch']['false_alarm']}/{v['catch']['right']} \\\\"
+                    for k, v in E["human_per_label"].items())
+_ht = {"zs_v1": "mDeBERTa zero-shot", "ft_v1": "Fine-tuned V1", "ft20full_v1": "Fine-tuned 20k", "xzs_v1": "XLM-R zero-shot", "xft_v1": "XLM-R fine-tuned"}
+HT_ROWS = "\n".join(f"{_ht[k]} & {n(v['silver_tuned'])} & {n(v['human_tuned'])} & {n(v['diff'])} & {ci(v)} \\\\" for k, v in E["human_tuned"].items())
+DH_ROWS = "\n".join(
+    f"{_hl[k]} & {v['1-3']['caught']}/{v['1-3']['wrong']} & {v['1-3']['false_alarm']}/{v['1-3']['right']} & {v['4-5']['caught']}/{v['4-5']['wrong']} & {v['4-5']['false_alarm']}/{v['4-5']['right']} \\\\"
+    for k, v in E["detect_by_hop_group"].items())
+CB_ROWS = "\n".join(f"{k} & {v['silver']['caught']}/{v['silver']['wrong']} & {v['silver']['false_alarm']}/{v['silver']['right']} & {n(v['silver']['f1_flag'])} & {v['human']['caught']}/{v['human']['wrong']} & {v['human']['false_alarm']}/{v['human']['right']} & {n(v['human']['f1_flag'])} \\\\"
+                    for k, v in E["combo"].items())
+_pn = {"judge_7b": "Judge 7B", "nli_ft_v1": "Fine-tuned V1", "nli_zs_v1": "Zero-shot V1", "judge_3b": "Judge 3B"}
+PASS_ROWS = "\n".join(f"{v} & {n(AC['sensitivity'][k]['macro_f1_vs_human'])} & {n(AQ['sensitivity'][k]['macro_f1_vs_human'])} & {n(SENS[k]['macro_f1_vs_human'])} \\\\" for k, v in _pn.items())
+TH_GAP = E["threshold"]
+EITHER, BOTH = E["combo"]["either flags"], E["combo"]["both flag"]
+HTF = E["human_tuned"]["ft_v1"]
 BIB = {
     "vihermes": r"L. S. T. Nguyen, Q. M. Bui, T. T. Ngo, Q. T. N. Vo, D. N. H. Le, and T. T. Quan, ``ViHERMES: A graph-grounded multihop question answering benchmark and system for Vietnamese healthcare regulations,'' in \emph{Proc. ACIIDS}, 2026, arXiv:2602.07361.",
     "ragas": r"S. Es, J. James, L. Espinosa-Anke, and S. Schockaert, ``RAGAs: Automated evaluation of retrieval augmented generation,'' in \emph{Proc. EACL System Demonstrations}, 2024.",
@@ -447,7 +563,7 @@ Comparison & Diff. & 95\% CI & Share $\le 0$ \\
 \end{tabular}
 \end{table}
 
-\textbf{Human labels.} Fig.~\ref{fig:labels} reverses the conclusion on fine-tuning. On <<ACG['n']>> claims, fine-tuned V1 reaches <<n(SENS['nli_ft_v1']['macro_f1_vs_human'])>>, level with zero-shot (<<n(SENS['nli_zs_v1']['macro_f1_vs_human'])>>) and clearly below the 7B judge (<<n(SENS['judge_7b']['macro_f1_vs_human'])>>). The rank correlation of metrics between the two label sets is only $\rho=<<n(ACG['rank_spearman'], 2)>>$. Verifier thresholds are chosen on Claude's labels, so the fine-tuned model may have learnt Claude's strict labelling. Table~\ref{tab:confusion} supports this: Claude labels <<NOT_SUP>> claims contradicted or unsupported, and the human agrees on only <<HUMAN_AGREE>> and labels <<HUMAN_SUP>> of them supported, whereas <<pc(CM[0][0] / sum(CM[0]))>> of Claude's supported labels are confirmed.
+\textbf{Human labels.} Fig.~\ref{fig:labels} reverses the conclusion on fine-tuning. On <<ACG['n']>> claims, fine-tuned V1 reaches <<n(SENS['nli_ft_v1']['macro_f1_vs_human'])>>, level with zero-shot (<<n(SENS['nli_zs_v1']['macro_f1_vs_human'])>>) and clearly below the 7B judge (<<n(SENS['judge_7b']['macro_f1_vs_human'])>>). The rank correlation of metrics between the two label sets is only $\rho=<<n(ACG['rank_spearman'], 2)>>$. Verifier thresholds are chosen on Claude's labels, so one explanation is that the fine-tuned model learnt Claude's strict labelling; Section~\ref{sec:posthoc} tests this. Table~\ref{tab:confusion} supports this: Claude labels <<NOT_SUP>> claims contradicted or unsupported, and the human agrees on only <<HUMAN_AGREE>> and labels <<HUMAN_SUP>> of them supported, whereas <<pc(CM[0][0] / sum(CM[0]))>> of Claude's supported labels are confirmed.
 
 \begin{figure}[t]
 \centering
@@ -489,7 +605,7 @@ Method & Silver & 95\% CI & AUROC & Caught & False alarms & Human \\
 \end{table*}
 
 \subsection{RQ3: Verify-then-revise}
-Of 80 answers, <<RA['revised']>> have flagged claims (Table~\ref{tab:revise}). GGF rises from <<n(RA['GGF_before'])>> to <<n(RA['GGF_after'])>> (Wilcoxon $p=<<n(RA['wilcoxon_GGF_p'])>>$) and CR halves, but token F1 falls from <<n(RA['answer_f1_before'])>> to <<n(RA['answer_f1_after'])>> ($p=<<n(RA['wilcoxon_F1_p'])>>$), claims per answer fall from <<n(RA['claims_before'], 2)>> to <<n(RA['claims_after'], 2)>>, and <<RA['abstained_after']>> answers become ``no information found''. Round 1 of revision gives most of the gain. Exact match is 0 in every configuration because ViHERMES answers are long (about 115 words), so token recall measures content loss. The GGF gain is an upper bound, since the 7B judge both flags and rescores.
+Of 80 answers, <<RA['revised']>> have flagged claims (Table~\ref{tab:revise}). GGF rises from <<n(RA['GGF_before'])>> to <<n(RA['GGF_after'])>> (Wilcoxon $p=<<n(RA['wilcoxon_GGF_p'])>>$) and CR halves, but token F1 falls from <<n(RA['answer_f1_before'])>> to <<n(RA['answer_f1_after'])>> ($p=<<n(RA['wilcoxon_F1_p'])>>$), claims per answer fall from <<n(RA['claims_before'], 2)>> to <<n(RA['claims_after'], 2)>>, and <<RA['abstained_after']>> answers become ``no information found''. The first revision round gives most of the gain: on the <<P2['n']>> answers that needed a second round, GGF moves from <<n(P2['GGF_r1'])>> to <<n(P2['GGF_r2'])>> without significance ($p=<<n(P2['wilcoxon_GGF_p'])>>$). Exact match is 0 in every configuration because ViHERMES answers are long (about 115 words), so token recall measures content loss. The GGF gain is an upper bound, since the 7B judge both flags and rescores.
 
 \begin{table}[t]
 \caption{Verify-then-revise on 80 answers. GGF, CR and UR from the 7B judge; F1, recall and EM against ViHERMES answers}
@@ -506,7 +622,38 @@ Setting & GGF & CR & UR & F1 & Recall & EM & Claims \\
 \end{tabular}
 \end{table}
 
-In one 3-hop example, the 7B judge flagged the claim that the amended Pharmacy Law would go to the National Assembly in 10/2025, while the document says 10/2022. The new answer reached GGF of 1 by the judge but dropped all three dates, including the correct 01/07/2025 date that both the judge and Claude labelled supported, and replaced them with a generic sentence saying the dates are stated in the context. This pattern explains how GGF rises while token recall falls.
+Table~\ref{tab:revsys} splits the loop by system. Both systems gain GGF and lose token F1, so the trade-off does not depend on the retrieval method.
+
+\begin{table}[t]
+\caption{Verify-then-revise by system, at most 2 rounds}
+\label{tab:revsys}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+System & Revised & GGF before & After & F1 before & After & Refused \\
+\midrule
+<<REV_SYS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:revex} gives one 3-hop example. The 7B judge flagged the claim that the amended Pharmacy Law would go to the National Assembly in 10/2025, while the document says 10/2022. The new answer reached GGF of 1 by the judge but dropped all three dates, including the correct 01/07/2025 date that both the judge and Claude labelled supported, and replaced them with a generic sentence saying the dates are stated in the context. This pattern explains how GGF rises while token recall falls.
+
+\begin{table}[t]
+\caption{Verify-then-revise example (3 hops, Naive RAG, translated)}
+\label{tab:revex}
+\centering
+\footnotesize
+\begin{tabular}{p{0.45\columnwidth}p{0.45\columnwidth}}
+\toprule
+Before revision & After one round \\
+\midrule
+The amended Pharmacy Law is expected to go to the National Assembly in 10/2025. Decree 124/2021/ND-CP on administrative penalties in health was issued in 12/2021. Autonomous hospitals may decide drug procurement under Law 90/2025/QH15 from 01/07/2025. & No information was found on when the amended Pharmacy Law is expected to go to the National Assembly. The issuing date of Decree 124/2021/ND-CP and the date autonomous hospitals may decide drug procurement under Law 90/2025/QH15 are stated clearly in the context. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Systems and hop difficulty}
 The two systems do not differ significantly (paired Wilcoxon on GGF, $p=<<n(SY['wilcoxon_GGF_p'])>>$; Table~\ref{tab:systems}). The released ViHERMES graph is coarse, with few amendment edges, so propagation adds few gold passages. Faithfulness falls clearly at 4 and 5 hops (Fig.~\ref{fig:hops}).
@@ -542,6 +689,194 @@ GraphRAG & <<n(QA['graph']['answer_f1'])>> & <<pc(QA['graph']['gold_passage_reca
 \item \textbf{False refusals and extraction errors:} answers claim there is no information when the evidence is explicit, and <<R['claims_bad']>> claims were malformed by extraction.
 \end{itemize}
 
+Table~\ref{tab:cases} shows four of these errors with the verdict of each checker. The fine-tuned verifier matches the silver label on all four, the 7B judge on two and the 3B judge on one. The 7B judge misses the wrong sum and flags the invented item under another label.
+
+\begin{table*}[t]
+\caption{Four claims and the verdict of each checker (S supported, C contradicted, U unsupported; translated)}
+\label{tab:cases}
+\centering
+\footnotesize
+\begin{tabular}{p{0.11\textwidth}p{0.3\textwidth}p{0.3\textwidth}ccccc}
+\toprule
+Error type & Claim & Evidence & Silver & 7B & 3B & Zero-shot & Fine-tuned \\
+\midrule
+Wrong sum & The total fine of the three clinics is 8 million VND. & One clinic alone was fined 30 million VND. & C & S & S & C & C \\
+False denial & The Population Department has no role in inspection or handling violations. & Its duties include specialised inspection and handling violations in the population field. & C & C & S & C & C \\
+Invented item & Fine Vietnam Co. may advertise on Instagram. & Instagram appears only in the certificate of another company in the context. & U & C & U & S & U \\
+Invented date & Circular 30/2017/TT-BYT takes effect on 01/01/2018. & The evidence gives no such date. & U & U & C & U & U \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Post hoc analyses}
+\label{sec:posthoc}
+The analyses in this subsection were designed after the main results, on the same data, so they suggest explanations and do not confirm them.
+
+\textbf{Difficulty by hop.} Table~\ref{tab:hop} shows that the share of non-supported silver labels grows from <<pc(E['by_hop']['1']['not_supported'] / E['by_hop']['1']['claims'])>> at 1 hop to <<pc(E['by_hop']['4']['not_supported'] / E['by_hop']['4']['claims'])>> at 4 hops. Claude and the human also agree less at 3 and 4 hops (<<pc(E['by_hop']['3']['agree'] / E['by_hop']['3']['human'])>> and <<pc(E['by_hop']['4']['agree'] / E['by_hop']['4']['human'])>>) than at 1 and 2 hops (<<pc(E['by_hop']['1']['agree'] / E['by_hop']['1']['human'])>> and <<pc(E['by_hop']['2']['agree'] / E['by_hop']['2']['human'])>>), so hard questions are also hard to label. Table~\ref{tab:dethop} shows that the 7B judge detects <<E['detect_by_hop_group']['j7']['1-3']['caught']>>/<<E['detect_by_hop_group']['j7']['1-3']['wrong']>> wrong claims at 1--3 hops but only <<E['detect_by_hop_group']['j7']['4-5']['caught']>>/<<E['detect_by_hop_group']['j7']['4-5']['wrong']>> at 4--5 hops. A faithfulness score is therefore least reliable on the questions where wrong claims are most frequent.
+
+\begin{table}[t]
+\caption{Profile by hop on usable claims: silver error share, Claude--human agreement, mean GGF and CR for Naive RAG (N) and GraphRAG (G)}
+\label{tab:hop}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ccccccccc}
+\toprule
+Hop & Claims & Wrong & Human & Agree & GGF N & GGF G & CR N & CR G \\
+\midrule
+<<HOP_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Detection of non-supported claims by hop group, all usable claims, silver labels}
+\label{tab:dethop}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{1--3 hops} & \multicolumn{2}{c}{4--5 hops} \\
+Checker & Caught & False al. & Caught & False al. \\
+\midrule
+<<DH_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{The silver--human gap.} Fig.~\ref{fig:gap} places both scores side by side. The gap has no single direction: LLM-judge 7B scores higher on human labels, while the verifiers tuned on silver labels fall. Table~\ref{tab:hl} gives per-label results on human labels, using all <<ACG['n']>> claims. The human labelled <<ACG['human_distribution']['supported']>> claims supported, <<ACG['human_distribution']['unsupported']>> unsupported and <<ACG['human_distribution']['contradicted']>> contradicted, so the contradicted F1 rests on few examples. XLM-R fine-tuned has the best contradicted F1, and the 7B judge the best supported and unsupported F1.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{gap.pdf}
+\caption{Macro-F1 on silver labels (test split) and human labels for selected checkers.}
+\label{fig:gap}
+\end{figure}
+
+\begin{table}[t]
+\caption{Per-label F1 and detection on human labels}
+\label{tab:hl}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lccccc}
+\toprule
+Checker & Supp. & Contra. & Unsup. & Caught & False al. \\
+\midrule
+<<HL_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Discrimination without thresholds.} Fig.~\ref{fig:roc} shows ROC curves for detecting non-supported claims. On silver labels, fine-tuned verifiers separate from zero-shot, with AUROC <<n(E['roc']['ft_v1|silver']['auc'])>> against <<n(E['roc']['zs_v1|silver']['auc'])>>. On human labels the gap narrows but remains (<<n(E['roc']['ft_v1|human']['auc'])>> against <<n(E['roc']['zs_v1|human']['auc'])>>), and XLM-R fine-tuned reaches <<n(E['roc']['xft_v1|human']['auc'])>>. So fine-tuning keeps some ranking signal under human labels even though macro-F1 at the chosen threshold does not improve. At their fixed operating points, both judges lie above the verifier curves on both label sets, so at the same false alarm rate they detect more wrong claims.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{roc.pdf}
+\caption{ROC curves for detecting non-supported claims. Dots mark the fixed operating points of the 7B and 14B judges.}
+\label{fig:roc}
+\end{figure}
+
+\textbf{Threshold sensitivity.} Fig.~\ref{fig:threshold} varies the support threshold. For fine-tuned V1, the dev thresholds give <<n(TH_GAP['ft_v1']['dev_score'])>>, while the best grid point on test gives <<n(TH_GAP['ft_v1']['test_best'])>>; for XLM-R fine-tuned the figures are <<n(TH_GAP['xft_v1']['dev_score'])>> and <<n(TH_GAP['xft_v1']['test_best'])>>. Those best points are oracle values, not results, but they show that <<R['claims_dev']>> dev claims select thresholds with an error of up to about 0.1 in macro-F1. Differences of this size between verifiers should not be over-interpreted, and AUROC is the safer comparison.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{threshold.pdf}
+\caption{Macro-F1 against the support threshold. Solid: silver labels on test; dashed: human labels.}
+\label{fig:threshold}
+\end{figure}
+
+\textbf{Tuning thresholds on human labels.} If thresholds tuned on silver labels caused the drop, tuning on human labels should recover it. We ran grouped five-fold cross-validation over the <<ACG['n']>> human-labelled claims, keeping claims of one question in one fold, and pooled the held-out predictions (Table~\ref{tab:ht}). Fine-tuned V1 does not improve (<<n(HTF['silver_tuned'])>> to <<n(HTF['human_tuned'])>>, CI of the difference <<ci(HTF)>>), and no verifier improves significantly. Thresholds alone therefore do not explain the gap on this sample, although each fold trains on only about 130 claims and the chosen thresholds vary between folds.
+
+\begin{table}[t]
+\caption{Macro-F1 on human labels: thresholds from silver dev against grouped five-fold thresholds from human labels}
+\label{tab:ht}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Verifier & Silver & Human & Diff. & 95\% CI \\
+\midrule
+<<HT_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Agreement between checkers.} Fig.~\ref{fig:kappa} gives pairwise Cohen's $\kappa$ on the human-labelled claims. The human agrees more with the 7B judge ($\kappa=<<n(E['kappa']['values']['human|j7'], 2)>>$) than with the silver labels ($\kappa=<<n(E['kappa']['values']['human|silver'], 2)>>$) or the 14B judge ($\kappa=<<n(E['kappa']['values']['human|j14'], 2)>>$). Agreement with the human is low for every checker, and the 7B judge and the verifiers also agree little with one another, which suggests that they make different errors.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\columnwidth]{kappa.pdf}
+\caption{Pairwise Cohen's $\kappa$ on the human-labelled claims.}
+\label{fig:kappa}
+\end{figure}
+
+\textbf{Combining two checkers.} Because the 7B judge and XLM-R fine-tuned disagree often ($\kappa=<<n(E['kappa']['values']['j7|xft_v1'], 2)>>$), we tested two simple rules on the binary task of flagging a claim (Table~\ref{tab:combo}). Flagging when either checker objects catches <<EITHER['silver']['caught']>>/<<EITHER['silver']['wrong']>> wrong claims on silver labels at the cost of <<EITHER['silver']['false_alarm']>>/<<EITHER['silver']['right']>> false alarms. Flagging only when both object cuts false alarms to <<BOTH['silver']['false_alarm']>>/<<BOTH['silver']['right']>> and still catches <<BOTH['silver']['caught']>>. Neither rule beats the 7B judge alone on flag F1, but they offer two useful operating points.
+
+\begin{table}[t]
+\caption{Flagging rules from the 7B judge and XLM-R fine-tuned V1; ``F1'' is for the flag class}
+\label{tab:combo}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{Silver, test} & \multicolumn{3}{c}{Human} \\
+Rule & Caught & False al. & F1 & Caught & False al. & F1 \\
+\midrule
+<<CB_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Effect of the audit pass.} Table~\ref{tab:pass} compares pass C, stratified with full passages, against the random quick passes. The 7B judge leads in both, so the main finding does not depend on the display condition. Pass C oversamples errors, so scores between the two columns are not directly comparable.
+
+\begin{table}[t]
+\caption{Macro-F1 on human labels by audit pass}
+\label{tab:pass}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Checker & Pass C (<<AC['n']>>) & G--J (<<AQ['n']>>) & All (<<ACG['n']>>) \\
+\midrule
+<<PASS_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Cost.} Table~\ref{tab:cost} lists wall-clock times of round 2. They come from file timestamps of a single run, so they are indicative only. The 14B judge with RAGAS took about 2.8 hours for 80 answers, roughly 30 times the 3B span run, without a significant claim-level gain.
+
+\begin{table}[t]
+\caption{Wall-clock time of round 2 jobs (single run)}
+\label{tab:cost}
+\centering
+\footnotesize
+\begin{tabular}{p{0.6\columnwidth}cc}
+\toprule
+Job & GPU & Time \\
+\midrule
+Judge and RAGAS 14B, 80 answers & T4 & about 2.8 h \\
+Qwen 3B with spans, 80 answers & T4 & 5 min \\
+XLM-R zero-shot, <<R['claims_total']>> claims, V1 and V3 & T4 & 6.5 min \\
+XLM-R fine-tune, 16,000 pairs, with scoring & T4 & 69 min \\
+mDeBERTa fine-tune, 29,993 pairs, 900 chars, with scoring & T4 & 53 min \\
+mDeBERTa fine-tune, 29,993 pairs, 450 chars & GTX 1650 & about 2 h \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+\textbf{Which checker should a practitioner use?} On this data, the 7B judge is the most defensible default. It leads on human labels, is not significantly below the best verifier on silver labels, and needs no training. Moving to 14B brings a clear gain only at answer level, where RAGAS reaches $\rho=<<n(R14['spearman'])>>$, and even that gain is untested. A team that wants one faithfulness number per answer can use RAGAS 14B, while a team that needs to locate wrong claims should stay with a claim-level judge. For regulations, where missing a wrong claim costs more than reviewing a correct one, the either-flags rule is a reasonable triage step: it passes few wrong claims but sends close to half of the correct claims to a human reader. It supports human review and does not replace it.
+
+\textbf{Why do silver and human labels disagree?} We can see the size of the disagreement but not who is right. Claude labels <<NOT_SUP>> claims as non-supported and the human confirms <<HUMAN_AGREE>> of them. Three explanations are plausible. Claude may be stricter about implicit inferences. The annotator, who is not a legal expert, may accept claims that a lawyer would reject. The quick passes may also hide distant evidence, although Table~\ref{tab:pass} shows the same leading checker in both conditions. Adjudication by two legal experts is the only way to separate these. Until then, both label sets should be reported, because a ranking from one source does not transfer to the other.
+
+\textbf{What does fine-tuning learn?} Accuracy on synthetic dev pairs reaches about 0.9, far above any score on real claims. Synthetic errors change a number, a date or a negation, or borrow a sentence from elsewhere. Real errors in our sample also include wrong subjects, wrong aggregation across documents and invented list items, which these perturbations do not produce. A verifier can thus master the synthetic task without learning the real one. This fits the flat AUROC from 15,000 to 30,000 pairs: adding more pairs of the same kind does not help. Future synthetic data should reproduce the observed error types, for example by swapping the responsible agency between passages of one document.
+
+\textbf{Why did graph input not help?} Prepending metadata to each window makes every claim that names a document look entailed. Selective triples avoid part of this, but the released graph is coarse and is passed as plain text. Our result concerns this form of graph input on this graph, and it does not show that graphs cannot help verification.
+
+\textbf{What does revision really do?} A faithfulness score alone rewards deletion. An answer that says less contains fewer wrong claims, so GGF improves as content disappears. Any revision loop should therefore be scored by faithfulness and completeness together, with an independent scorer. With a 3B generator the loop mostly removes content, and a larger generator may behave differently.
+
 \section{Threats to Validity}
 \textbf{Silver reference.} Claude agrees with the human on <<pc(ACG['acc'])>> of claims ($\kappa=<<n(ACG['kappa'], 2)>>$). We therefore report both label sets; more human labels and a second annotator with adjudication are needed.
 
@@ -549,16 +884,95 @@ GraphRAG & <<n(QA['graph']['answer_f1'])>> & <<pc(QA['graph']['gold_passage_reca
 
 \textbf{Small scale.} We evaluate 2 systems, <<R['claims_total']>> claims and judges up to 14B. Bootstrap intervals and paired tests accompany the main comparisons, without multiple-comparison correction.
 
-\textbf{Thresholds tuned on silver labels.} This biases fine-tuned verifiers toward Claude, and only <<R['claims_dev']>> dev claims are available. Thresholds should be selected on human labels when enough exist.
+\textbf{Thresholds tuned on silver labels.} Only <<R['claims_dev']>> dev claims are available, and thresholds tuned on silver labels may lean toward Claude. Tuning on human labels did not improve scores in our cross-validation (Table~\ref{tab:ht}), but that sample is small.
 
 \textbf{Self-scored revision.} Revised answers are scored only by the judge that flagged them. Rescoring by humans or an independent metric is needed.
 
 \textbf{Graph as text.} Triples are appended as text, so verifiers do not read graph structure. ViEduReg and the KAG Verify operator are not covered.
 
+\textbf{Post hoc and multiple comparisons.} Many comparisons were run without correction, and the analyses in Section~\ref{sec:posthoc} were chosen after seeing the main results. Intervals that barely exclude zero should be read as hints.
+
+\textbf{Implementation.} Early fine-tuning runs produced NaN loss because the mDeBERTa checkpoint is stored in float16; all reported runs use float32. Round 1 on Colab used transformers 5.x, and round 2 used 4.46. Ollama runs Q4\_K\_M quantised models, so results may differ from full-precision weights.
+
 \section{Conclusion}
-On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Meta-evaluation with LLM labels can therefore change metric rankings. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
+On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
 
 Future work includes full human labelling by two annotators with legal expertise and threshold selection on human labels; a 32B judge and a fine-tuned small Qwen verifier whose spans are copied from the evidence; structured triple input for verifiers and extension to LightRAG, HippoRAG 2, KAG and ViEduReg; and independent scoring of revised answers with a larger generator. Code and data are available at \url{https://github.com/vinhha195-oss/vikag-faith}.
+
+\appendices
+
+\section{Prompts}
+The RAGAS prompts follow the library. The statement prompt reads: ``Given a question, an answer, and sentences from the answer analyze the complexity of each sentence given under `sentences' and break down each sentence into one or more fully understandable statements while also ensuring no pronouns are used in each statement.'' The verdict prompt reads: ``Your task is to judge the faithfulness of a series of statements based on a given context. For each statement you must return verdict as 1 if the statement can be directly inferred based on the context or 0 if the statement can not be directly inferred based on the context.'' Both ask for JSON output, and the first keeps the language of the answer.
+
+The remaining prompts are in Vietnamese; these are English translations.
+
+\textbf{Generator.} ``You are an assistant answering questions about Vietnamese healthcare legal documents. Use only information in the CONTEXT. Answer in Vietnamese in 2--5 sentences, naming documents when available. If the context is insufficient, say clearly that no information was found.''
+
+\textbf{Claim extraction.} ``Split the answer into atomic claims. Each claim states ONE fact with one main predicate. Each claim must be self-contained: replace pronouns with specific names. Keep numbers, dates and document identifiers as in the answer. Add nothing beyond the answer, and drop sentences that only say no information was found.'' Two worked examples follow.
+
+\textbf{LLM-judge.} ``You are a fact checker. For each claim, compare with the EVIDENCE and assign exactly one label. supported: the evidence implies the claim. contradicted: the evidence says the opposite (wrong figure, date, document name, negation, and so on). unsupported: the evidence does not mention it or is not enough to conclude.'' The span verifier adds: ``For each claim, copy verbatim one short sentence from the EVIDENCE as the basis in the span field; if there is none, leave the string empty.''
+
+\section{Full Results}
+Table~\ref{tab:full} lists every round 1 configuration. Table~\ref{tab:corr} lists answer-level correlations, Table~\ref{tab:th} the dev thresholds, and Table~\ref{tab:pairfull} the paired comparisons of round 2.
+
+\begin{table*}[t]
+\caption{All round 1 configurations on <<R['claims_test']>> test claims (silver labels), with macro-F1 on human labels}
+\label{tab:full}
+\centering
+\footnotesize
+\begin{tabular}{lcccccccc}
+\toprule
+Method & Macro-F1 & 95\% CI & Acc. & AUROC & F1 supp. & F1 contra. & F1 unsup. & Human \\
+\midrule
+<<FULL_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\caption{Paired macro-F1 differences of round 2 methods with 95\% CI (1,000 bootstrap resamples, not corrected for multiple comparisons)}
+\label{tab:pairfull}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Method & Silver, $-$ fine-tuned V1 & Silver, $-$ judge 7B & Human, $-$ fine-tuned V1 & Human, $-$ judge 7B \\
+\midrule
+<<PAIR_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table}[t]
+\caption{Answer-level correlation with reference GGF on the test split, sorted by Spearman $\rho$; $n$ is the number of answers with valid output}
+\label{tab:corr}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Metric & Spearman & Kendall & $n$ \\
+\midrule
+<<CORR_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Thresholds chosen on the dev split}
+\label{tab:th}
+\centering
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Verifier & $\tau_s$ & $\tau_c$ \\
+\midrule
+<<TH_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Reproducibility}
+The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, and \texttt{s11\_ieee\_extra} computes the post hoc analyses of this paper. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
 
 \begin{thebibliography}{99}
 <<BIBITEMS>>
@@ -569,7 +983,7 @@ Future work includes full human labelling by two annotators with legal expertise
 
 
 def build():
-    fig_pipeline(); fig_scores(); fig_labels(); fig_hops()
+    fig_pipeline(); fig_scores(); fig_labels(); fig_hops(); fig_roc(); fig_threshold(); fig_kappa(); fig_gap()
     order = []
     for m in re.finditer(r"\\cite\{([^}]+)\}", TEMPLATE):
         for k in m.group(1).split(","):
