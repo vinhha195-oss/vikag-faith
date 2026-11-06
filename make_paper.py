@@ -48,6 +48,7 @@ V3 = D2["methods"]["nli_zs_v3"]
 FT1, FT3 = D2["methods"]["nli_ft20_v1"], D2["methods"]["nli_ft20_v3"]
 PS, PH, AP = D2["paired_silver"], D2["paired_human"], D2["auroc_paired"]
 J14, XZ1, XZ3, QSP = D2["methods"]["judge_14b"], D2["methods"]["nli_xzs_v1"], D2["methods"]["nli_xzs_v3"], D2["methods"]["qwen3b_span"]
+XF1, XF3 = D2["methods"]["nli_xft_v1"], D2["methods"]["nli_xft_v3"]
 R14, JC14, SPN = D2["corr_ragas_14b"], D2["corr_judge_14b"], D2["span"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
@@ -521,7 +522,7 @@ numbered([
     "**Metric dựa trên LLM:** RAGAS faithfulness tái hiện theo hai prompt gốc của thư viện (tách statement, rồi phán xét NLI theo lô) và LLM-judge "
     "mức claim gán 3 nhãn cho các claim của đề tài; cả hai chạy với Qwen2.5-3B và 7B qua Ollama, đợt 2 thêm 14B và một verifier Qwen 3B trả nhãn kèm span bằng chứng (chưa fine-tune). Đầu ra không đọc được được loại khỏi phép đo, "
     "không mặc định thành một nhãn.",
-    f"**Verifier NLI:** mDeBERTa-v3-base-xnli-multilingual [13], [14] chạy trên cửa sổ 900 ký tự (bước 700); đợt 2 thử thêm XLM-R large xnli zero-shot. Với claim c và các cửa sổ w:",
+    f"**Verifier NLI:** mDeBERTa-v3-base-xnli-multilingual [13], [14] chạy trên cửa sổ 900 ký tự (bước 700); đợt 2 thử thêm XLM-R large xnli, zero-shot và fine-tune 16.000 cặp. Với claim c và các cửa sổ w:",
 ], start=5)
 equation(msub(mr("P"), mr("sup", True)) + mr("(c) = ") + mmax(mr("w"), mr("P(") + mr("entail", True) + mr(" | w, c)")), 3)
 equation(msub(mr("P"), mr("con", True)) + mr("(c) = ") + mmax(mr("w ∈ ") + mr("top-2 overlap", True), mr("P(") + mr("contra", True) + mr(" | w, c)")), 4)
@@ -665,25 +666,28 @@ para(f"Claude gán contradicted hoặc unsupported cho {sum(cm[1]) + sum(cm[2])}
      f"thích vì sao metric được tối ưu theo nhãn Claude (verifier fine-tune với ngưỡng chọn trên dev silver) bị đánh giá thấp hơn khi đổi sang nhãn người.")
 para(f"**Đợt 2 – mô hình lớn hơn:** judge 14B đạt {f(J14['macro_f1'])} theo silver (AUROC {f(J14['auroc_not_supported'])}), chênh với judge 7B không có ý nghĩa "
      f"({f(PS['judge_14b - judge_7b']['diff'])}, KTC [{f(PS['judge_14b - judge_7b']['ci95'][0], 2)}; {f(PS['judge_14b - judge_7b']['ci95'][1], 2)}]); theo nhãn người lại thấp hơn "
-     f"({f(J14['macro_f1_human'])} so với {f(hj7)}, KTC của chênh lệch [{f(PH['judge_14b - judge_7b']['ci95'][0], 2)}; {f(PH['judge_14b - judge_7b']['ci95'][1], 2)}]), nên chưa có bằng chứng 14B tốt hơn 7B ở mức claim. "
-     f"Ở mức câu trả lời, RAGAS 14B đạt ρ = {f(R14['spearman'])} và judge 14B {f(JC14['spearman'])}, cao hơn bản 7B ({f(CO['ragas_7b']['spearman'])} và {f(CO['judge_7b']['spearman'])}), nhưng chỉ trên {R14['n']} câu trả lời và chưa kiểm định chênh lệch. "
+     f"({f(J14['macro_f1_human'])} so với {f(hj7)}, KTC của chênh lệch [{f(PH['judge_14b - judge_7b']['ci95'][0], 2)}; {f(PH['judge_14b - judge_7b']['ci95'][1], 2)}]). "
+     f"Ở mức câu trả lời, RAGAS 14B đạt ρ = {f(R14['spearman'])} và judge 14B {f(JC14['spearman'])}, cao hơn bản 7B ({f(CO['ragas_7b']['spearman'])} và {f(CO['judge_7b']['spearman'])}), chưa kiểm định chênh lệch. "
      f"XLM-R zero-shot V1 đạt {f(XZ1['macro_f1'])} theo silver, hơn rõ mDeBERTa zero-shot (chênh {f(PS['nli_xzs_v1 - nli_zs_v1']['diff'])}, KTC [{f(PS['nli_xzs_v1 - nli_zs_v1']['ci95'][0], 2)}; {f(PS['nli_xzs_v1 - nli_zs_v1']['ci95'][1], 2)}]), "
-     f"nhưng theo nhãn người chỉ {f(XZ1['macro_f1_human'])}, lặp lại độ lệch giữa hai bộ nhãn đã thấy ở fine-tune. Qwen 3B trả span đạt {f(QSP['macro_f1'])} theo silver và {f(QSP['macro_f1_human'])} theo người, thấp hơn rõ judge 7B; "
+     f"nhưng theo nhãn người chỉ {f(XZ1['macro_f1_human'])}, lặp lại độ lệch giữa hai bộ nhãn. "
+     f"XLM-R fine-tune V1 (900 ký tự) đạt {f(XF1['macro_f1_human'])} theo người, hơn XLM-R zero-shot có ý nghĩa (chênh {f(PH['nli_xft_v1 - nli_xzs_v1']['diff'])}, KTC [{f(PH['nli_xft_v1 - nli_xzs_v1']['ci95'][0], 2)}; {f(PH['nli_xft_v1 - nli_xzs_v1']['ci95'][1], 2)}]) "
+     f"và không khác có ý nghĩa với judge 7B (KTC [{f(PH['nli_xft_v1 - judge_7b']['ci95'][0], 2)}; {f(PH['nli_xft_v1 - judge_7b']['ci95'][1], 2)}]), nhưng theo silver không tăng và báo nhầm tới {XF1['false_alarm']}/{XF1['right']}. "
+     f"XLM-R fine-tune V3 có AUROC cao nhất ({f(XF3['auroc_not_supported'])}), hơn fine-tune đợt 1 theo silver (KTC [{f(AP['xft_v3 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['xft_v3 - ft_v1 silver']['ci95'][1], 2)}]), không hơn theo người. Các KTC này chưa hiệu chỉnh đa so sánh. "
+     f"Qwen 3B trả span đạt {f(QSP['macro_f1'])} theo silver và {f(QSP['macro_f1_human'])} theo người, thấp hơn rõ judge 7B; "
      f"chỉ {SPN['verbatim']}/{SPN['labelled']} nhãn kèm span chép đúng từ bằng chứng, không tính hoa thường và dấu câu.")
 para(f"**Đợt 2 – tăng lên khoảng 20.000 cặp tổng hợp:** độ chính xác trên dev tổng hợp tăng từ 0,594 lên 0,897, nhưng phần tăng này không chuyển sang claim thật "
      f"(Bảng 9). Fine-tune V1 đợt 2 thấp hơn đợt 1 (chênh {f(PS['nli_ft20_v1 - nli_ft_v1']['diff'])}, KTC [{f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][1], 2)}]); "
      f"AUROC, vốn không phụ thuộc ngưỡng, chỉ nhích {f(AP['ft20_v1 - ft_v1 silver']['b'])} → {f(AP['ft20_v1 - ft_v1 silver']['a'])} và không khác có ý nghĩa "
-     f"(KTC [{f(AP['ft20_v1 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['ft20_v1 - ft_v1 silver']['ci95'][1], 2)}]). Ngưỡng V1 rơi vào cận dưới của lưới, nhưng mở rộng lưới xuống 0,01 vẫn chỉ cho {f(D2['wide_grid']['ft20_v1']['macro_f1'])}: {R['claims_dev']} claim dev là quá ít để chọn ngưỡng ổn định. "
+     f"(KTC [{f(AP['ft20_v1 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['ft20_v1 - ft_v1 silver']['ci95'][1], 2)}]). "
      f"Với mô hình đợt 2, V3 đạt {f(FT3['macro_f1'])} so với {f(FT1['macro_f1'])} của V1, nhưng chênh lệch không có ý nghĩa (KTC [{f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][1], 2)}]): "
-     f"V3 bắt và báo nhầm đều gấp đôi, AUROC không cao hơn, tức là khác ở điểm cắt, "
-     f"không phải ở khả năng phân biệt. Theo nhãn người, không cấu hình nào của đợt 2 tới gần judge 7B ({f(hj7)}).")
+     f"V3 chỉ khác V1 ở điểm cắt. Theo nhãn người, không cấu hình mDeBERTa nào của đợt 2 tới gần judge 7B ({f(hj7)}).")
 table("Kết quả đợt 2 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
       ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
           ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
           ["Judge 14B", f(J14["macro_f1"]), f"{f(J14['ci95'][0], 2)}; {f(J14['ci95'][1], 2)}", f(J14["auroc_not_supported"]), f"{J14['caught']}/{J14['wrong']}", f"{J14['false_alarm']}/{J14['right']}", f(J14["macro_f1_human"])],
           ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
       ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
-           for n, r in (("Fine-tune V1, đợt 2", FT1), ("Fine-tune V3, đợt 2", FT3), ("Zero-shot V3", V3), ("XLM-R zero-shot V1", XZ1), ("XLM-R zero-shot V3", XZ3), ("Qwen 3B trả span", QSP))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
+           for n, r in (("Fine-tune V1, đợt 2", FT1), ("Fine-tune V3, đợt 2", FT3), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R fine-tune V3", XF3), ("Qwen 3B trả span", QSP))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
 
 h3("6.3 RQ3 – Verify-then-revise")
 table("Verify-then-revise trên 80 câu trả lời (GGF, CR, UR do judge 7B chấm; token F1, recall, EM so với đáp án ViHERMES)",
@@ -741,8 +745,8 @@ bullets([
 # 8 ------------------------------------------------------------------
 h2("8. Kết luận & hướng phát triển")
 para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulness tự động chạy bằng LLM mở cỡ nhỏ chỉ khớp ở mức thấp đến trung bình với nhãn chuẩn. "
-     f"LLM-judge 7B là metric ổn định nhất ở cả hai bộ nhãn; judge 14B không hơn có ý nghĩa ở mức claim; RAGAS tốt nhất ở mức câu trả lời và tăng theo kích thước mô hình. Fine-tune verifier bằng dữ liệu tổng hợp trong miền tăng "
-     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp cũng không tốt hơn, cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
+     f"LLM-judge 7B là metric ổn định nhất ở cả hai bộ nhãn; judge 14B không hơn có ý nghĩa ở mức claim; RAGAS tốt nhất ở mức câu trả lời và tăng theo kích thước mô hình. Fine-tune mDeBERTa bằng dữ liệu tổng hợp trong miền tăng "
+     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp cũng không tốt hơn; XLM-R fine-tune tăng theo nhãn người nhưng báo nhầm nhiều. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
      f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
 numbered([
     "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người; chọn ngưỡng verifier trên nhãn người.",
