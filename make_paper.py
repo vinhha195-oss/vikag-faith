@@ -49,6 +49,7 @@ FT1, FT3 = D2["methods"]["nli_ft20_v1"], D2["methods"]["nli_ft20_v3"]
 PS, PH, AP = D2["paired_silver"], D2["paired_human"], D2["auroc_paired"]
 J14, XZ1, XZ3, QSP = D2["methods"]["judge_14b"], D2["methods"]["nli_xzs_v1"], D2["methods"]["nli_xzs_v3"], D2["methods"]["qwen3b_span"]
 XF1, XF3 = D2["methods"]["nli_xft_v1"], D2["methods"]["nli_xft_v3"]
+FF1, FF3 = D2["methods"]["nli_ft20full_v1"], D2["methods"]["nli_ft20full_v3"]
 R14, JC14, SPN = D2["corr_ragas_14b"], D2["corr_judge_14b"], D2["span"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
@@ -535,7 +536,7 @@ numbered([
     "gốc; contradicted = đổi một con số, ngày hoặc thêm phủ định (“không”); unsupported = câu của đoạn khác cùng văn bản. Huấn luyện 1 epoch, "
     "lr 5e-6, batch 4 × tích lũy 4, float32, giữ checkpoint tốt nhất trên dev. Ablation: cùng cấu hình nhưng chỉ dùng ViNLI. Đợt 2 lặp lại quy trình với "
     "12.000 cặp ViNLI + 17.993 cặp tổng hợp (trong 19.992 cặp, phần còn lại làm dev); vì chạy trên GTX 1650 4 GB, premise huấn luyện rút từ 900 xuống 450 ký tự, "
-    "độ dài tối đa từ 320 xuống 200 token, dev kiểm tra 1.000 cặp, còn lúc chấm claim vẫn giữ cửa sổ 900 ký tự và 320 token.",
+    "độ dài tối đa từ 320 xuống 200 token, dev kiểm tra 1.000 cặp, còn lúc chấm claim vẫn giữ cửa sổ 900 ký tự và 320 token; sau đó huấn luyện lại trên Colab với 900 ký tự, 320 token.",
     "**Rule số/ngày/số hiệu:** giá trị trong claim không có trong bằng chứng thì hạ supported thành unsupported; nếu câu bằng chứng tương ứng có "
     "giá trị cùng loại khác thì gán contradicted.",
     "**SelfCheckGPT-NLI** [8]: sinh thêm 3 câu trả lời (nhiệt độ 0,7) từ cùng prompt và ngữ cảnh; điểm của claim là trung bình xác suất entail/contradict "
@@ -675,19 +676,22 @@ para(f"**Đợt 2 – mô hình lớn hơn:** judge 14B đạt {f(J14['macro_f1'
      f"XLM-R fine-tune V3 có AUROC cao nhất ({f(XF3['auroc_not_supported'])}), hơn fine-tune đợt 1 theo silver (KTC [{f(AP['xft_v3 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['xft_v3 - ft_v1 silver']['ci95'][1], 2)}]), không hơn theo người. Các KTC này chưa hiệu chỉnh đa so sánh. "
      f"Qwen 3B trả span đạt {f(QSP['macro_f1'])} theo silver và {f(QSP['macro_f1_human'])} theo người, thấp hơn rõ judge 7B; "
      f"chỉ {SPN['verbatim']}/{SPN['labelled']} nhãn kèm span chép đúng từ bằng chứng, không tính hoa thường và dấu câu.")
-para(f"**Đợt 2 – tăng lên khoảng 20.000 cặp tổng hợp:** độ chính xác trên dev tổng hợp tăng từ 0,594 lên 0,897, nhưng phần tăng này không chuyển sang claim thật "
-     f"(Bảng 9). Fine-tune V1 đợt 2 thấp hơn đợt 1 (chênh {f(PS['nli_ft20_v1 - nli_ft_v1']['diff'])}, KTC [{f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][1], 2)}]); "
-     f"AUROC, vốn không phụ thuộc ngưỡng, chỉ nhích {f(AP['ft20_v1 - ft_v1 silver']['b'])} → {f(AP['ft20_v1 - ft_v1 silver']['a'])} và không khác có ý nghĩa "
-     f"(KTC [{f(AP['ft20_v1 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['ft20_v1 - ft_v1 silver']['ci95'][1], 2)}]). "
-     f"Với mô hình đợt 2, V3 đạt {f(FT3['macro_f1'])} so với {f(FT1['macro_f1'])} của V1, nhưng chênh lệch không có ý nghĩa (KTC [{f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][1], 2)}]): "
-     f"V3 chỉ khác V1 ở điểm cắt. Theo nhãn người, không cấu hình mDeBERTa nào của đợt 2 tới gần judge 7B ({f(hj7)}).")
+def _ci(d, k):
+    return f"KTC [{f(d[k]['ci95'][0], 2)}; {f(d[k]['ci95'][1], 2)}]"
+
+
+para(f"**Đợt 2 – tăng lên khoảng 20.000 cặp tổng hợp:** độ chính xác trên dev tổng hợp tăng từ 0,594 lên 0,897. Trên GPU 4 GB với premise ngắn (450 ký tự, 200 token), fine-tune V1 chỉ đạt "
+     f"{f(FT1['macro_f1'])}, thấp hơn đợt 1 (chênh {f(PS['nli_ft20_v1 - nli_ft_v1']['diff'])}, {_ci(PS, 'nli_ft20_v1 - nli_ft_v1')}). Huấn luyện lại với cùng đầu vào đợt 1 (900 ký tự, 320 token) đạt {f(FF1['macro_f1'])}, "
+     f"cao nhất theo silver, hơn bản premise ngắn có ý nghĩa (chênh {f(PS['nli_ft20full_v1 - nli_ft20_v1']['diff'])}, {_ci(PS, 'nli_ft20full_v1 - nli_ft20_v1')}) nhưng không hơn đợt 1 có ý nghĩa "
+     f"(chênh {f(PS['nli_ft20full_v1 - nli_ft_v1']['diff'])}, {_ci(PS, 'nli_ft20full_v1 - nli_ft_v1')}); AUROC gần như không đổi ({f(AP['ft20full_v1 - ft_v1 silver']['b'])} → {f(AP['ft20full_v1 - ft_v1 silver']['a'])}, {_ci(AP, 'ft20full_v1 - ft_v1 silver')}). "
+     f"Như vậy cú giảm ban đầu đến từ premise ngắn, còn tăng dữ liệu chưa cải thiện khả năng phân biệt. Theo nhãn người, bản này chỉ đạt {f(FF1['macro_f1_human'])}, thấp hơn rõ judge 7B ({f(hj7)}, {_ci(PH, 'nli_ft20full_v1 - judge_7b')}).")
 table("Kết quả đợt 2 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
       ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
           ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
           ["Judge 14B", f(J14["macro_f1"]), f"{f(J14['ci95'][0], 2)}; {f(J14['ci95'][1], 2)}", f(J14["auroc_not_supported"]), f"{J14['caught']}/{J14['wrong']}", f"{J14['false_alarm']}/{J14['right']}", f(J14["macro_f1_human"])],
           ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
       ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
-           for n, r in (("Fine-tune V1, đợt 2", FT1), ("Fine-tune V3, đợt 2", FT3), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R fine-tune V3", XF3), ("Qwen 3B trả span", QSP))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
+           for n, r in (("Fine-tune V1, 450 ký tự", FT1), ("Fine-tune V1, 900 ký tự", FF1), ("Fine-tune V3, 900 ký tự", FF3), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R fine-tune V3", XF3), ("Qwen 3B trả span", QSP))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
 
 h3("6.3 RQ3 – Verify-then-revise")
 table("Verify-then-revise trên 80 câu trả lời (GGF, CR, UR do judge 7B chấm; token F1, recall, EM so với đáp án ViHERMES)",
@@ -738,7 +742,6 @@ bullets([
     "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 14B (giới hạn Colab T4). Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
     "**Ngưỡng verifier chọn theo nhãn silver:** làm verifier fine-tune nghiêng theo Claude. Giảm thiểu: chọn ngưỡng trên nhãn người khi đủ dữ liệu.",
     "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
-    "**Cấu hình đợt 2 khác đợt 1:** premise huấn luyện ngắn hơn (450 ký tự) do GPU 4 GB, chưa tách được tác động của lượng dữ liệu. Giảm thiểu: huấn luyện lại với 900 ký tự.",
     "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; chưa có ViEduReg, toán tử Verify trong KAG.",
 ])
 
@@ -746,7 +749,7 @@ bullets([
 h2("8. Kết luận & hướng phát triển")
 para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulness tự động chạy bằng LLM mở cỡ nhỏ chỉ khớp ở mức thấp đến trung bình với nhãn chuẩn. "
      f"LLM-judge 7B là metric ổn định nhất ở cả hai bộ nhãn; judge 14B không hơn có ý nghĩa ở mức claim; RAGAS tốt nhất ở mức câu trả lời và tăng theo kích thước mô hình. Fine-tune mDeBERTa bằng dữ liệu tổng hợp trong miền tăng "
-     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp cũng không tốt hơn; XLM-R fine-tune tăng theo nhãn người nhưng báo nhầm nhiều. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
+     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp không hơn có ý nghĩa; XLM-R fine-tune tăng theo nhãn người nhưng báo nhầm nhiều. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
      f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
 numbered([
     "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người; chọn ngưỡng verifier trên nhãn người.",

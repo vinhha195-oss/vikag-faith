@@ -164,6 +164,9 @@ def main():
         out["paired_silver"]["nli_ft20_v3 - nli_ft20_v1"] = paired(new["nli_ft20_v3"], new["nli_ft20_v1"], keys, gold)
         out["paired_human"]["nli_ft20_v3 - nli_ft20_v1"] = paired(new["nli_ft20_v3"], new["nli_ft20_v1"], keys, gold, human)
 
+    if {"nli_ft20full_v1", "nli_ft20_v1"} <= new.keys():
+        out["paired_silver"]["nli_ft20full_v1 - nli_ft20_v1"] = paired(new["nli_ft20full_v1"], new["nli_ft20_v1"], keys, gold)
+        out["paired_human"]["nli_ft20full_v1 - nli_ft20_v1"] = paired(new["nli_ft20full_v1"], new["nli_ft20_v1"], keys, gold, human)
     if {"nli_xft_v1", "nli_xzs_v1"} <= new.keys():
         out["paired_silver"]["nli_xft_v1 - nli_xzs_v1"] = paired(new["nli_xft_v1"], new["nli_xzs_v1"], keys, gold)
         out["paired_human"]["nli_xft_v1 - nli_xzs_v1"] = paired(new["nli_xft_v1"], new["nli_xzs_v1"], keys, gold, human)
@@ -183,7 +186,7 @@ def main():
         rows2 = {r["cid"]: r for r in read_jsonl(OUT / SCORE_FILE)}
         wide = np.round(np.concatenate([np.arange(0.01, 0.1, 0.01), np.arange(0.1, 0.96, 0.05)]), 2)
         out["auroc_paired"], out["wide_grid"] = {}, {}
-        for n in ("ft20_v1", "ft20_v3", "xft_v1", "xft_v3"):
+        for n in ("ft20_v1", "ft20_v3", "xft_v1", "xft_v3", "ft20full_v1", "ft20full_v3"):
             if n not in out["thresholds"]:
                 continue
             out["auroc_paired"][f"{n} - ft_v1 silver"] = auroc_gap(n, "ft_v1", keys["test"], gold)

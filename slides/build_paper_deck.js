@@ -40,7 +40,7 @@ const pct = (x) => Math.round(100 * x) + "%";
 const CL = R.claim_level, CO = R.answer_level_correlation, CMP = R.comparisons, REV = R.revise, SY = R.systems;
 const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG.sensitivity;
 const RA = REV.all, R1 = REV.by_max_rounds["1"], R2 = REV.by_max_rounds["2"];
-const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3, J14 = D2.methods.judge_14b, XZ1 = D2.methods.nli_xzs_v1, XF1 = D2.methods.nli_xft_v1, XF3 = D2.methods.nli_xft_v3, PXF = D2.paired_human["nli_xft_v1 - nli_xzs_v1"], QSP = D2.methods.qwen3b_span, R14 = D2.corr_ragas_14b, SPN = D2.span, PS14 = D2.paired_silver["judge_14b - judge_7b"], PH14 = D2.paired_human["judge_14b - judge_7b"];
+const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3, J14 = D2.methods.judge_14b, XZ1 = D2.methods.nli_xzs_v1, FF1 = D2.methods.nli_ft20full_v1, PFF = D2.paired_silver["nli_ft20full_v1 - nli_ft_v1"], PFS = D2.paired_silver["nli_ft20full_v1 - nli_ft20_v1"], XF1 = D2.methods.nli_xft_v1, XF3 = D2.methods.nli_xft_v3, PXF = D2.paired_human["nli_xft_v1 - nli_xzs_v1"], QSP = D2.methods.qwen3b_span, R14 = D2.corr_ragas_14b, SPN = D2.span, PS14 = D2.paired_silver["judge_14b - judge_7b"], PH14 = D2.paired_human["judge_14b - judge_7b"];
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -245,7 +245,7 @@ s.addChart(pres.ChartType.bar, [
   { name: "Fine-tune ViNLI + tổng hợp", labels: ["V1: chỉ đoạn văn", "V2: thêm đồ thị"], values: [K(CL.nli_ft_v1.macro_f1), K(CL.nli_ft_v2.macro_f1)] },
 ], { ...CHART_BASE(), x: 0.5, y: 1.85, w: 7.2, h: 5.0, barDir: "col", barGrouping: "clustered", chartColors: [DIM, MUTED, ACC],
   valAxisMinVal: 0, valAxisMaxVal: 600, dataLabelPosition: "outEnd", showLegend: true, legendPos: "b", objectName: "verifier" });
-[["+", "Dữ liệu tổng hợp", `+${f(c1.diff)} so với zero-shot (KTC ${f(c1.ci95[0], 2)}–${f(c1.ci95[1], 2)}). Bỏ dữ liệu này chỉ còn +${f(c2.diff)}. mDeBERTa 20.000 cặp không hơn: ${f(FT20.macro_f1)}.`, SUP],
+[["+", "Dữ liệu tổng hợp", `+${f(c1.diff)} so với zero-shot (KTC ${f(c1.ci95[0], 2)}–${f(c1.ci95[1], 2)}). Bỏ dữ liệu này chỉ còn +${f(c2.diff)}. 20.000 cặp: ${f(FF1.macro_f1)}, không hơn có ý nghĩa.`, SUP],
  ["−", "Thông tin đồ thị", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL.nli_zs_v2.macro_f1)} khi nhét mọi thông tin đồ thị. Triple nối theo claim đạt ${f(V3.macro_f1)}, nhưng theo nhãn người chỉ ${f(V3.macro_f1_human)}.`, CON],
  ["=", "Rule số, ngày", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL["nli_zs_v1+rule"].macro_f1)}: nhiều lỗi nằm ở chủ thể, không ở con số.`, MUTED]].forEach(([g, h, d, col], i) => {
   const y = 2.05 + i * 1.5;
@@ -253,7 +253,7 @@ s.addChart(pres.ChartType.bar, [
   text(s, h, { x: 8.85, y: y + 0.02, w: 3.85, h: 0.34, fontSize: 17, bold: true });
   text(s, d, { x: 8.85, y: y + 0.4, w: 3.85, h: 0.9, fontSize: 14, color: SOFT });
 });
-notes(s, `Ba can thiệp, ba kết quả khác nhau. Nói rõ các số trên slide này đều theo nhãn silver; slide kế tiếp cho thấy điều gì xảy ra khi đổi sang nhãn người. Đợt 2 huấn luyện với khoảng 18.000 cặp tổng hợp, premise 450 ký tự, 200 token do GPU 4 GB: V1 ${f(FT20.macro_f1)}, V3 ${f(FT20V3.macro_f1)}, AUROC ${f(FT20.auroc_not_supported)} so với ${f(D2.auroc_paired["ft20_v1 - ft_v1 silver"].b)} của đợt 1, không khác có ý nghĩa; theo nhãn người ${f(FT20.macro_f1_human)} và ${f(FT20V3.macro_f1_human)}. XLM-R fine-tune V1 đạt ${f(XF1.macro_f1)} theo silver, ${f(XF1.macro_f1_human)} theo người, hơn XLM-R zero-shot theo người (+${f(PXF.diff)}, KTC ${f(PXF.ci95[0], 2)}; ${f(PXF.ci95[1], 2)}) nhưng báo nhầm ${XF1.false_alarm}/${XF1.right}; V3 có AUROC cao nhất, ${f(XF3.auroc_not_supported)}. Các KTC chưa hiệu chỉnh đa so sánh.`);
+notes(s, `Ba can thiệp, ba kết quả khác nhau. Nói rõ các số trên slide này đều theo nhãn silver; slide kế tiếp cho thấy điều gì xảy ra khi đổi sang nhãn người. Đợt 2 huấn luyện với khoảng 18.000 cặp tổng hợp. Premise ngắn 450 ký tự do GPU 4 GB: V1 ${f(FT20.macro_f1)}. Chạy lại với 900 ký tự như đợt 1: V1 ${f(FF1.macro_f1)}, cao nhất theo silver, hơn bản ngắn có ý nghĩa (+${f(PFS.diff)}, KTC ${f(PFS.ci95[0], 2)}; ${f(PFS.ci95[1], 2)}) nhưng không hơn đợt 1 có ý nghĩa (+${f(PFF.diff)}, KTC ${f(PFF.ci95[0], 2)}; ${f(PFF.ci95[1], 2)}); theo nhãn người chỉ ${f(FF1.macro_f1_human)}. XLM-R fine-tune V1 đạt ${f(XF1.macro_f1)} theo silver, ${f(XF1.macro_f1_human)} theo người, hơn XLM-R zero-shot theo người (+${f(PXF.diff)}, KTC ${f(PXF.ci95[0], 2)}; ${f(PXF.ci95[1], 2)}) nhưng báo nhầm ${XF1.false_alarm}/${XF1.right}; V3 có AUROC cao nhất, ${f(XF3.auroc_not_supported)}. Các KTC chưa hiệu chỉnh đa so sánh.`);
 
 // ---------- 10. ranking flips ----------
 s = page("KIỂM ĐỊNH MÙ", "Đổi sang nhãn người, bảng xếp hạng đổi theo", "Kết quả");
@@ -313,12 +313,12 @@ table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
   [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });
-notes(s, `Chủ động nói hạn chế trước khi bị hỏi. So với đề cương, đợt 2 đã làm thêm triple, mutual index, fine-tune khoảng 20.000 cặp, judge 14B, XLM-R (zero-shot ${f(XZ1.macro_f1)} theo silver, ${f(XZ1.macro_f1_human)} theo người; fine-tune ${f(XF1.macro_f1)} và ${f(XF1.macro_f1_human)}) và Qwen 3B trả span (${f(QSP.macro_f1)} và ${f(QSP.macro_f1_human)}; ${SPN.verbatim}/${SPN.labelled} span chép đúng). Còn thiếu 5 hệ, khoảng 3.000 claim, 2–3 người gán, judge 32B. Đợt 2 dùng premise ngắn hơn nên không tách được tác động của lượng dữ liệu. Hướng tiếp theo: nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý; judge 32B; verifier đọc triple; thêm LightRAG, KAG, ViEduReg.`);
+notes(s, `Chủ động nói hạn chế trước khi bị hỏi. So với đề cương, đợt 2 đã làm thêm triple, mutual index, fine-tune khoảng 20.000 cặp, judge 14B, XLM-R (zero-shot ${f(XZ1.macro_f1)} theo silver, ${f(XZ1.macro_f1_human)} theo người; fine-tune ${f(XF1.macro_f1)} và ${f(XF1.macro_f1_human)}) và Qwen 3B trả span (${f(QSP.macro_f1)} và ${f(QSP.macro_f1_human)}; ${SPN.verbatim}/${SPN.labelled} span chép đúng). Còn thiếu 5 hệ, khoảng 3.000 claim, 2–3 người gán, judge 32B. Hướng tiếp theo: nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý; judge 32B; verifier đọc triple; thêm LightRAG, KAG, ViEduReg.`);
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
 [["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình; judge 14B không hơn có ý nghĩa.`],
- ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không tốt hơn. XLM-R fine-tune tăng theo người (${f(XF1.macro_f1_human)}) nhưng báo nhầm nhiều. Đồ thị, triple và rule chưa giúp được.`],
+ ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không hơn có ý nghĩa. XLM-R fine-tune tăng theo người (${f(XF1.macro_f1_human)}) nhưng báo nhầm nhiều. Đồ thị, triple và rule chưa giúp được.`],
  ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;
   text(s, k, { x: 0.6, y, w: 1.3, h: 0.85, fontSize: 24, bold: true, color: ACC, fontFace: MONO, valign: "middle" });
