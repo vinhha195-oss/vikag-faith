@@ -10,6 +10,8 @@ const { applyTheme } = require(process.env.APPLY_THEME);
 
 const AUTHOR = "Hà Văn Vinh";
 const COURSE = "Xử lý ngôn ngữ tự nhiên nâng cao";
+const ADVISOR = "TS. Hoàng Văn Quý";
+const TOPIC = "Đánh giá và kiểm chứng tính trung thực (faithfulness) mức mệnh đề cho KAG/GraphRAG tiếng Việt dựa trên đồ thị tri thức";
 const REPO = "github.com/vinhha195-oss/vikag-faith";
 
 const ROOT = path.resolve(__dirname, "..");
@@ -107,10 +109,11 @@ function figure(s, x, y, w, value, label, color = TXT, fs = 34) {
 // ---------- 1. cover ----------
 pres.addSection({ title: "Vấn đề" });
 let s = pres.addSlide({ masterName: "DESK_BLANK", sectionTitle: "Vấn đề" });
-text(s, "Ai chấm máy chấm?", { x: 0.6, y: 0.9, w: 6.6, h: 2.3, fontSize: 48, bold: true });
-text(s, "Đánh giá tính trung thực mức mệnh đề cho hệ hỏi đáp GraphRAG tiếng Việt", { x: 0.6, y: 2.05, w: 6.2, h: 1.0, fontSize: 20, color: SOFT });
-text(s, AUTHOR, { x: 0.6, y: 5.55, w: 6, h: 0.36, fontSize: 18, bold: true });
-text(s, `${COURSE} · Đồ án P4 ViKAG-Faith`, { x: 0.6, y: 5.95, w: 6.2, h: 0.3, fontSize: 14, color: MUTED });
+text(s, TOPIC, { x: 0.6, y: 0.75, w: 6.5, h: 3.1, fontSize: 28, bold: true });
+text(s, "Ai chấm máy chấm?", { x: 0.6, y: 3.95, w: 6.2, h: 0.45, fontSize: 20, color: SOFT });
+text(s, `Học viên: ${AUTHOR}`, { x: 0.6, y: 5.05, w: 6.5, h: 0.36, fontSize: 18, bold: true });
+text(s, `Giáo viên hướng dẫn: ${ADVISOR}`, { x: 0.6, y: 5.47, w: 6.5, h: 0.36, fontSize: 18, bold: true });
+text(s, `${COURSE} · Đồ án P4 ViKAG-Faith`, { x: 0.6, y: 5.95, w: 6.5, h: 0.3, fontSize: 14, color: MUTED });
 sheet(s, 7.5, 0, 5.83, 7.5, "cover sheet");
 text(s, "CÂU TRẢ LỜI CỦA AI, TÁCH THÀNH TỪNG Ý", { x: 7.95, y: 0.9, w: 5, h: 0.3, fontSize: 13, bold: true, color: "5B6474", fontFace: MONO });
 [[["được quảng cáo trên ", "Facebook"], M_SUP, SUP, "SUPPORTED"], [["tổng tiền phạt là ", "8 triệu đồng"], M_CON, CON, "CONTRADICTED"], [["được quảng cáo trên ", "Instagram"], M_UNS, UNS, "UNSUPPORTED"]].forEach(([t, mk, col, lb], i) => {
@@ -118,10 +121,12 @@ text(s, "CÂU TRẢ LỜI CỦA AI, TÁCH THÀNH TỪNG Ý", { x: 7.95, y: 0.9, 
   text(s, [{ text: t[0], options: { color: INK } }, { text: t[1], options: { color: INK, bold: true, highlight: mk } }], { x: 7.95, y, w: 4.95, h: 0.5, fontSize: 22 });
   tag(s, lb, col, 7.95, y + 0.62, 2.1);
 });
-notes(s, `Em là Hà Văn Vinh.
-Đề tài kiểm tra: máy chấm tự động có phát hiện được chỗ AI nói sai không?
-Em không chấm chatbot, em chấm các máy chấm.
-Mỗi câu trả lời được tách thành từng ý, gắn một trong ba nhãn: văn bản xác nhận, nói ngược lại, hoặc không nhắc tới.`);
+notes(s, `Em là Hà Văn Vinh, giáo viên hướng dẫn là ${ADVISOR}.
+Đề tài của em đánh giá tính trung thực của hệ hỏi đáp GraphRAG tiếng Việt, ở mức từng ý, trên văn bản pháp quy y tế.
+Tên ngắn là "Ai chấm máy chấm?": em không chấm chatbot, em chấm các công cụ chấm tự động.
+Bên phải là cách làm: tách câu trả lời thành từng ý, rồi gắn nhãn cho từng ý.
+SUPPORTED: văn bản xác nhận. CONTRADICTED: văn bản nói ngược lại. UNSUPPORTED: văn bản không nhắc tới.
+Em sẽ trình bày vấn đề, cách làm, kết quả và kết luận.`);
 
 // ---------- 2. the error ----------
 s = page("VẤN ĐỀ", "AI trả lời trôi chảy, nhưng một con số sai là đủ gây hậu quả", "Vấn đề");
