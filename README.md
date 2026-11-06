@@ -49,6 +49,7 @@ Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (c
 | `make_colab.py` | Sinh `colab/ViKAG_Faith_Colab.ipynb` (bước 1–5, 8, 9 và ablation verifier trên Colab T4, kết quả lưu Drive) |
 | `make_paper.py` | Bài báo (A4, lề 2,5 cm, Times New Roman 12, công thức Office): `nop_bai/ViKAG-Faith_BaiBao.docx` |
 | `slides/build_paper_deck.js` | Slide thuyết trình cho bài báo, thiết kế riêng (14 trang): `nop_bai/ViKAG-Faith_BaiBao_slide.pptx` (PDF xuất từ PowerPoint) |
+| `make_paper_ieee.py`, `ieee/` | Bản tiếng Anh theo mẫu IEEE (IEEEtran); tải `ieee/ViKAG-Faith_IEEE_Overleaf.zip` lên Overleaf để biên dịch |
 | `src/s3b_triples.py`, `src/s10_dot2.py`, `make_colab_dot2.py` | Đợt 2: triple + mutual index, phân tích riêng (`results_dot2.json`), notebook Colab cho judge 14B, Qwen span, XLM-R và fine-tune 900 ký tự |
 | `make_demo.py` | Cập nhật số liệu thẳng vào `demo/vikag_faith_demo.html` (không có file khuôn riêng) |
 | `make_dataset.py` | Đóng gói `dataset/ViFaithKAG` (claims/answers/passages JSONL + README, ghi nguồn ViHERMES MIT) |
