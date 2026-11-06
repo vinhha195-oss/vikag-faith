@@ -1,0 +1,16 @@
+11-06 05:37 training ft20 on 30k pairs
+11-06 05:47 gpu 55, 3892 MiB, 37.50 W
+11-06 05:57 gpu 54, 3882 MiB, 37.92 W
+11-06 06:07 gpu 54, 3884 MiB, 20.59 W
+11-06 06:17 gpu 54, 3884 MiB, 35.19 W
+11-06 06:27 gpu 56, 3886 MiB, 36.52 W
+11-06 06:37 gpu 53, 3886 MiB, 22.48 W
+11-06 06:47 gpu 54, 3886 MiB, 23.12 W
+11-06 06:57 gpu 56, 3886 MiB, 37.08 W
+11-06 07:07 gpu 56, 3886 MiB, 37.46 W
+11-06 07:17 gpu 56, 3886 MiB, 34.83 W
+11-06 07:27 gpu 57, 3886 MiB, 34.71 W
+11-06 07:35 training exit 0: best dev mean acc: 0.8579 non-finite batches skipped: 0
+11-06 07:37 gpu 62, 1674 MiB, 40.03 W
+11-06 07:42 scoring exit 0
+11-06 07:43 analysis exit 0

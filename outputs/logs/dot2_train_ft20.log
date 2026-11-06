@@ -1,2 +1,8 @@
 transformers 4.46.3 torch 2.6.0+cu124 dtype torch.float32
 train rows 29993 -> C:\Users\Admin\vikag-faith\models\verifier_ft20
+dev acc before: {'vinli': 0.7872, 'synth': 0.5936}
+step 600/1874 loss 0.0298 dev {'vinli': 0.7843, 'synth': 0.8828} -> saved
+step 1200/1874 loss 0.2208 dev {'vinli': 0.8163, 'synth': 0.8904} -> saved
+step 1800/1874 loss 0.0272 dev {'vinli': 0.8192, 'synth': 0.895} -> saved
+final dev {'vinli': 0.8192, 'synth': 0.8965}
+best dev mean acc: 0.8579 non-finite batches skipped: 0

@@ -45,6 +45,8 @@ _story = (ROOT / "demo" / "vikag_faith_demo.html").read_text(encoding="utf-8")  
 _at = _story.index("const DATA = ") + 13
 D2 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot2.json", encoding="utf-8"))  # second round, separate file
 V3 = D2["methods"]["nli_zs_v3"]
+FT1, FT3 = D2["methods"]["nli_ft20_v1"], D2["methods"]["nli_ft20_v3"]
+PS, PH, AP = D2["paired_silver"], D2["paired_human"], D2["auroc_paired"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
 
@@ -528,7 +530,9 @@ para(f"Contradiction chỉ xét hai cửa sổ trùng từ nhiều nhất với 
 numbered([
     "**Fine-tune verifier bằng dữ liệu tổng hợp:** 12.000 cặp ViNLI [20] + 3.328 cặp tạo từ các đoạn *không* thuộc mẫu đánh giá: supported = câu "
     "gốc; contradicted = đổi một con số, ngày hoặc thêm phủ định (“không”); unsupported = câu của đoạn khác cùng văn bản. Huấn luyện 1 epoch, "
-    "lr 5e-6, batch 4 × tích lũy 4, float32, giữ checkpoint tốt nhất trên dev. Ablation: cùng cấu hình nhưng chỉ dùng ViNLI.",
+    "lr 5e-6, batch 4 × tích lũy 4, float32, giữ checkpoint tốt nhất trên dev. Ablation: cùng cấu hình nhưng chỉ dùng ViNLI. Đợt 2 lặp lại quy trình với "
+    "12.000 cặp ViNLI + 17.993 cặp tổng hợp (trong 19.992 cặp, phần còn lại làm dev); vì chạy trên GTX 1650 4 GB, premise huấn luyện rút từ 900 xuống 450 ký tự, "
+    "độ dài tối đa từ 320 xuống 200 token, dev kiểm tra 1.000 cặp, còn lúc chấm claim vẫn giữ cửa sổ 900 ký tự và 320 token.",
     "**Rule số/ngày/số hiệu:** giá trị trong claim không có trong bằng chứng thì hạ supported thành unsupported; nếu câu bằng chứng tương ứng có "
     "giá trị cùng loại khác thì gán contradicted.",
     "**SelfCheckGPT-NLI** [8]: sinh thêm 3 câu trả lời (nhiệt độ 0,7) từ cùng prompt và ngữ cảnh; điểm của claim là trung bình xác suất entail/contradict "
@@ -657,6 +661,20 @@ table(f"Ma trận nhầm lẫn giữa nhãn Claude (hàng) và nhãn người (c
 para(f"Claude gán contradicted hoặc unsupported cho {sum(cm[1]) + sum(cm[2])} claim, người chỉ đồng ý ở {cm[1][1] + cm[2][2]} claim và gán supported cho "
      f"{cm[1][0] + cm[2][0]} claim trong số đó. Ngược lại, khi Claude gán supported, người đồng ý {pct(cm[0][0] / sum(cm[0]))}. Độ lệch có hướng này giải "
      f"thích vì sao metric được tối ưu theo nhãn Claude (verifier fine-tune với ngưỡng chọn trên dev silver) bị đánh giá thấp hơn khi đổi sang nhãn người.")
+para(f"**Đợt 2 – tăng lên khoảng 20.000 cặp tổng hợp:** độ chính xác trên dev tổng hợp tăng từ 0,594 lên 0,897, nhưng phần tăng này không chuyển sang claim thật "
+     f"(Bảng 9). Fine-tune V1 đợt 2 thấp hơn đợt 1 (chênh {f(PS['nli_ft20_v1 - nli_ft_v1']['diff'])}, KTC [{f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v1 - nli_ft_v1']['ci95'][1], 2)}]); "
+     f"AUROC, vốn không phụ thuộc ngưỡng, chỉ nhích {f(AP['ft20_v1 - ft_v1 silver']['b'])} → {f(AP['ft20_v1 - ft_v1 silver']['a'])} và không khác có ý nghĩa "
+     f"(KTC [{f(AP['ft20_v1 - ft_v1 silver']['ci95'][0], 2)}; {f(AP['ft20_v1 - ft_v1 silver']['ci95'][1], 2)}]). Cả hai ngưỡng V1 rơi vào cận dưới của lưới ({f(D2['thresholds']['ft20_v1'][0], 2)}), nhưng mở rộng lưới "
+     f"xuống 0,01 và vẫn chọn trên dev chỉ cho {f(D2['wide_grid']['ft20_v1']['macro_f1'])}: {R['claims_dev']} claim dev là quá ít để chọn ngưỡng ổn định. "
+     f"Với mô hình đợt 2, V3 đạt {f(FT3['macro_f1'])} so với {f(FT1['macro_f1'])} của V1, nhưng chênh lệch không có ý nghĩa (KTC [{f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][0], 2)}; {f(PS['nli_ft20_v3 - nli_ft20_v1']['ci95'][1], 2)}]): "
+     f"V3 bắt gấp đôi claim sai ({FT3['caught']} so với {FT1['caught']}), đồng thời báo nhầm cũng gấp đôi ({FT3['false_alarm']} so với {FT1['false_alarm']}) và AUROC không cao hơn, tức là khác ở điểm cắt, "
+     f"không phải ở khả năng phân biệt. Theo nhãn người, không cấu hình nào của đợt 2 tới gần judge 7B ({f(hj7)}).")
+table("Kết quả đợt 2 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
+      ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
+          ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
+          ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
+      ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
+           for n, r in (("Fine-tune V1, đợt 2", FT1), ("Fine-tune V3, đợt 2", FT3), ("Zero-shot V3", V3))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
 
 h3("6.3 RQ3 – Verify-then-revise")
 table("Verify-then-revise trên 80 câu trả lời (GGF, CR, UR do judge 7B chấm; token F1, recall, EM so với đáp án ViHERMES)",
@@ -707,14 +725,15 @@ bullets([
     "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 7B (giới hạn Colab T4). Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
     "**Ngưỡng verifier chọn theo nhãn silver:** làm verifier fine-tune nghiêng theo Claude. Giảm thiểu: chọn ngưỡng trên nhãn người khi đủ dữ liệu.",
     "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
-    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản và mới thử với NLI zero-shot; chưa fine-tune với 20.000 cặp tổng hợp; chưa có ViEduReg, verifier Qwen trả span, toán tử Verify trong KAG.",
+    "**Cấu hình đợt 2 khác đợt 1:** premise huấn luyện ngắn hơn (450 ký tự, 200 token) do GPU 4 GB, nên không tách được tác động của lượng dữ liệu với tác động của đầu vào ngắn. Giảm thiểu: huấn luyện lại với 900 ký tự, 320 token trên GPU lớn hơn.",
+    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; chưa có ViEduReg, verifier Qwen trả span, toán tử Verify trong KAG.",
 ])
 
 # 8 ------------------------------------------------------------------
 h2("8. Kết luận & hướng phát triển")
 para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulness tự động chạy bằng LLM mở cỡ nhỏ chỉ khớp ở mức thấp đến trung bình với nhãn chuẩn. "
      f"LLM-judge 7B là metric ổn định nhất ở cả hai bộ nhãn; RAGAS 7B tốt nhất ở mức câu trả lời. Fine-tune verifier bằng dữ liệu tổng hợp trong miền tăng "
-     f"điểm theo nhãn silver nhưng không theo nhãn người, cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
+     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp cũng không tốt hơn, cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
      f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
 numbered([
     "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người; chọn ngưỡng verifier trên nhãn người.",

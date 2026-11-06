@@ -67,10 +67,13 @@ def corrupt(sentence, rng):
     return None
 
 
+TRAIN_WINDOW = int(os.environ.get("VIKAG_TRAIN_WINDOW", WINDOW))  # shorter premises for CPU training
+
+
 def window_of(text, sentence):
     i = text.find(sentence)
-    start = max(0, min(i - WINDOW // 3, len(text) - WINDOW))
-    return text[start:start + WINDOW]
+    start = max(0, min(i - TRAIN_WINDOW // 3, len(text) - TRAIN_WINDOW))
+    return text[start:start + TRAIN_WINDOW]
 
 
 def build_data():
@@ -151,6 +154,9 @@ def train():
           "dtype", next(model.parameters()).dtype, flush=True)
     tr, dv = read_jsonl(DATA / f"verifier_train{DATA_TAG}.jsonl"), read_jsonl(DATA / f"verifier_dev{DATA_TAG}.jsonl")
     label_id = head_ids(model)
+    train_len = int(os.environ.get("VIKAG_TRAIN_MAX_LEN", MAX_LEN))
+    if os.environ.get("VIKAG_DEV_MAX"):
+        dv = random.Random(SEED).sample(dv, int(os.environ["VIKAG_DEV_MAX"]))
     if os.environ.get("VIKAG_NO_SYNTH") == "1":
         tr = [r for r in tr if r["src"] != "synth"]
     tr = tr[: int(os.environ.get("VIKAG_MAX_RUN", len(tr)))]  # XLM-R is slower on a free T4
@@ -158,7 +164,7 @@ def train():
 
     def collate(batch):
         enc = tok([b["premise"] for b in batch], [b["hypothesis"] for b in batch],
-                  truncation="longest_first", max_length=MAX_LEN, padding=True, return_tensors="pt")
+                  truncation="longest_first", max_length=train_len, padding=True, return_tensors="pt")
         enc["labels"] = torch.tensor([label_id[b["label"]] for b in batch])
         return enc
 
@@ -213,6 +219,11 @@ def train():
                         model.save_pretrained(FT_DIR); tok.save_pretrained(FT_DIR)
                     print(f"step {(i + 1) // accum}/{steps} loss {loss.item() * accum:.4f} dev {acc}"
                           f"{' -> saved' if kept else ''}", flush=True)
+    acc = evaluate()  # the last steps count too: the periodic check may not fall on the final step
+    if (acc["vinli"] + acc["synth"]) / 2 > best:
+        best = (acc["vinli"] + acc["synth"]) / 2
+        model.save_pretrained(FT_DIR); tok.save_pretrained(FT_DIR)
+    print("final dev", acc, flush=True)
     print("best dev mean acc:", round(best, 4), "non-finite batches skipped:", nonfinite, flush=True)
 
 

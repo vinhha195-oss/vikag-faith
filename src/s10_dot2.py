@@ -156,12 +156,42 @@ def main():
         for ref_name, ref in (("nli_ft_v1", base["ft_v1"]), ("nli_zs_v1", base["zs_v1"]), ("judge_7b", judges7)):
             out["paired_silver"][f"{name} - {ref_name}"] = paired(pred, ref, keys, gold)
             out["paired_human"][f"{name} - {ref_name}"] = paired(pred, ref, keys, gold, human)
+    if {"nli_ft20_v1", "nli_ft20_v3"} <= new.keys():
+        out["paired_silver"]["nli_ft20_v3 - nli_ft20_v1"] = paired(new["nli_ft20_v3"], new["nli_ft20_v1"], keys, gold)
+        out["paired_human"]["nli_ft20_v3 - nli_ft20_v1"] = paired(new["nli_ft20_v3"], new["nli_ft20_v1"], keys, gold, human)
+
+    # threshold-free check, and how far the choice of grid matters; the wide grid is a sensitivity run on dev, not the headline
+    if (OUT / SCORE_FILE).exists():
+        def auroc_gap(n, r, ks, ref):
+            ks = [k for k in ks if k in ref]
+            yb = np.array([int(ref[k] != "supported") for k in ks])
+            sa = np.array([1 - rows2[k][n]["entail"] for k in ks])
+            sb = np.array([1 - first[k][r]["entail"] for k in ks])
+            rng = np.random.default_rng(SEED)
+            d = [roc_auc_score(yb[i], sa[i]) - roc_auc_score(yb[i], sb[i]) for i in (rng.integers(0, len(ks), len(ks)) for _ in range(1000)) if 0 < yb[i].sum() < len(i)]
+            return {"n": len(ks), "a": float(roc_auc_score(yb, sa)), "b": float(roc_auc_score(yb, sb)), "diff": float(roc_auc_score(yb, sa) - roc_auc_score(yb, sb)),
+                    "ci95": [float(np.percentile(d, 2.5)), float(np.percentile(d, 97.5))]}
+
+        rows2 = {r["cid"]: r for r in read_jsonl(OUT / SCORE_FILE)}
+        wide = np.round(np.concatenate([np.arange(0.01, 0.1, 0.01), np.arange(0.1, 0.96, 0.05)]), 2)
+        out["auroc_paired"], out["wide_grid"] = {}, {}
+        for n in ("ft20_v1", "ft20_v3"):
+            if n not in out["thresholds"]:
+                continue
+            out["auroc_paired"][f"{n} - ft_v1 silver"] = auroc_gap(n, "ft_v1", keys["test"], gold)
+            out["auroc_paired"][f"{n} - ft_v1 human"] = auroc_gap(n, "ft_v1", keys["usable"], human)
+            y = [gold[k] for k in keys["dev"]]
+            t = max(((a, b) for a in wide for b in wide), key=lambda t: macro_f1(y, [decide(rows2[k][n]["entail"], rows2[k][n]["contra"], *t) for k in keys["dev"]]))
+            p = {k: decide(rows2[k][n]["entail"], rows2[k][n]["contra"], *t) for k in usable}
+            hs = [k for k in usable if k in human]
+            out["wide_grid"][n] = {"thresholds": [float(x) for x in t], "macro_f1": macro_f1([gold[k] for k in keys["test"]], [p[k] for k in keys["test"]]),
+                                   "macro_f1_human": macro_f1([human[k] for k in hs], [p[k] for k in hs])}
     json.dump(out, open(RES / "results_dot2.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("method                 macroF1   CI95            AUROC  caught  falseAl  human")
     for n, r in out["methods"].items():
         print(f"{n:22s} {r['macro_f1']:.3f}  {r['ci95'][0]:.2f}-{r['ci95'][1]:.2f}  {r['auroc_not_supported']:.3f}  "
               f"{r['caught']}/{r['wrong']}  {r['false_alarm']}/{r['right']}  {r['macro_f1_human']:.3f} ({r['n_human']})")
-    for k in ("corr_ragas_14b", "corr_judge_14b", "span", "judge_coverage_14b"):
+    for k in ("corr_ragas_14b", "corr_judge_14b", "span", "judge_coverage_14b", "auroc_paired", "wide_grid"):
         if k in out:
             print(k, out[k])
     print("baseline: judge_7b", round(res["claim_level"]["judge_7b"]["macro_f1"], 3), "ft_v1", round(res["claim_level"]["nli_ft_v1"]["macro_f1"], 3))

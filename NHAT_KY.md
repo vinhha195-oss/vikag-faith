@@ -91,3 +91,5 @@ Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22
 
 Verifier Qwen trả span bằng chứng · bộ ViEduReg (quy chế đào tạo) · baseline ViHallu · toán tử Verify trong KAG · chatbot quy chế.
 Thu nhỏ: 2 hệ thay vì 5, 284 claim thay vì ~3.000 (165 có nhãn người), 1 người gán, judge 7B thay vì 32B.
+
+37. **Fine-tune đợt 2** (06/11): `run_dot2_gpu.sh` chạy 2 giờ trên GTX 1650 (29.993 cặp, premise 450 ký tự, 200 token, dev kiểm tra 1.000 cặp). Dev tổng hợp 0,594 → 0,897 nhưng trên claim thật không tốt hơn đợt 1: V1 0,441 (KTC 0,36–0,53), V3 0,501; AUROC 0,753 so với 0,738, chênh không có ý nghĩa; theo nhãn người 0,371 và 0,404. Ngưỡng V1 rơi vào cận dưới của lưới, nhưng lưới rộng hơn (chọn trên dev) còn thấp hơn (0,384). Judge 14B, Qwen span và XLM-R chưa chạy vì cần Colab. `results.json` không đổi.
