@@ -40,7 +40,7 @@ const pct = (x) => Math.round(100 * x) + "%";
 const CL = R.claim_level, CO = R.answer_level_correlation, CMP = R.comparisons, REV = R.revise, SY = R.systems;
 const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG.sensitivity;
 const RA = REV.all, R1 = REV.by_max_rounds["1"], R2 = REV.by_max_rounds["2"];
-const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3;
+const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3, J14 = D2.methods.judge_14b, XZ1 = D2.methods.nli_xzs_v1, QSP = D2.methods.qwen3b_span, R14 = D2.corr_ragas_14b, SPN = D2.span, PS14 = D2.paired_silver["judge_14b - judge_7b"], PH14 = D2.paired_human["judge_14b - judge_7b"];
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -186,8 +186,8 @@ notes(s, "Đọc từ trái qua phải. Hai hệ dùng chung corpus, bộ truy x
 // ---------- 6. checkers ----------
 s = page("CÁCH LÀM", "Các máy chấm được so sánh trên cùng một tập bằng chứng", "Cách làm");
 table(s, ["Máy chấm", "Cách làm", "Biến thể"], [
-  [{ text: "RAGAS", options: { bold: true } }, "Tái hiện 2 prompt gốc, chấm cả câu trả lời", "Qwen2.5 3B, 7B"],
-  [{ text: "LLM-judge", options: { bold: true } }, "LLM gán 3 nhãn cho từng claim", "Qwen2.5 3B, 7B"],
+  [{ text: "RAGAS", options: { bold: true } }, "Tái hiện 2 prompt gốc, chấm cả câu trả lời", "Qwen2.5 3B, 7B, 14B"],
+  [{ text: "LLM-judge", options: { bold: true } }, "LLM gán 3 nhãn cho từng claim", "Qwen2.5 3B, 7B, 14B"],
   [{ text: "NLI mDeBERTa-v3", options: { bold: true } }, "Zero-shot trên cửa sổ 900 ký tự, ngưỡng chọn trên tập dev", "V1 đoạn văn · V2 thêm đồ thị"],
   [{ text: "NLI fine-tune", options: { bold: true } }, "12.000 cặp ViNLI + 3.328 cặp tổng hợp (đổi số, ngày, phủ định)", "Ablation: chỉ ViNLI"],
   [{ text: "Rule", options: { bold: true } }, "So khớp số, ngày, số hiệu văn bản", "Riêng lẻ, hoặc thêm vào NLI"],
@@ -220,20 +220,21 @@ notes(s, `Phải nói rõ: nhãn chuẩn chính là silver do Claude gán, khôn
 // ---------- 8. RQ1 waffle ----------
 pres.addSection({ title: "Kết quả" });
 const J = CATCH.j7;
-s = page("RQ1 · MÁY CHẤM CÓ SẴN", `Máy bắt nhiều nhất cũng chỉ được ${J.caught}/${J.wrong} ý sai`, "Kết quả");
+s = page("RQ1 · MÁY CHẤM CÓ SẴN", "Judge tốt nhất vẫn bỏ sót khoảng 1/3 số ý sai", "Kết quả");
 for (let i = 0; i < J.wrong; i++) {
   const col = i % 8, row = Math.floor(i / 8);
   s.addShape(pres.ShapeType.rect, { x: 0.6 + col * 0.5, y: 2.0 + row * 0.5, w: 0.42, h: 0.42, fill: { color: i < J.caught ? ACC : DIM }, line: { color: i < J.caught ? ACC : DIM }, objectName: i < J.caught ? "caught" : "missed" });
 }
 text(s, `Mỗi ô là một ý sai trong tập test. Ô đậm: Judge 7B bắt được.`, { x: 0.6, y: 6.1, w: 4.2, h: 0.7, fontSize: 14, color: SOFT });
 const rowsC = [["j7", "Judge 7B"], ["ft", "NLI fine-tune V1"], ["j3", "Judge 3B"], ["v1", "NLI zero-shot V1"]];
+const row14 = [{ text: "Judge 14B" }, { text: `${J14.caught}/${J14.wrong}` }, { text: `${J14.false_alarm}/${J14.right}` }, { text: f(J14.macro_f1) }];
 table(s, ["Máy chấm", "Bắt được", "Báo nhầm", "Macro-F1"], rowsC.map(([k, n], i) => {
   const key = { j7: "judge_7b", ft: "nli_ft_v1", j3: "judge_3b", v1: "nli_zs_v1" }[k], c = CATCH[k], b = i === 0 ? { bold: true, color: ACC } : {};
   return [{ text: n, options: b }, { text: `${c.caught}/${c.wrong}`, options: b }, { text: `${c.false_alarm}/${c.right}`, options: b }, { text: f(CL[key].macro_f1), options: b }];
-}), { x: 5.2, y: 2.0, w: 7.6, colW: [3.1, 1.5, 1.6, 1.4], rowH: [0.45, 0.58, 0.58, 0.58, 0.58], fontSize: 16 });
+}).concat([row14]), { x: 5.2, y: 2.0, w: 7.6, colW: [3.1, 1.5, 1.6, 1.4], rowH: [0.42, 0.48, 0.48, 0.48, 0.48, 0.48], fontSize: 16 });
 text(s, `Theo nhãn silver. Báo nhầm là số ý đúng bị cho là sai. SelfCheckGPT đạt ${f(CL.nli_selfcheck.macro_f1)} dù không nhìn bằng chứng, ngang NLI zero-shot.`, { x: 5.3, y: 4.95, w: 7.4, h: 0.8, fontSize: 15, color: SOFT });
-text(s, `Chấm cả câu trả lời: RAGAS 7B khớp nhất với điểm chuẩn nhưng chỉ ở mức trung bình (ρ = ${f(CO.ragas_7b.spearman)}; RAGAS 3B chỉ ${f(CO.ragas_3b.spearman)}).`, { x: 5.3, y: 5.8, w: 7.4, h: 0.8, fontSize: 15, color: SOFT });
-notes(s, `Ô đậm là số ý sai bắt được, tức khoảng 2/3. Chỉ nên nói đây là kết quả trên tập test ${R.claims_test} claim, theo nhãn silver. AUROC của judge 7B là ${f(CL.judge_7b.auroc_not_supported)}.`);
+text(s, `Chấm cả câu trả lời: RAGAS khớp nhất với điểm chuẩn, tăng theo mô hình: ρ = ${f(CO.ragas_3b.spearman)} (3B), ${f(CO.ragas_7b.spearman)} (7B), ${f(R14.spearman)} (14B).`, { x: 5.3, y: 5.8, w: 7.4, h: 0.8, fontSize: 15, color: SOFT });
+notes(s, `Ô đậm là số ý sai bắt được, tức khoảng 2/3. Chỉ nên nói đây là kết quả trên tập test ${R.claims_test} claim, theo nhãn silver. AUROC của judge 7B là ${f(CL.judge_7b.auroc_not_supported)}. Judge 14B chạy thêm ở đợt 2: silver ${f(J14.macro_f1)}, chênh với 7B +${f(PS14.diff)} (KTC ${f(PS14.ci95[0], 2)}; ${f(PS14.ci95[1], 2)}), không có ý nghĩa; theo nhãn người ${f(J14.macro_f1_human)}, thấp hơn 7B nhưng cũng không có ý nghĩa (KTC ${f(PH14.ci95[0], 2)}; ${f(PH14.ci95[1], 2)}). Chênh lệch ρ của RAGAS chưa được kiểm định và chỉ trên ${R14.n} câu trả lời.`);
 
 // ---------- 9. RQ2 ----------
 const c1 = CMP["nli_ft_v1 - nli_zs_v1"], c2 = CMP["nli_nosynth_v1 - nli_zs_v1"];
@@ -307,16 +308,16 @@ s = page("HẠN CHẾ", "Sáu giới hạn cần đọc kèm mọi con số", "K
 table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Nhãn chuẩn là silver", options: { bold: true } }, `Claude trùng người ${pct(ACG.acc)}`, "Báo cáo song song theo nhãn người"],
   [{ text: "Một người gán", options: { bold: true } }, "Không phải chuyên gia pháp lý; lượt nhanh chỉ xem 4 câu", "Hai người gán, đo κ người–người"],
-  [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge 7B`, "KTC bootstrap, kiểm định ghép cặp"],
+  [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge lớn nhất 14B`, "KTC bootstrap, kiểm định ghép cặp"],
   [{ text: "Ngưỡng theo silver", options: { bold: true } }, "Verifier fine-tune nghiêng theo Claude", "Chọn ngưỡng trên nhãn người"],
   [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
   [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });
-notes(s, "Chủ động nói hạn chế trước khi bị hỏi. So với đề cương, đợt 2 đã làm thêm triple, mutual index và fine-tune khoảng 20.000 cặp; còn thiếu 5 hệ, khoảng 3.000 claim, 2–3 người gán, judge 14–32B, XLM-R và Qwen trả span. Đợt 2 dùng premise ngắn hơn nên không tách được tác động của lượng dữ liệu. Hướng tiếp theo: nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý; judge 14–32B; verifier đọc triple; thêm LightRAG, KAG, ViEduReg.");
+notes(s, `Chủ động nói hạn chế trước khi bị hỏi. So với đề cương, đợt 2 đã làm thêm triple, mutual index, fine-tune khoảng 20.000 cặp, judge 14B, XLM-R zero-shot (${f(XZ1.macro_f1)} theo silver, ${f(XZ1.macro_f1_human)} theo người) và Qwen 3B trả span (${f(QSP.macro_f1)} và ${f(QSP.macro_f1_human)}; ${SPN.verbatim}/${SPN.labelled} span chép đúng). Còn thiếu 5 hệ, khoảng 3.000 claim, 2–3 người gán, judge 32B. Đợt 2 dùng premise ngắn hơn nên không tách được tác động của lượng dữ liệu. Hướng tiếp theo: nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý; judge 32B; verifier đọc triple; thêm LightRAG, KAG, ViEduReg.`);
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
-[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS 7B tốt nhất, chỉ khớp mức trung bình.`],
+[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình; judge 14B không hơn có ý nghĩa.`],
  ["RQ2", "Dữ liệu tổng hợp giúp theo nhãn silver, không giữ được theo người; tăng lên 20.000 cặp không tốt hơn. Đồ thị, triple và rule chưa giúp được."],
  ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;

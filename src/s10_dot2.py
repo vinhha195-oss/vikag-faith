@@ -7,6 +7,7 @@ Silver labels stay the reference on the test split; the human column uses the sa
 
 import json
 import os
+import re
 from collections import defaultdict
 
 import numpy as np
@@ -135,22 +136,25 @@ def main():
 
     path = OUT / SPAN_FILE
     if path.exists():
-        pools = {(p["qid"], p["system"]): " ".join(x["text"] for x in p["pool"]) for p in read_jsonl(OUT / "pools.jsonl")}
+        # same evidence the model saw; case, punctuation and "..." do not count against a copied span
+        norm = lambda t: " ".join(re.sub(r"[\W_]+", " ", t.lower()).split())
+        pools = {(p["qid"], p["system"]): norm(" ".join(x["text"][:2500] + " " + x["title"] + " " + " ".join(x["facts"]) for x in p["pool"]))
+                 for p in read_jsonl(OUT / "pools.jsonl")}
         rows = read_jsonl(path)
         p, found, given = {}, 0, 0
         for j in rows:
-            text = " ".join(pools[(j["qid"], j["system"])].split())
+            text = pools[(j["qid"], j["system"])]
             for k, v in j["judge"].items():
                 if not v or k not in gold:
                     continue
                 p[k] = v["label"]
-                span = " ".join(v.get("span", "").split())
+                span = norm(v.get("span", ""))
                 if span:
                     given += 1
-                    found += span in text
+                    found += f" {span} " in f" {text} "
         new["qwen3b_span"] = p
         out["methods"]["qwen3b_span"] = table_row(p, keys, gold, human)
-        out["span"] = {"given": given, "verbatim": found, "rate": found / max(1, given)}
+        out["span"] = {"labelled": len(p), "given": given, "verbatim": found, "rate": found / max(1, len(p))}
 
     for name, pred in new.items():
         for ref_name, ref in (("nli_ft_v1", base["ft_v1"]), ("nli_zs_v1", base["zs_v1"]), ("judge_7b", judges7)):

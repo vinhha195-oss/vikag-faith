@@ -89,7 +89,9 @@ Danh sách việc đã làm, từ lúc chọn đề tài đến bản cuối (22
 
 ## Chưa làm (so với đề cương)
 
-Verifier Qwen trả span bằng chứng · bộ ViEduReg (quy chế đào tạo) · baseline ViHallu · toán tử Verify trong KAG · chatbot quy chế.
-Thu nhỏ: 2 hệ thay vì 5, 284 claim thay vì ~3.000 (165 có nhãn người), 1 người gán, judge 7B thay vì 32B.
+Fine-tune verifier Qwen trả span · bộ ViEduReg (quy chế đào tạo) · baseline ViHallu · toán tử Verify trong KAG · chatbot quy chế.
+Thu nhỏ: 2 hệ thay vì 5, 284 claim thay vì ~3.000 (165 có nhãn người), 1 người gán, judge 14B thay vì 32B.
 
 37. **Fine-tune đợt 2** (06/11): `run_dot2_gpu.sh` chạy 2 giờ trên GTX 1650 (29.993 cặp, premise 450 ký tự, 200 token, dev kiểm tra 1.000 cặp). Dev tổng hợp 0,594 → 0,897 nhưng trên claim thật không tốt hơn đợt 1: V1 0,441 (KTC 0,36–0,53), V3 0,501; AUROC 0,753 so với 0,738, chênh không có ý nghĩa; theo nhãn người 0,371 và 0,404. Ngưỡng V1 rơi vào cận dưới của lưới, nhưng lưới rộng hơn (chọn trên dev) còn thấp hơn (0,384). Judge 14B, Qwen span và XLM-R chưa chạy vì cần Colab. `results.json` không đổi.
+
+38. **Colab đợt 2** (06/11): Qwen2.5-14B chạy 80 câu trả lời trong gần 3 giờ trên T4. Judge 14B 0,541 theo silver (KTC 0,46–0,62), AUROC 0,761, bắt 45/65, báo nhầm 26/153, 0,439 theo nhãn người; chênh với 7B không có ý nghĩa ở cả hai bộ nhãn (+0,069 và −0,089). RAGAS 14B ρ = 0,644, judge 14B ρ = 0,597 (7B: 0,484 và 0,418), chưa kiểm định chênh lệch. XLM-R zero-shot V1 0,532 theo silver, 0,354 theo nhãn người; V3 0,516 và 0,370. Qwen 3B trả span 0,361 và 0,399; 130/263 span chép đúng từ bằng chứng khi không tính hoa thường và dấu câu (khớp ký tự tuyệt đối chỉ 11%, vì model thêm dấu ba chấm và dấu câu). XLM-R fine-tune và mDeBERTa 900 ký tự chưa có kết quả tại thời điểm cập nhật. `results.json` không đổi.
