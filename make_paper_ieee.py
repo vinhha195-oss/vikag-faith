@@ -181,6 +181,19 @@ def fig_kappa():
     fig.savefig(IEEE / "figures" / "kappa.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
 
 
+def fig_scatter():
+    fig, axes = plt.subplots(1, 2, figsize=(3.45, 1.7), sharey=True)
+    for ax, t, lab, rho in zip(axes, ("7b", "14b"), ("RAGAS 7B", "RAGAS 14B"), (CO["ragas_7b"]["spearman"], R14["spearman"])):
+        pts = E["more"]["scatter"][t]
+        ax.scatter([x[1] for x in pts], [x[0] for x in pts], s=7, color=ACC, alpha=0.6, lw=0)
+        ax.plot([0, 1], [0, 1], color="#cccccc", lw=0.6)
+        ax.set_title(f"{lab}, rho = {rho:.3f}", fontsize=8); ax.set_xlabel("RAGAS score")
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+    axes[0].set_ylabel("Reference GGF")
+    fig.savefig(IEEE / "figures" / "scatter.pdf", bbox_inches="tight", pad_inches=0.02); plt.close(fig)
+
+
 def fig_gap():
     rows = [("Judge 7B", CL["judge_7b"]["macro_f1"], SENS["judge_7b"]["macro_f1_vs_human"]), ("Judge 14B", J14["macro_f1"], J14["macro_f1_human"]),
             ("Fine-tuned V1, round 1", CL["nli_ft_v1"]["macro_f1"], SENS["nli_ft_v1"]["macro_f1_vs_human"]), ("Fine-tuned V1, 20k", FF1["macro_f1"], FF1["macro_f1_human"]),
@@ -295,6 +308,28 @@ PASS_ROWS = "\n".join(f"{v} & {n(AC['sensitivity'][k]['macro_f1_vs_human'])} & {
 TH_GAP = E["threshold"]
 EITHER, BOTH = E["combo"]["either flags"], E["combo"]["both flag"]
 HTF = E["human_tuned"]["ft_v1"]
+MORE = E["more"]
+_bs = {"j7": "Judge 7B", "j14": "Judge 14B", "ft_v1": "Fine-tuned V1", "ft20full_v1": "Fine-tuned 20k", "xft_v1": "XLM-R fine-tuned"}
+BS_ROWS = "\n".join(f"{_bs[k]} & {n(v['naive']['silver'])} & {n(v['graph']['silver'])} & {n(v['naive']['human'])} & {n(v['graph']['human'])} \\\\" for k, v in MORE["by_system"].items())
+
+
+def _cf(k):
+    return "\n".join(f"{LB[i]} & " + " & ".join(str(x) for x in r) + " \\\\" for i, r in enumerate(MORE["confusion_human"][k]))
+
+
+CF7, CFX = _cf("j7"), _cf("xft_v1")
+
+
+def _power(name, v):
+    se = (v["ci95"][1] - v["ci95"][0]) / 3.92
+    need = v["n"] * (2.8 * se / 0.05) ** 2
+    return f"{name} & {v['n']} & {n(se)} & {int(round(need, -2)):,} \\\\"
+
+
+POWER_ROWS = "\n".join([_power("Fine-tuned V1 $-$ judge 7B, silver", CMP["nli_ft_v1 - judge_7b"]), _power("Judge 14B $-$ judge 7B, silver", PS["judge_14b - judge_7b"]),
+                        _power("Judge 14B $-$ judge 7B, human", PH["judge_14b - judge_7b"]), _power("XLM-R fine-tuned $-$ judge 7B, human", PH["nli_xft_v1 - judge_7b"])])
+DIS = MORE["disagree"]
+_dp = DIS["pairs"]
 BIB = {
     "vihermes": r"L. S. T. Nguyen, Q. M. Bui, T. T. Ngo, Q. T. N. Vo, D. N. H. Le, and T. T. Quan, ``ViHERMES: A graph-grounded multihop question answering benchmark and system for Vietnamese healthcare regulations,'' in \emph{Proc. ACIIDS}, 2026, arXiv:2602.07361.",
     "ragas": r"S. Es, J. James, L. Espinosa-Anke, and S. Schockaert, ``RAGAs: Automated evaluation of retrieval augmented generation,'' in \emph{Proc. EACL System Demonstrations}, 2024.",
@@ -371,6 +406,28 @@ Our contributions are: (C1) a reproducible claim-level evaluation pipeline on Vi
 
 \textbf{Graph RAG, KAG and regulations.} RAG \cite{rag}, GraphRAG \cite{graphrag}, LightRAG \cite{lightrag}, HippoRAG 2 \cite{hipporag} and KAG \cite{kag} use graphs for retrieval or reasoning. ViHERMES \cite{vihermes} builds a Document--Article--Clause graph with amendment, replacement and citation relations for healthcare documents.
 
+Table~\ref{tab:related} compares these lines of work with ours.
+
+\begin{table*}[t]
+\caption{Related work compared by evaluation unit, evidence, language and use of a graph}
+\label{tab:related}
+\centering
+\footnotesize
+\begin{tabular}{lllll}
+\toprule
+Work & Unit & Evidence & Language & Graph \\
+\midrule
+RAGAS \cite{ragas} & Statement & Retrieved context & Mainly English & No \\
+FActScore \cite{factscore} & Atomic fact & Knowledge source & English & No \\
+SelfCheckGPT \cite{selfcheck} & Sentence & None, sampled answers & English & No \\
+SHROOM, Mu-SHROOM \cite{shroom,mushroom} & Span & None required & English, multilingual & No \\
+ViHallu \cite{vihallu} & -- & Not tied to retrieval & Vietnamese & No \\
+ViHERMES \cite{vihermes} & Whole answer & Retrieved context & Vietnamese & Legal graph \\
+This work & Claim & Common evidence set & Vietnamese & Legal graph, triples \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
 \textbf{Positioning.} We do not propose a new QA system. We evaluate verification metrics on Vietnamese at claim level against human labels, keeping the ViHERMES data and graph unchanged and adding only an evaluation layer.
 
 \section{Proposed Method}
@@ -438,6 +495,8 @@ Dev / test split by question & <<R['claims_dev']>> / <<R['claims_test']>> claims
 \bottomrule
 \end{tabular}
 \end{table}
+
+\textbf{Claim extraction quality.} In the labelled sample, an answer has <<n(MORE['extraction']['mean_claims'], 2)>> claims on average and at most <<MORE['extraction']['max_claims']>>, with little change across hop levels (<<n(min(MORE['extraction']['by_hop'].values()), 2)>> to <<n(max(MORE['extraction']['by_hop'].values()), 2)>>). <<R['claims_bad']>> of <<R['claims_total']>> claims (<<pc(R['claims_bad'] / R['claims_total'], 1)>>) were excluded as malformed: repeated questions, lead-in phrases without content, vague statements, or placeholders such as ``[?]''. A further <<MORE['extraction']['multi_value']>> claims hold three or more numeric values and were marked for the annotator, because such claims can be partly right. Extraction by the same small model thus adds a source of error before any checker runs.
 
 Synthetic pairs come from passages outside the evaluation sample, so they do not leak into the test split. The dev set holds 1,000 ViNLI pairs and 10\% of the synthetic pairs. Table~\ref{tab:dev} shows that synthetic data strongly raises accuracy on synthetic pairs, while the ViNLI-only model barely learns the in-domain error types.
 
@@ -768,6 +827,47 @@ Checker & Supp. & Contra. & Unsup. & Caught & False al. \\
 \end{tabular}
 \end{table}
 
+\textbf{Disagreement in detail.} Claude and the human differ on <<DIS['n']>> claims. Of these, <<_dp.get('contradicted>supported', 0) + _dp.get('unsupported>supported', 0)>> are claims Claude rejects and the human accepts, <<_dp.get('supported>contradicted', 0) + _dp.get('supported>unsupported', 0)>> go the other way, and <<_dp.get('contradicted>unsupported', 0) + _dp.get('unsupported>contradicted', 0)>> differ only between contradicted and unsupported, so both sides call the claim wrong. On the disputed claims the 7B judge sides with the human <<DIS['j7_with_human']>> times and with Claude <<DIS['j7_with_silver']>> times. Table~\ref{tab:dis} shows examples. In several, Claude's reason points to a precise detail, such as a shortened name or a change from a subsidy to a contribution, which suggests that the human may accept near matches. In others, Claude asks for an explicit statement where a reader might accept a reasonable inference.
+
+\begin{table*}[t]
+\caption{Examples of disagreement between Claude and the human (translated; S supported, C contradicted, U unsupported)}
+\label{tab:dis}
+\centering
+\footnotesize
+\begin{tabular}{p{0.4\textwidth}p{0.38\textwidth}ccc}
+\toprule
+Claim & Claude's reason & Claude & Human & 7B \\
+\midrule
+The representative of Thai Ha General Clinic is Mr. Le Son. & The correct name is Mr. Le Quang Son. & C & S & S \\
+Policy sets the insurance contribution of students at 50\% of the minimum contribution. & Students receive a subsidy of at least 50\%; they do not contribute 50\%. & C & S & S \\
+The Institute of Strategy and Policy manages the Hai Thuong Lan Ong award golden book. & The golden book is managed by the Department of Traditional Medicine. & C & S & C \\
+Fine Vietnam Co. may advertise on Pinterest. & Pinterest is not mentioned. & U & C & C \\
+Health staff at the CDC centre must propose the GSP certification of vaccine stores. & No rule says that health staff propose it. & U & S & S \\
+GSP principles are taken from the World Health Organization. & Issued on the basis of WHO guidance. & S & C & S \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:cfh} shows how two checkers err against the human. The 7B judge tends to accept claims, while XLM-R fine-tuned rejects many supported claims.
+
+\begin{table}[t]
+\caption{Human labels (rows) against predictions (columns) on the human-labelled claims}
+\label{tab:cfh}
+\centering
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Judge 7B & Supp. & Contra. & Unsup. \\
+\midrule
+<<CF7>>
+\midrule
+XLM-R fine-tuned & Supp. & Contra. & Unsup. \\
+\midrule
+<<CFX>>
+\bottomrule
+\end{tabular}
+\end{table}
+
 \textbf{Discrimination without thresholds.} Fig.~\ref{fig:roc} shows ROC curves for detecting non-supported claims. On silver labels, fine-tuned verifiers separate from zero-shot, with AUROC <<n(E['roc']['ft_v1|silver']['auc'])>> against <<n(E['roc']['zs_v1|silver']['auc'])>>. On human labels the gap narrows but remains (<<n(E['roc']['ft_v1|human']['auc'])>> against <<n(E['roc']['zs_v1|human']['auc'])>>), and XLM-R fine-tuned reaches <<n(E['roc']['xft_v1|human']['auc'])>>. So fine-tuning keeps some ranking signal under human labels even though macro-F1 at the chosen threshold does not improve. At their fixed operating points, both judges lie above the verifier curves on both label sets, so at the same false alarm rate they detect more wrong claims.
 
 \begin{figure}[t]
@@ -829,6 +929,48 @@ Rule & Caught & False al. & F1 & Caught & False al. & F1 \\
 \end{tabular}
 \end{table}
 
+\textbf{Answer-level agreement.} Fig.~\ref{fig:scatter} plots RAGAS against reference GGF. Scores spread widely at every GGF level, so even the best correlation does not make a single answer's score dependable. Two RAGAS versions also differ: their rank correlation with each other is $\rho=<<n(MORE['ragas_vs_ragas']['rho'], 2)>>$ on <<MORE['ragas_vs_ragas']['n']>> answers.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{scatter.pdf}
+\caption{RAGAS score against reference GGF for test answers. Each dot is one answer; the grey line marks equality.}
+\label{fig:scatter}
+\end{figure}
+
+\textbf{Results by system.} Table~\ref{tab:bysys} splits checker scores by the system that produced the answer. Differences between systems are smaller than differences between label sets, so the checker comparison does not depend on one system.
+
+\begin{table}[t]
+\caption{Macro-F1 by answer system}
+\label{tab:bysys}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Silver, test} & \multicolumn{2}{c}{Human} \\
+Checker & Naive & Graph & Naive & Graph \\
+\midrule
+<<BS_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Sample size.} Many intervals in this paper include zero. Table~\ref{tab:power} estimates the claims needed to detect a macro-F1 difference of 0.05 with 80\% power, taking the standard error from the bootstrap interval and assuming that it shrinks with the square root of the sample. The estimates are optimistic because claims from one answer are not independent. They still show that the target of about 3,000 claims in our proposal is of the right order, and that the present sample cannot settle differences of this size.
+
+\begin{table}[t]
+\caption{Estimated claims needed to detect a difference of 0.05 in macro-F1 with 80\% power}
+\label{tab:power}
+\centering
+\footnotesize
+\begin{tabular}{p{0.52\columnwidth}ccc}
+\toprule
+Comparison & $n$ & SE & Needed \\
+\midrule
+<<POWER_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
 \textbf{Effect of the audit pass.} Table~\ref{tab:pass} compares pass C, stratified with full passages, against the random quick passes. The 7B judge leads in both, so the main finding does not depend on the display condition. Pass C oversamples errors, so scores between the two columns are not directly comparable.
 
 \begin{table}[t]
@@ -877,6 +1019,8 @@ mDeBERTa fine-tune, 29,993 pairs, 450 chars & GTX 1650 & about 2 h \\
 
 \textbf{What does revision really do?} A faithfulness score alone rewards deletion. An answer that says less contains fewer wrong claims, so GGF improves as content disappears. Any revision loop should therefore be scored by faithfulness and completeness together, with an independent scorer. With a 3B generator the loop mostly removes content, and a larger generator may behave differently.
 
+\textbf{Recommendations for meta-evaluation.} Our results suggest four practices for future work on Vietnamese faithfulness evaluation. First, report the label source and keep human labels for at least part of the sample, because a ranking on LLM labels may not hold. Second, compare checkers with threshold-free measures as well as macro-F1, since small dev sets make thresholds unstable. Third, report detection and false alarms separately, because a high macro-F1 can hide a verifier that rejects a third or more of correct claims. Fourth, split results by hop, since a mean score hides the weakest questions, where errors are most common.
+
 \section{Threats to Validity}
 \textbf{Silver reference.} Claude agrees with the human on <<pc(ACG['acc'])>> of claims ($\kappa=<<n(ACG['kappa'], 2)>>$). We therefore report both label sets; more human labels and a second annotator with adjudication are needed.
 
@@ -911,6 +1055,9 @@ The remaining prompts are in Vietnamese; these are English translations.
 \textbf{Claim extraction.} ``Split the answer into atomic claims. Each claim states ONE fact with one main predicate. Each claim must be self-contained: replace pronouns with specific names. Keep numbers, dates and document identifiers as in the answer. Add nothing beyond the answer, and drop sentences that only say no information was found.'' Two worked examples follow.
 
 \textbf{LLM-judge.} ``You are a fact checker. For each claim, compare with the EVIDENCE and assign exactly one label. supported: the evidence implies the claim. contradicted: the evidence says the opposite (wrong figure, date, document name, negation, and so on). unsupported: the evidence does not mention it or is not enough to conclude.'' The span verifier adds: ``For each claim, copy verbatim one short sentence from the EVIDENCE as the basis in the span field; if there is none, leave the string empty.''
+
+\section{Annotation Protocol}
+The annotator received a single offline HTML page holding the claim, the question and the evidence; labels were saved locally and exported as a file. Claim identifiers were anonymised, so the annotator could not tell which system produced a claim, and neither Claude's labels nor its reasons were shown. An earlier pre-filled review pass confirmed all <<AG['pass_A_excluded']['confirmed']>> labels with <<AG['pass_A_excluded']['labels_changed']>> changes in about 10 minutes. Such a result says little about label quality, so we discarded it and moved to blind passes. Passes D and E were excluded because their exports were not created through the labelling page. In the quick passes, the annotator could skip a claim; <<AQ['n_input'] - AQ['n']>> claims were skipped and are not counted.
 
 \section{Full Results}
 Table~\ref{tab:full} lists every round 1 configuration. Table~\ref{tab:corr} lists answer-level correlations, Table~\ref{tab:th} the dev thresholds, and Table~\ref{tab:pairfull} the paired comparisons of round 2.
@@ -972,7 +1119,7 @@ Verifier & $\tau_s$ & $\tau_c$ \\
 \end{table}
 
 \section{Reproducibility}
-The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, and \texttt{s11\_ieee\_extra} computes the post hoc analyses of this paper. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
+The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, and \texttt{s11\_ieee\_extra} and \texttt{s12\_ieee\_more} compute the post hoc analyses of this paper. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
 
 \begin{thebibliography}{99}
 <<BIBITEMS>>
@@ -983,7 +1130,7 @@ The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} gener
 
 
 def build():
-    fig_pipeline(); fig_scores(); fig_labels(); fig_hops(); fig_roc(); fig_threshold(); fig_kappa(); fig_gap()
+    fig_pipeline(); fig_scores(); fig_labels(); fig_hops(); fig_roc(); fig_threshold(); fig_kappa(); fig_gap(); fig_scatter()
     order = []
     for m in re.finditer(r"\\cite\{([^}]+)\}", TEMPLATE):
         for k in m.group(1).split(","):
