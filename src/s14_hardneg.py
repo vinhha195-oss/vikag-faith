@@ -13,6 +13,7 @@ Passages of the evaluation sample are excluded, as in s5. Output (gzipped jsonl,
 """
 
 import csv
+import os
 import gzip
 import json
 import random
@@ -22,7 +23,12 @@ from collections import Counter
 from common import DATA, OUT, SEED, read_jsonl
 from s5_verifier import split_sentences, window_of
 
-N_PER_KIND, N_TOTAL = 2000, 16000
+N_PER_KIND = 2000
+# Colab run: 16,000 rows from the 900-character base set. Local run (VIKAG_HARD_BASE=_20k450, VIKAG_TRAIN_WINDOW=450):
+# same size as the base set, so the only change from the second-round model is that hard pairs replace base pairs.
+BASE_TAG = os.environ.get("VIKAG_HARD_BASE", "_20k")
+OUT_TAG = os.environ.get("VIKAG_HARD_TAG", "")
+N_TOTAL = int(os.environ.get("VIKAG_HARD_TOTAL", "16000"))
 AGENCIES = ["Bộ Y tế", "Sở Y tế", "Thanh tra Bộ Y tế", "Văn phòng Bộ Y tế", "Cục Quản lý Dược", "Cục Quản lý Y, Dược cổ truyền",
             "Cục Quản lý Khám, chữa bệnh", "Cục An toàn thực phẩm", "Cục Y tế dự phòng", "Cục Dân số", "Tổng cục Dân số", "Cục Khoa học công nghệ và Đào tạo",
             "Cục Quản lý Môi trường y tế", "Cục Phòng, chống HIV/AIDS", "Cục Công nghệ thông tin", "Cục Hạ tầng và Thiết bị y tế", "Vụ Pháp chế",
@@ -91,17 +97,21 @@ def main():
         hard[k] = hard[k][:N_PER_KIND]
     dev_hard = [x for k in hard for x in hard[k][:200]]
     train_hard = [x for k in hard for x in hard[k][200:]]
-    base = read_jsonl(DATA / "verifier_train_20k.jsonl")
+    base = read_jsonl(DATA / f"verifier_train{BASE_TAG}.jsonl")
     rng.shuffle(base)
     train = train_hard + base[:N_TOTAL - len(train_hard)]
     rng.shuffle(train)
-    dev = read_jsonl(DATA / "verifier_dev_20k.jsonl") + dev_hard
+    dev = read_jsonl(DATA / f"verifier_dev{BASE_TAG}.jsonl") + dev_hard
     (OUT / "hardneg").mkdir(exist_ok=True)
     for name, rows in (("train_hard", train), ("dev_hard", dev)):
-        with gzip.open(OUT / "hardneg" / f"{name}.jsonl.gz", "wt", encoding="utf-8") as f:
+        with gzip.open(OUT / "hardneg" / f"{name}{OUT_TAG}.jsonl.gz", "wt", encoding="utf-8") as f:
             for x in rows:
                 f.write(json.dumps(x, ensure_ascii=False) + "\n")
-    json.dump(dev_hard, open(OUT / "hardneg" / "dev_hard_only.json", "w", encoding="utf-8"), ensure_ascii=False)
+    json.dump(dev_hard, open(OUT / "hardneg" / f"dev_hard_only{OUT_TAG}.json", "w", encoding="utf-8"), ensure_ascii=False)
+    if OUT_TAG:  # local run: write the training files directly
+        from common import write_jsonl
+        write_jsonl(DATA / f"verifier_train_hard{OUT_TAG}.jsonl", train)
+        write_jsonl(DATA / f"verifier_dev_hard{OUT_TAG}.jsonl", dev)
     print("orgs", len(orgs), "list items", len(items))
     print({k: (len(v), Counter(x["label"] for x in v)) for k, v in hard.items()})
     print("train", len(train), Counter(x.get("kind", x["src"]) for x in train), "dev", len(dev))

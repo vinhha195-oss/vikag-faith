@@ -1,0 +1,16 @@
+transformers 4.46.3 torch 2.6.0+cu124 dtype torch.float32
+train rows 29993 -> C:\Users\Admin\vikag-faith\models\verifier_fthard
+dev acc before: {'vinli': 0.7754, 'synth': 0.5972}
+Traceback (most recent call last):
+  File "C:\Users\Admin\vikag-faith\src\s5_verifier.py", line 329, in <module>
+    {"data": build_data, "train": train, "predict": predict}[sys.argv[1]]()
+  File "C:\Users\Admin\vikag-faith\src\s5_verifier.py", line 209, in train
+    loss.backward()
+  File "C:\Users\Admin\vikag-faith\.venv\Lib\site-packages\torch\_tensor.py", line 626, in backward
+    torch.autograd.backward(
+  File "C:\Users\Admin\vikag-faith\.venv\Lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "C:\Users\Admin\vikag-faith\.venv\Lib\site-packages\torch\autograd\graph.py", line 823, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: CUDA error: CUBLAS_STATUS_EXECUTION_FAILED when calling `cublasSgemm( handle, opa, opb, m, n, k, &alpha, a, lda, b, ldb, &beta, c, ldc)`
