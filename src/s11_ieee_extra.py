@@ -148,13 +148,14 @@ for name, fn in rules.items():
         row[tag] = c
     out["combo"][name] = row
 out["claims_per_answer"] = dict(Counter(str(claims[k]["hop"]) for k in usable))
-json.dump(out, open(RES / "ieee_extra.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+if __name__ == "__main__":  # s12 and s13 import this module and must not overwrite the file
+    json.dump(out, open(RES / "ieee_extra.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
-print("by_hop", out["by_hop"]); print("system", out["agree_by_system"])
-print("detect", json.dumps(out["detect_by_hop_group"])[:700])
-print("human_per_label", {k: {a: round(b, 3) if isinstance(b, float) else b for a, b in v.items()} for k, v in out["human_per_label"].items()})
-print("thr", {k: {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items() if a != "curve"} for k, v in out["threshold"].items()})
-print("tuned", {k: {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items()} for k, v in out["human_tuned"].items()}, out["human_tuned_ref"])
-print("kappa", {k: round(v, 2) for k, v in kap.items() if k.split("|")[0] in ("human", "silver", "j7") and k.split("|")[0] < k.split("|")[1]})
-print("combo", out["combo"])
-print("auc", {k: round(v["auc"], 3) for k, v in out["roc"].items()})
+    print("by_hop", out["by_hop"]); print("system", out["agree_by_system"])
+    print("detect", json.dumps(out["detect_by_hop_group"])[:700])
+    print("human_per_label", {k: {a: round(b, 3) if isinstance(b, float) else b for a, b in v.items()} for k, v in out["human_per_label"].items()})
+    print("thr", {k: {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items() if a != "curve"} for k, v in out["threshold"].items()})
+    print("tuned", {k: {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items()} for k, v in out["human_tuned"].items()}, out["human_tuned_ref"])
+    print("kappa", {k: round(v, 2) for k, v in kap.items() if k.split("|")[0] in ("human", "silver", "j7") and k.split("|")[0] < k.split("|")[1]})
+    print("combo", out["combo"])
+    print("auc", {k: round(v["auc"], 3) for k, v in out["roc"].items()})
