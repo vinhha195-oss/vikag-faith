@@ -23,6 +23,8 @@ D2 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot2.json", encodin
 _s = (ROOT / "demo" / "vikag_faith_demo.html").read_text(encoding="utf-8")
 _a = _s.index("const DATA = ") + 13
 E = json.load(open(ROOT / "outputs" / "analysis" / "ieee_extra.json", encoding="utf-8"))
+D3 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot3.json", encoding="utf-8"))
+CASC = json.load(open(ROOT / "outputs" / "analysis" / "cascade.json", encoding="utf-8"))
 CATCH = json.loads(_s[_a:_s.index("\n", _a)].strip().rstrip(";"))["summary"]["catch"]
 
 CL, CO, CMP, REV, SY, QA = R["claim_level"], R["answer_level_correlation"], R["comparisons"], R["revise"], R["systems"], R["qa"]
@@ -330,6 +332,21 @@ POWER_ROWS = "\n".join([_power("Fine-tuned V1 $-$ judge 7B, silver", CMP["nli_ft
                         _power("Judge 14B $-$ judge 7B, human", PH["judge_14b - judge_7b"]), _power("XLM-R fine-tuned $-$ judge 7B, human", PH["nli_xft_v1 - judge_7b"])])
 DIS = MORE["disagree"]
 _dp = DIS["pairs"]
+XH1, XH3 = D3["methods"]["xhard_v1"], D3["methods"]["xhard_v3"]
+P3S, P3H, A3, HD = D3["paired_silver"], D3["paired_human"], D3["auroc_paired"], D3["hard_dev"]
+
+
+def _cr(n, b):
+    return next(r for r in CASC["verifiers"][n] if abs(r["budget"] - b) < 1e-9)
+
+
+C50 = _cr("ft_v1", 0.5)
+CASC_ROWS = "\n".join(f"{int(b * 100)}\\% & {n(_cr('ft_v1', b)['silver']['macro_f1'])} & {_cr('ft_v1', b)['silver']['false_alarm']}/{_cr('ft_v1', b)['silver']['right']} & {n(_cr('ft_v1', b)['human']['macro_f1'])} & "
+                      f"{n(_cr('xft_v1', b)['silver']['macro_f1'])} & {_cr('xft_v1', b)['silver']['false_alarm']}/{_cr('xft_v1', b)['silver']['right']} & {n(_cr('xft_v1', b)['human']['macro_f1'])} \\\\"
+                      for b in (0, 0.3, 0.5, 0.7, 1.0))
+R3_ROWS = "\n".join([base_row("Judge 7B", "judge_7b", CATCH["j7"], CL["judge_7b"]["auroc_not_supported"]), row2("XLM-R fine-tuned V1, round 2", XF1),
+                     row2("XLM-R fine-tuned V3, round 2", XF3), row2("XLM-R + hard negatives, V1", XH1), row2("XLM-R + hard negatives, V3", XH3)])
+HD_ROWS = "\n".join(f"{name} & {pc(HD['xzs'][k]['acc'])} & {pc(HD['xhard'][k]['acc'])} \\\\" for k, name in (("swap", "Wrong agency"), ("list", "Inserted list item"), ("deny", "False denial")))
 BIB = {
     "vihermes": r"L. S. T. Nguyen, Q. M. Bui, T. T. Ngo, Q. T. N. Vo, D. N. H. Le, and T. T. Quan, ``ViHERMES: A graph-grounded multihop question answering benchmark and system for Vietnamese healthcare regulations,'' in \emph{Proc. ACIIDS}, 2026, arXiv:2602.07361.",
     "ragas": r"S. Es, J. James, L. Espinosa-Anke, and S. Schockaert, ``RAGAs: Automated evaluation of retrieval augmented generation,'' in \emph{Proc. EACL System Demonstrations}, 2024.",
@@ -375,7 +392,7 @@ Vietnam}}
 \maketitle
 
 \begin{abstract}
-Vietnamese RAG and GraphRAG question answering systems are usually scored with F1 or a single LLM-judge score for the whole answer. Neither shows which statements are backed by evidence and which are invented or contradicted. For legal regulations, one wrong effective date or fine is enough to cause harm. We build ViKAG-Faith, a claim-level faithfulness evaluation pipeline on ViHERMES. Two systems, Naive RAG and GraphRAG, answer 100 questions of 1--5 hops with Qwen2.5-3B. Answers are split into <<sum(1 for _ in open(ROOT / 'outputs' / 'claims.jsonl', encoding='utf-8'))>> claims, of which <<R['claims_total']>> claims from 80 answers are labelled supported, contradicted or unsupported against a common evidence set. We compare RAGAS, LLM-judges, SelfCheckGPT, multilingual NLI verifiers with and without graph information, number and date rules, verifiers fine-tuned on synthetic in-domain data, and a verify-then-revise loop. The primary labels are silver labels assigned by an LLM (Claude); <<ACG['n']>> claims were also labelled blindly by one human annotator. On those claims, the 7B judge reaches the highest macro-F1 (<<n(SENS['judge_7b']['macro_f1_vs_human'])>>), above every NLI verifier (best <<n(XF1['macro_f1_human'])>>). Fine-tuning with synthetic data raises the mDeBERTa verifier from <<n(CL['nli_zs_v1']['macro_f1'])>> to <<n(CL['nli_ft_v1']['macro_f1'])>> on silver labels, yet the gain disappears on human labels (<<n(SENS['nli_ft_v1']['macro_f1_vs_human'])>> versus <<n(SENS['nli_zs_v1']['macro_f1_vs_human'])>>). Silver labels agree with the human on <<pc(ACG['acc'])>> of claims ($\kappa=<<n(ACG['kappa'], 2)>>$), and metric rankings change with the label source. Verify-then-revise halves the contradiction rate but lowers token F1, because the small generator mostly deletes flagged claims.
+Vietnamese RAG and GraphRAG question answering systems are usually scored with F1 or a single LLM-judge score for the whole answer. Neither shows which statements are backed by evidence and which are invented or contradicted. For legal regulations, one wrong effective date or fine is enough to cause harm. We build ViKAG-Faith, a claim-level faithfulness evaluation pipeline on ViHERMES. Two systems, Naive RAG and GraphRAG, answer 100 questions of 1--5 hops with Qwen2.5-3B. Answers are split into <<sum(1 for _ in open(ROOT / 'outputs' / 'claims.jsonl', encoding='utf-8'))>> claims, of which <<R['claims_total']>> claims from 80 answers are labelled supported, contradicted or unsupported against a common evidence set. We compare RAGAS, LLM-judges, SelfCheckGPT, multilingual NLI verifiers with and without graph information, number and date rules, verifiers fine-tuned on synthetic in-domain data, and a verify-then-revise loop. The primary labels are silver labels assigned by an LLM (Claude); <<ACG['n']>> claims were also labelled blindly by one human annotator. On those claims, the 7B judge reaches the highest macro-F1 (<<n(SENS['judge_7b']['macro_f1_vs_human'])>>), above every NLI verifier (best <<n(XF1['macro_f1_human'])>>). Fine-tuning with synthetic data raises the mDeBERTa verifier from <<n(CL['nli_zs_v1']['macro_f1'])>> to <<n(CL['nli_ft_v1']['macro_f1'])>> on silver labels, yet the gain disappears on human labels (<<n(SENS['nli_ft_v1']['macro_f1_vs_human'])>> versus <<n(SENS['nli_zs_v1']['macro_f1_vs_human'])>>). Silver labels agree with the human on <<pc(ACG['acc'])>> of claims ($\kappa=<<n(ACG['kappa'], 2)>>$), and metric rankings change with the label source. Verify-then-revise halves the contradiction rate but lowers token F1, because the small generator mostly deletes flagged claims. Training on hard negatives shaped like the observed errors gives the best silver score (<<n(XH1['macro_f1'])>>) but no gain on human labels, and a two-tier checker matches the judge on human labels while sending it only half of the claims.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -556,7 +573,7 @@ Circular 30/2017/TT-BYT takes effect on 01/01/2018. & The evidence gives no such
 \end{table}
 
 \section{Experimental Setup}
-\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans.
+\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans. Round 3 adds XLM-R trained with error-shaped hard negatives and a two-tier checker.
 
 \textbf{Metrics.} At claim level we report three-label macro-F1, per-label F1 and AUROC for detecting non-supported claims. At answer level we report Spearman and Kendall correlation between automatic scores and reference GGF on 61--63 test answers, depending on valid outputs. For revision we report changes in GGF, CR, UR, token F1, exact match and token recall against ViHERMES answers.
 
@@ -648,6 +665,36 @@ Claude & Supp. & Contra. & Unsup. & Agree \\
 \textbf{Round 2: larger models.} The 14B judge reaches <<n(J14['macro_f1'])>> on silver labels, not significantly different from the 7B judge (<<n(PS['judge_14b - judge_7b']['diff'])>>, CI <<ci(PS['judge_14b - judge_7b'])>>). On human labels it is lower (<<n(J14['macro_f1_human'])>> versus <<n(SENS['judge_7b']['macro_f1_vs_human'])>>, CI of the difference <<ci(PH['judge_14b - judge_7b'])>>). At answer level, RAGAS 14B reaches $\rho=<<n(R14['spearman'])>>$ and the 14B judge <<n(JC14['spearman'])>>, above the 7B versions (<<n(CO['ragas_7b']['spearman'])>> and <<n(CO['judge_7b']['spearman'])>>), but on <<R14['n']>> answers and without a test of the difference. XLM-R zero-shot V1 reaches <<n(XZ1['macro_f1'])>> on silver labels, clearly above mDeBERTa zero-shot (<<n(PS['nli_xzs_v1 - nli_zs_v1']['diff'])>>, CI <<ci(PS['nli_xzs_v1 - nli_zs_v1'])>>), but only <<n(XZ1['macro_f1_human'])>> on human labels. XLM-R fine-tuned V1 reaches <<n(XF1['macro_f1_human'])>> on human labels, significantly above XLM-R zero-shot (<<n(PH['nli_xft_v1 - nli_xzs_v1']['diff'])>>, CI <<ci(PH['nli_xft_v1 - nli_xzs_v1'])>>) and not significantly different from the 7B judge (CI <<ci(PH['nli_xft_v1 - judge_7b'])>>), at the cost of <<XF1['false_alarm']>>/<<XF1['right']>> false alarms. XLM-R fine-tuned V3 has the highest AUROC (<<n(XF3['auroc_not_supported'])>>), above round 1 on silver labels (CI <<ci(AP['xft_v3 - ft_v1 silver'])>>) but not on human labels. Qwen 3B with spans reaches <<n(QSP['macro_f1'])>> on silver and <<n(QSP['macro_f1_human'])>> on human labels, clearly below the 7B judge; only <<SPN['verbatim']>>/<<SPN['labelled']>> labels carry a span copied from the evidence, ignoring case and punctuation.
 
 \textbf{Round 2: about 20,000 synthetic pairs.} Accuracy on synthetic dev pairs rises from 0.594 to 0.897. With short premises (450 characters, 200 tokens), fine-tuned V1 reaches only <<n(FT1['macro_f1'])>>, below round 1 (<<n(PS['nli_ft20_v1 - nli_ft_v1']['diff'])>>, CI <<ci(PS['nli_ft20_v1 - nli_ft_v1'])>>). Retraining with the round 1 input (900 characters, 320 tokens) gives <<n(FF1['macro_f1'])>>, the highest silver score, significantly above the short-premise model (<<n(PS['nli_ft20full_v1 - nli_ft20_v1']['diff'])>>, CI <<ci(PS['nli_ft20full_v1 - nli_ft20_v1'])>>) but not above round 1 (<<n(PS['nli_ft20full_v1 - nli_ft_v1']['diff'])>>, CI <<ci(PS['nli_ft20full_v1 - nli_ft_v1'])>>). AUROC barely moves (<<n(AP['ft20full_v1 - ft_v1 silver']['b'])>> to <<n(AP['ft20full_v1 - ft_v1 silver']['a'])>>, CI <<ci(AP['ft20full_v1 - ft_v1 silver'])>>). The first drop thus came from short premises, and more data did not improve discrimination. On human labels this model reaches only <<n(FF1['macro_f1_human'])>>, clearly below the 7B judge (CI <<ci(PH['nli_ft20full_v1 - judge_7b'])>>). Table~\ref{tab:round2} lists these results.
+
+\textbf{Round 3: error-shaped hard negatives.} The error analysis showed that real wrong claims name the wrong agency, insert list items or deny what the text says, while our synthetic pairs only changed numbers, dates or negation. We therefore generated 3,546 pairs of these three kinds from passages outside the evaluation sample, each with a supported counterpart (an agency swapped from a fixed list of 22 health agencies, a list item inserted or removed, and a false or true statement that the passage mentions an identifier, a date, an amount or an agency), and retrained XLM-R on 16,000 pairs of which 2,946 are hard; the other 600 hard pairs are held out. Table~\ref{tab:harddev} shows that the model learns these error types: on held-out hard pairs, accuracy on wrong agencies rises from <<pc(HD['xzs']['swap']['acc'])>> to <<pc(HD['xhard']['swap']['acc'])>>. False denials were already solved by the zero-shot model, so that template is too easy to teach anything. On real claims (Table~\ref{tab:round3}), the new model reaches <<n(XH1['macro_f1'])>> on silver labels, the highest score in this study and significantly above XLM-R of round 2 (<<n(P3S['xhard_v1 - xft_v1']['diff'])>>, CI <<ci(P3S['xhard_v1 - xft_v1'])>>) and above the 7B judge (<<n(P3S['xhard_v1 - judge_7b']['diff'])>>, CI <<ci(P3S['xhard_v1 - judge_7b'])>>). On human labels it reaches <<n(XH1['macro_f1_human'])>>, no better than round 2 (<<n(P3H['xhard_v1 - xft_v1']['diff'])>>, CI <<ci(P3H['xhard_v1 - xft_v1'])>>), and AUROC does not change significantly (CI <<ci(A3['xhard_v1 - xft_v1 silver'])>>). This is the third time the same pattern appears: each training change that raises the silver score leaves the human-label score where it was.
+
+\begin{table}[t]
+\caption{Accuracy on 200 held-out hard pairs per error type}
+\label{tab:harddev}
+\centering
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Error type & XLM-R zero-shot & XLM-R + hard negatives \\
+\midrule
+<<HD_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[t]
+\caption{Round 3 on the test split: XLM-R trained with error-shaped hard negatives, compared with XLM-R of round 2 and the 7B judge}
+\label{tab:round3}
+\centering
+\footnotesize
+\begin{tabular}{lcccccc}
+\toprule
+Method & Silver & 95\% CI & AUROC & Caught & False alarms & Human \\
+\midrule
+<<R3_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \begin{table*}[t]
 \caption{Round 2 on the test split compared with round 1 and the 7B judge. Thresholds are chosen on dev with the round 1 grid. ``Caught'' counts wrong claims detected; ``False alarms'' counts correct claims flagged}
@@ -971,6 +1018,24 @@ Comparison & $n$ & SE & Needed \\
 \end{tabular}
 \end{table}
 
+\textbf{Two-tier checking.} A cheap verifier can decide the claims it is sure about and pass only the uncertain ones to the 7B judge. We rank claims by the distance between the verifier's support probability and its threshold, and send the closest share to the judge (Table~\ref{tab:cascade}). With fine-tuned V1 and half of the claims sent to the judge, the combination reaches <<n(C50['human']['macro_f1'])>> on human labels, level with the judge alone (<<n(CASC['judge_alone']['human'])>>), while false alarms on silver labels fall from <<CATCH['j7']['false_alarm']>>/<<CATCH['j7']['right']>> to <<C50['silver']['false_alarm']>>/<<C50['silver']['right']>>. The budget of one half was chosen after seeing these curves and should be checked on new data, but the result suggests that the expensive judge is not needed for every claim.
+
+\begin{table}[t]
+\caption{Two-tier checking: share of claims sent to the 7B judge against macro-F1 and false alarms}
+\label{tab:cascade}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ccccccc}
+\toprule
+ & \multicolumn{3}{c}{Fine-tuned V1 first} & \multicolumn{3}{c}{XLM-R fine-tuned first} \\
+To judge & Silver & False al. & Human & Silver & False al. & Human \\
+\midrule
+<<CASC_ROWS>>
+\bottomrule
+\end{tabular}
+\end{table}
+
 \textbf{Effect of the audit pass.} Table~\ref{tab:pass} compares pass C, stratified with full passages, against the random quick passes. The 7B judge leads in both, so the main finding does not depend on the display condition. Pass C oversamples errors, so scores between the two columns are not directly comparable.
 
 \begin{table}[t]
@@ -1039,7 +1104,7 @@ mDeBERTa fine-tune, 29,993 pairs, 450 chars & GTX 1650 & about 2 h \\
 \textbf{Implementation.} Early fine-tuning runs produced NaN loss because the mDeBERTa checkpoint is stored in float16; all reported runs use float32. Round 1 on Colab used transformers 5.x, and round 2 used 4.46. Ollama runs Q4\_K\_M quantised models, so results may differ from full-precision weights.
 
 \section{Conclusion}
-On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
+On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap, and neither did hard negatives shaped like the observed errors, which gave the best silver score of the study. A two-tier checker that sends only uncertain claims to the judge kept the judge's human-label score at half the cost. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
 
 Future work includes full human labelling by two annotators with legal expertise and threshold selection on human labels; a 32B judge and a fine-tuned small Qwen verifier whose spans are copied from the evidence; structured triple input for verifiers and extension to LightRAG, HippoRAG 2, KAG and ViEduReg; and independent scoring of revised answers with a larger generator. Code and data are available at \url{https://github.com/vinhha195-oss/vikag-faith}.
 

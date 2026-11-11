@@ -19,7 +19,7 @@ Vietnam}}
 \maketitle
 
 \begin{abstract}
-Vietnamese RAG and GraphRAG question answering systems are usually scored with F1 or a single LLM-judge score for the whole answer. Neither shows which statements are backed by evidence and which are invented or contradicted. For legal regulations, one wrong effective date or fine is enough to cause harm. We build ViKAG-Faith, a claim-level faithfulness evaluation pipeline on ViHERMES. Two systems, Naive RAG and GraphRAG, answer 100 questions of 1--5 hops with Qwen2.5-3B. Answers are split into 610 claims, of which 284 claims from 80 answers are labelled supported, contradicted or unsupported against a common evidence set. We compare RAGAS, LLM-judges, SelfCheckGPT, multilingual NLI verifiers with and without graph information, number and date rules, verifiers fine-tuned on synthetic in-domain data, and a verify-then-revise loop. The primary labels are silver labels assigned by an LLM (Claude); 165 claims were also labelled blindly by one human annotator. On those claims, the 7B judge reaches the highest macro-F1 (0.528), above every NLI verifier (best 0.463). Fine-tuning with synthetic data raises the mDeBERTa verifier from 0.404 to 0.521 on silver labels, yet the gain disappears on human labels (0.381 versus 0.409). Silver labels agree with the human on 65\% of claims ($\kappa=0.29$), and metric rankings change with the label source. Verify-then-revise halves the contradiction rate but lowers token F1, because the small generator mostly deletes flagged claims.
+Vietnamese RAG and GraphRAG question answering systems are usually scored with F1 or a single LLM-judge score for the whole answer. Neither shows which statements are backed by evidence and which are invented or contradicted. For legal regulations, one wrong effective date or fine is enough to cause harm. We build ViKAG-Faith, a claim-level faithfulness evaluation pipeline on ViHERMES. Two systems, Naive RAG and GraphRAG, answer 100 questions of 1--5 hops with Qwen2.5-3B. Answers are split into 610 claims, of which 284 claims from 80 answers are labelled supported, contradicted or unsupported against a common evidence set. We compare RAGAS, LLM-judges, SelfCheckGPT, multilingual NLI verifiers with and without graph information, number and date rules, verifiers fine-tuned on synthetic in-domain data, and a verify-then-revise loop. The primary labels are silver labels assigned by an LLM (Claude); 165 claims were also labelled blindly by one human annotator. On those claims, the 7B judge reaches the highest macro-F1 (0.528), above every NLI verifier (best 0.463). Fine-tuning with synthetic data raises the mDeBERTa verifier from 0.404 to 0.521 on silver labels, yet the gain disappears on human labels (0.381 versus 0.409). Silver labels agree with the human on 65\% of claims ($\kappa=0.29$), and metric rankings change with the label source. Verify-then-revise halves the contradiction rate but lowers token F1, because the small generator mostly deletes flagged claims. Training on hard negatives shaped like the observed errors gives the best silver score (0.643) but no gain on human labels, and a two-tier checker matches the judge on human labels while sending it only half of the claims.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -200,7 +200,7 @@ Circular 30/2017/TT-BYT takes effect on 01/01/2018. & The evidence gives no such
 \end{table}
 
 \section{Experimental Setup}
-\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans.
+\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans. Round 3 adds XLM-R trained with error-shaped hard negatives and a two-tier checker.
 
 \textbf{Metrics.} At claim level we report three-label macro-F1, per-label F1 and AUROC for detecting non-supported claims. At answer level we report Spearman and Kendall correlation between automatic scores and reference GGF on 61--63 test answers, depending on valid outputs. For revision we report changes in GGF, CR, UR, token F1, exact match and token recall against ViHERMES answers.
 
@@ -316,6 +316,42 @@ unsupported & 13 & 6 & 10 & 34\% \\
 \textbf{Round 2: larger models.} The 14B judge reaches 0.541 on silver labels, not significantly different from the 7B judge (0.069, CI [$-$0.05, 0.18]). On human labels it is lower (0.439 versus 0.528, CI of the difference [$-$0.20, 0.03]). At answer level, RAGAS 14B reaches $\rho=0.644$ and the 14B judge 0.597, above the 7B versions (0.484 and 0.418), but on 61 answers and without a test of the difference. XLM-R zero-shot V1 reaches 0.532 on silver labels, clearly above mDeBERTa zero-shot (0.128, CI [0.03, 0.22]), but only 0.354 on human labels. XLM-R fine-tuned V1 reaches 0.463 on human labels, significantly above XLM-R zero-shot (0.109, CI [0.02, 0.20]) and not significantly different from the 7B judge (CI [$-$0.17, 0.04]), at the cost of 64/153 false alarms. XLM-R fine-tuned V3 has the highest AUROC (0.821), above round 1 on silver labels (CI [0.01, 0.16]) but not on human labels. Qwen 3B with spans reaches 0.361 on silver and 0.399 on human labels, clearly below the 7B judge; only 130/263 labels carry a span copied from the evidence, ignoring case and punctuation.
 
 \textbf{Round 2: about 20,000 synthetic pairs.} Accuracy on synthetic dev pairs rises from 0.594 to 0.897. With short premises (450 characters, 200 tokens), fine-tuned V1 reaches only 0.441, below round 1 ($-$0.080, CI [$-$0.16, 0.00]). Retraining with the round 1 input (900 characters, 320 tokens) gives 0.572, the highest silver score, significantly above the short-premise model (0.131, CI [0.05, 0.22]) but not above round 1 (0.051, CI [$-$0.02, 0.12]). AUROC barely moves (0.738 to 0.754, CI [$-$0.01, 0.04]). The first drop thus came from short premises, and more data did not improve discrimination. On human labels this model reaches only 0.356, clearly below the 7B judge (CI [$-$0.28, $-$0.05]). Table~\ref{tab:round2} lists these results.
+
+\textbf{Round 3: error-shaped hard negatives.} The error analysis showed that real wrong claims name the wrong agency, insert list items or deny what the text says, while our synthetic pairs only changed numbers, dates or negation. We therefore generated 3,546 pairs of these three kinds from passages outside the evaluation sample, each with a supported counterpart (an agency swapped from a fixed list of 22 health agencies, a list item inserted or removed, and a false or true statement that the passage mentions an identifier, a date, an amount or an agency), and retrained XLM-R on 16,000 pairs of which 2,946 are hard; the other 600 hard pairs are held out. Table~\ref{tab:harddev} shows that the model learns these error types: on held-out hard pairs, accuracy on wrong agencies rises from 59\% to 100\%. False denials were already solved by the zero-shot model, so that template is too easy to teach anything. On real claims (Table~\ref{tab:round3}), the new model reaches 0.643 on silver labels, the highest score in this study and significantly above XLM-R of round 2 (0.144, CI [0.09, 0.20]) and above the 7B judge (0.165, CI [0.06, 0.27]). On human labels it reaches 0.450, no better than round 2 ($-$0.013, CI [$-$0.09, 0.07]), and AUROC does not change significantly (CI [0.00, 0.05]). This is the third time the same pattern appears: each training change that raises the silver score leaves the human-label score where it was.
+
+\begin{table}[t]
+\caption{Accuracy on 200 held-out hard pairs per error type}
+\label{tab:harddev}
+\centering
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Error type & XLM-R zero-shot & XLM-R + hard negatives \\
+\midrule
+Wrong agency & 59\% & 100\% \\
+Inserted list item & 60\% & 98\% \\
+False denial & 100\% & 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[t]
+\caption{Round 3 on the test split: XLM-R trained with error-shaped hard negatives, compared with XLM-R of round 2 and the 7B judge}
+\label{tab:round3}
+\centering
+\footnotesize
+\begin{tabular}{lcccccc}
+\toprule
+Method & Silver & 95\% CI & AUROC & Caught & False alarms & Human \\
+\midrule
+Judge 7B & 0.476 & [0.40, 0.55] & 0.748 & 41/64 & 22/153 & 0.528 \\
+XLM-R fine-tuned V1, round 2 & 0.500 & [0.42, 0.57] & 0.798 & 58/65 & 64/153 & 0.463 \\
+XLM-R fine-tuned V3, round 2 & 0.477 & [0.40, 0.55] & 0.821 & 60/65 & 62/153 & 0.433 \\
+XLM-R + hard negatives, V1 & 0.643 & [0.56, 0.71] & 0.823 & 55/65 & 43/153 & 0.450 \\
+XLM-R + hard negatives, V3 & 0.626 & [0.54, 0.70] & 0.837 & 58/65 & 47/153 & 0.451 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \begin{table*}[t]
 \caption{Round 2 on the test split compared with round 1 and the 7B judge. Thresholds are chosen on dev with the round 1 grid. ``Caught'' counts wrong claims detected; ``False alarms'' counts correct claims flagged}
@@ -685,6 +721,28 @@ XLM-R fine-tuned $-$ judge 7B, human & 165 & 0.055 & 1,500 \\
 \end{tabular}
 \end{table}
 
+\textbf{Two-tier checking.} A cheap verifier can decide the claims it is sure about and pass only the uncertain ones to the 7B judge. We rank claims by the distance between the verifier's support probability and its threshold, and send the closest share to the judge (Table~\ref{tab:cascade}). With fine-tuned V1 and half of the claims sent to the judge, the combination reaches 0.530 on human labels, level with the judge alone (0.528), while false alarms on silver labels fall from 22/153 to 13/153. The budget of one half was chosen after seeing these curves and should be checked on new data, but the result suggests that the expensive judge is not needed for every claim.
+
+\begin{table}[t]
+\caption{Two-tier checking: share of claims sent to the 7B judge against macro-F1 and false alarms}
+\label{tab:cascade}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ccccccc}
+\toprule
+ & \multicolumn{3}{c}{Fine-tuned V1 first} & \multicolumn{3}{c}{XLM-R fine-tuned first} \\
+To judge & Silver & False al. & Human & Silver & False al. & Human \\
+\midrule
+0\% & 0.524 & 37/153 & 0.381 & 0.496 & 64/153 & 0.463 \\
+30\% & 0.500 & 22/153 & 0.494 & 0.517 & 59/153 & 0.506 \\
+50\% & 0.491 & 13/153 & 0.530 & 0.511 & 61/153 & 0.503 \\
+70\% & 0.487 & 18/153 & 0.523 & 0.484 & 43/153 & 0.507 \\
+100\% & 0.476 & 22/153 & 0.528 & 0.476 & 22/153 & 0.528 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \textbf{Effect of the audit pass.} Table~\ref{tab:pass} compares pass C, stratified with full passages, against the random quick passes. The 7B judge leads in both, so the main finding does not depend on the display condition. Pass C oversamples errors, so scores between the two columns are not directly comparable.
 
 \begin{table}[t]
@@ -756,7 +814,7 @@ mDeBERTa fine-tune, 29,993 pairs, 450 chars & GTX 1650 & about 2 h \\
 \textbf{Implementation.} Early fine-tuning runs produced NaN loss because the mDeBERTa checkpoint is stored in float16; all reported runs use float32. Round 1 on Colab used transformers 5.x, and round 2 used 4.46. Ollama runs Q4\_K\_M quantised models, so results may differ from full-precision weights.
 
 \section{Conclusion}
-On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
+On Vietnamese healthcare regulations, automatic faithfulness metrics running on small open LLMs match reference labels only at a low to moderate level. The 7B judge is the most stable metric across both label sets, and the 14B judge is not significantly better at claim level. RAGAS is best at answer level and improves with model size. Fine-tuning mDeBERTa on synthetic in-domain data raises silver scores but not human-label scores, and about 20,000 pairs bring no significant gain; XLM-R fine-tuning improves on human labels but raises many false alarms. Tuning thresholds on human labels did not close the gap, and neither did hard negatives shaped like the observed errors, which gave the best silver score of the study. A two-tier checker that sends only uncertain claims to the judge kept the judge's human-label score at half the cost. Meta-evaluation with LLM labels can therefore change metric rankings, and reports should state their label source. Verify-then-revise with a 3B generator reduces wrong claims by deleting content, which is a trade-off and not a pure improvement.
 
 Future work includes full human labelling by two annotators with legal expertise and threshold selection on human labels; a 32B judge and a fine-tuned small Qwen verifier whose spans are copied from the evidence; structured triple input for verifiers and extension to LightRAG, HippoRAG 2, KAG and ViEduReg; and independent scoring of revised answers with a larger generator. Code and data are available at \url{https://github.com/vinhha195-oss/vikag-faith}.
 

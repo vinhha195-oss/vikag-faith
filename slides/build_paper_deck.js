@@ -44,6 +44,8 @@ const AG = R.agreement, ACG = AG.audit_CG || AG.audit, AC = AG.audit, SENS = ACG
 const RA = REV.all, R1 = REV.by_max_rounds["1"], R2 = REV.by_max_rounds["2"];
 const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")), V3 = D2.methods.nli_zs_v3, FT20 = D2.methods.nli_ft20_v1, FT20V3 = D2.methods.nli_ft20_v3, J14 = D2.methods.judge_14b, XZ1 = D2.methods.nli_xzs_v1, FF1 = D2.methods.nli_ft20full_v1, PFF = D2.paired_silver["nli_ft20full_v1 - nli_ft_v1"], PFS = D2.paired_silver["nli_ft20full_v1 - nli_ft20_v1"], XF1 = D2.methods.nli_xft_v1, XF3 = D2.methods.nli_xft_v3, PXF = D2.paired_human["nli_xft_v1 - nli_xzs_v1"], QSP = D2.methods.qwen3b_span, R14 = D2.corr_ragas_14b, SPN = D2.span, PS14 = D2.paired_silver["judge_14b - judge_7b"], PH14 = D2.paired_human["judge_14b - judge_7b"];
 const HT = require(path.join(ROOT, "outputs", "analysis", "ieee_extra.json")).human_tuned.ft_v1;
+const D3 = require(path.join(ROOT, "outputs", "analysis", "results_dot3.json")), XH1 = D3.methods.xhard_v1;
+const C50 = require(path.join(ROOT, "outputs", "analysis", "cascade.json")).verifiers.ft_v1.find((r) => r.budget === 0.5);
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -267,7 +269,8 @@ text(s, `Chấm cả câu trả lời: RAGAS khớp nhất với điểm chuẩn
 notes(s, `Ô đậm là ý judge 7B bắt được: ${CATCH.j7.caught} trên ${CATCH.j7.wrong}, còn sót khoảng 1/3.
 Macro-F1 từ 0 đến 1, càng cao càng tốt.
 Judge 14B đạt ${f(J14.macro_f1)}, nhưng hơn 7B chưa có ý nghĩa thống kê.
-Chấm cả câu trả lời thì RAGAS tốt dần theo cỡ mô hình.`);
+Chấm cả câu trả lời thì RAGAS tốt dần theo cỡ mô hình.
+Máy chấm hai tầng: máy so khớp tự quyết nửa số ý nó chắc nhất, nửa còn lại gửi judge 7B; theo người đạt ${f(C50.human.macro_f1)}, ngang judge chấm hết.`);
 
 // ---------- 9. RQ2 ----------
 const c1 = CMP["nli_ft_v1 - nli_zs_v1"], c2 = CMP["nli_nosynth_v1 - nli_zs_v1"];
@@ -278,7 +281,7 @@ s.addChart(pres.ChartType.bar, [
   { name: "Fine-tune ViNLI + tổng hợp", labels: ["V1: chỉ đoạn văn", "V2: thêm đồ thị"], values: [K(CL.nli_ft_v1.macro_f1), K(CL.nli_ft_v2.macro_f1)] },
 ], { ...CHART_BASE(), x: 0.5, y: 1.85, w: 7.2, h: 5.0, barDir: "col", barGrouping: "clustered", chartColors: [DIM, MUTED, ACC],
   valAxisMinVal: 0, valAxisMaxVal: 600, dataLabelPosition: "outEnd", showLegend: true, legendPos: "b", objectName: "verifier" });
-[["+", "Dữ liệu tổng hợp", `+${f(c1.diff)} so với zero-shot (KTC ${f(c1.ci95[0], 2)}–${f(c1.ci95[1], 2)}). Bỏ dữ liệu này chỉ còn +${f(c2.diff)}. 20.000 cặp: ${f(FF1.macro_f1)}, không hơn có ý nghĩa.`, SUP],
+[["+", "Dữ liệu tổng hợp", `+${f(c1.diff)} so với zero-shot (KTC ${f(c1.ci95[0], 2)}–${f(c1.ci95[1], 2)}). Bỏ dữ liệu này chỉ còn +${f(c2.diff)}. 20.000 cặp: ${f(FF1.macro_f1)}. Dữ liệu lỗi thật: ${f(XH1.macro_f1)} theo Claude, ${f(XH1.macro_f1_human)} theo người.`, SUP],
  ["−", "Thông tin đồ thị", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL.nli_zs_v2.macro_f1)} khi nhét mọi thông tin đồ thị. Triple nối theo claim đạt ${f(V3.macro_f1)}, nhưng theo nhãn người chỉ ${f(V3.macro_f1_human)}.`, CON],
  ["=", "Rule số, ngày", `${f(CL.nli_zs_v1.macro_f1)} → ${f(CL["nli_zs_v1+rule"].macro_f1)}: nhiều lỗi nằm ở chủ thể, không ở con số.`, MUTED]].forEach(([g, h, d, col], i) => {
   const y = 2.05 + i * 1.5;
@@ -290,7 +293,9 @@ notes(s, `Các số ở đây theo nhãn Claude.
 Dấu cộng: dữ liệu tự tạo tăng 0,117 điểm.
 Dấu trừ: nhét thông tin đồ thị làm điểm giảm.
 Dấu bằng: luật số và ngày gần như không đổi.
-Tăng lên 20.000 cặp đạt ${f(FF1.macro_f1)}, nhưng chưa hơn đợt 1 có ý nghĩa.`);
+Tăng lên 20.000 cặp đạt ${f(FF1.macro_f1)}, nhưng chưa hơn đợt 1 có ý nghĩa.
+Đợt 3 luyện XLM-R với lỗi sát thực tế (đổi cơ quan, chèn mục, phủ nhận sai): ${f(XH1.macro_f1)} theo Claude, cao nhất, nhưng theo người chỉ ${f(XH1.macro_f1_human)}.
+Lần thứ ba cùng một khuôn mẫu: điểm theo Claude tăng, theo người thì không.`);
 
 // ---------- 10. ranking flips ----------
 s = page("KIỂM ĐỊNH MÙ", "Đổi sang nhãn người, bảng xếp hạng đổi theo", "Kết quả");
@@ -366,8 +371,8 @@ So với đề cương còn thiếu: 2 hệ thay vì 5, ${R.claims_total} claim 
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
-[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình; judge 14B không hơn có ý nghĩa.`],
- ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không hơn có ý nghĩa. XLM-R fine-tune tăng theo người (${f(XF1.macro_f1_human)}) nhưng báo nhầm nhiều. Đồ thị, triple và rule chưa giúp được.`],
+[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình. Máy hai tầng ngang judge 7B mà chỉ gọi judge nửa số ý.`],
+ ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không hơn có ý nghĩa. Dữ liệu lỗi sát thực tế: ${f(XH1.macro_f1)} theo Claude, chỉ ${f(XH1.macro_f1_human)} theo người. Đồ thị, triple và rule chưa giúp được.`],
  ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;
   text(s, k, { x: 0.6, y, w: 1.3, h: 0.85, fontSize: 24, bold: true, color: ACC, fontFace: MONO, valign: "middle" });
