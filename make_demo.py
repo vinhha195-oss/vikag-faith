@@ -24,6 +24,10 @@ revise = {(r["qid"], r["system"]): r["rounds"] for r in R("revise.jsonl")}
 judges = {}
 for j in R("judges.jsonl"):
     judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
+for j in R("judges_dot2.jsonl"):  # judge 14B, round 2
+    judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
+scores3 = {r["cid"]: r for r in R("verifier_scores_dot3.jsonl")}  # XLM-R with error-shaped hard negatives, round 3
+dot3 = json.load(open(OUT / "analysis" / "results_dot3.json", encoding="utf-8"))
 
 
 def decide(s, ts, tc):
@@ -31,6 +35,12 @@ def decide(s, ts, tc):
 
 
 th = res["thresholds"]
+th3 = dot3["thresholds"]["xhard_v1"]
+# Two-tier checker at the 50% budget of s13: the half of usable claims whose fine-tuned V1 support probability lies
+# closest to its threshold go to the 7B judge; the verifier decides the rest.
+usable = [k for k in scores if k in pre and not pre[k]["bad"]]
+margin = sorted(usable, key=lambda k: abs(scores[k]["ft_v1"]["entail"] - th["ft_v1"][0]))
+to_judge = set(margin[:round(0.5 * len(margin))])
 claims = {}
 for c in R("claims.jsonl"):
     if c["qid"] in sample:
@@ -53,6 +63,9 @@ for (q, s), cl in claims.items():
                   "v1": decide(scores[k]["zs_v1"], *th["zs_v1"]),
                   "ft": decide(scores[k]["ft_v1"], *th["ft_v1"]),
                   "v2": decide(scores[k]["zs_v2"], *th["zs_v2"]),
+                  "j14": jg.get("qwen2.5:14b", {}).get("judge", {}).get(k),
+                  "x3": decide(scores3[k]["xhard_v1"], *th3),
+                  "cas": (jg.get("qwen2.5:7b", {}).get("judge", {}).get(k) if k in to_judge else None) or decide(scores[k]["ft_v1"], *th["ft_v1"]),
                   "human": audit.get(k)},
         })
     item = items.setdefault(q, {"q": q, "hop": a["hop"], "split": sample[q], "question": a["question"],
@@ -95,6 +108,12 @@ summary["sensitivity"] = res["agreement"].get("audit_CG", res["agreement"]["audi
 dot2 = json.load(open(OUT / "analysis" / "results_dot2.json", encoding="utf-8"))
 summary["dot2"] = {"methods": {k: dot2["methods"][k] for k in ("judge_14b", "nli_ft20_v1", "nli_ft20full_v1", "nli_xzs_v1", "nli_xft_v1", "qwen3b_span")},
                    "ragas14": dot2["corr_ragas_14b"]["spearman"], "ragas14_n": dot2["corr_ragas_14b"]["n"]}
+
+casc = json.load(open(OUT / "analysis" / "cascade.json", encoding="utf-8"))
+c50 = next(r for r in casc["verifiers"]["ft_v1"] if abs(r["budget"] - 0.5) < 1e-9)
+summary["dot3"] = {"xhard": dot3["methods"]["xhard_v1"], "xft": dot2["methods"]["nli_xft_v1"],
+                   "p_silver_j7": dot3["paired_silver"]["xhard_v1 - judge_7b"], "hard_dev": dot3["hard_dev"],
+                   "cascade": {"silver": c50["silver"], "human": c50["human"], "judge_alone": casc["judge_alone"]}}
 
 data = {"items": sorted(items.values(), key=lambda x: (x["hop"], x["q"])), "passages": passages, "summary": summary}
 page = ROOT / "demo" / "vikag_faith_demo.html"
