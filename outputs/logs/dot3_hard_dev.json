@@ -1,0 +1,78 @@
+{
+ "xzs": {
+  "deny": {
+   "acc": 1.0,
+   "n": 200
+  },
+  "deny|contradicted": {
+   "acc": 1.0,
+   "n": 96
+  },
+  "deny|supported": {
+   "acc": 1.0,
+   "n": 104
+  },
+  "list": {
+   "acc": 0.595,
+   "n": 200
+  },
+  "list|supported": {
+   "acc": 0.883495145631068,
+   "n": 103
+  },
+  "list|unsupported": {
+   "acc": 0.28865979381443296,
+   "n": 97
+  },
+  "swap": {
+   "acc": 0.59,
+   "n": 200
+  },
+  "swap|contradicted": {
+   "acc": 0.28440366972477066,
+   "n": 109
+  },
+  "swap|supported": {
+   "acc": 0.9560439560439561,
+   "n": 91
+  }
+ },
+ "xhard": {
+  "deny": {
+   "acc": 1.0,
+   "n": 200
+  },
+  "deny|contradicted": {
+   "acc": 1.0,
+   "n": 96
+  },
+  "deny|supported": {
+   "acc": 1.0,
+   "n": 104
+  },
+  "list": {
+   "acc": 0.98,
+   "n": 200
+  },
+  "list|supported": {
+   "acc": 0.9805825242718447,
+   "n": 103
+  },
+  "list|unsupported": {
+   "acc": 0.979381443298969,
+   "n": 97
+  },
+  "swap": {
+   "acc": 1.0,
+   "n": 200
+  },
+  "swap|contradicted": {
+   "acc": 1.0,
+   "n": 109
+  },
+  "swap|supported": {
+   "acc": 1.0,
+   "n": 91
+  }
+ }
+}

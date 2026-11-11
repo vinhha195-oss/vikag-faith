@@ -1,0 +1,7 @@
+transformers 4.46.3 torch 2.14.1+cu130 dtype torch.float32
+train rows 16000 -> /content/vikag-faith/models/verifier_xhard
+dev acc before: {'vinli': 0.775, 'synth': 0.733}
+step 400/1000 loss 0.0117 dev {'vinli': 0.815, 'synth': 0.9761} -> saved
+step 800/1000 loss 0.9105 dev {'vinli': 0.828, 'synth': 0.9808} -> saved
+final dev {'vinli': 0.829, 'synth': 0.9827}
+best dev mean acc: 0.9059 non-finite batches skipped: 0
