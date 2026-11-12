@@ -1,0 +1,390 @@
+{
+ "labeller": "Claude (silver), 2026-11-12; evidence titles of CV 768 carry a wrong number (768/BGDĐT-QLCL instead of 768/QLCL-KĐCLGD) introduced when the pilot corpus was built; claims repeating it were judged on content",
+ "labels": {
+  "edu01|0": {
+   "claim": "Công văn 768/BGDĐT-QLCL hướng dẫn đánh giá theo bộ tiêu chuẩn chất lượng cơ sở giáo dục đại học.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu01|1": {
+   "claim": "Công văn 768/BGDĐT-QLCL được ban hành để thực hiện Thông tư số 12/2017/TT-BGDĐT.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu02|0": {
+   "claim": "Công văn 768/BGDĐT-QLCL yêu cầu các tổ chức kiểm định chất lượng giáo dục sử dụng bộ tiêu chuẩn để đánh giá.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu02|1": {
+   "claim": "Công văn 768/BGDĐT-QLCL yêu cầu các tổ chức kiểm định chất lượng giáo dục sử dụng bộ tiêu chuẩn để đảm bảo các nguyên tắc của kiểm định chất lượng giáo dục.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu02|2": {
+   "claim": "Công văn 768/BGDĐT-QLCL yêu cầu các tổ chức kiểm định chất lượng giáo dục sử dụng bộ tiêu chuẩn để hỗ trợ các cơ sở giáo dục tự đánh giá và đăng ký đánh giá ngoài.",
+   "label": "contradicted",
+   "note": "Bộ tiêu chuẩn: CSGD tự đánh giá, tổ chức KĐCLGD đánh giá ngoài; claim gán sai chủ thể"
+  },
+  "edu03|0": {
+   "claim": "Bộ tiêu chuẩn đánh giá chất lượng cơ sở giáo dục đại học theo Công văn 768 được xây dựng dựa trên tiêu chuẩn của Mạng lưới đảm bảo chất lượng các trường đại học ASEAN (AUN-QA).",
+   "label": "supported",
+   "note": ""
+  },
+  "edu04|0": {
+   "claim": "Các nhóm tiêu chuẩn trong bộ tiêu chuẩn đánh giá cơ sở giáo dục được chia theo 04 lĩnh vực của đảm bảo chất lượng: ĐBCL về chiến lược.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu04|1": {
+   "claim": "Các nhóm tiêu chuẩn trong bộ tiêu chuẩn đánh giá cơ sở giáo dục được chia theo 04 lĩnh vực của đảm bảo chất lượng: ĐBCL về hệ thống.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu04|2": {
+   "claim": "Các nhóm tiêu chuẩn trong bộ tiêu chuẩn đánh giá cơ sở giáo dục được chia theo 04 lĩnh vực của đảm bảo chất lượng: ĐBCL về thực hiện chức năng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu04|3": {
+   "claim": "Các nhóm tiêu chuẩn trong bộ tiêu chuẩn đánh giá cơ sở giáo dục được chia theo 04 lĩnh vực của đảm bảo chất lượng: ĐBCL về kết quả hoạt động.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu05|0": {
+   "claim": "Các tiêu chí của bộ tiêu chuẩn đánh giá chất lượng cơ sở giáo dục được đánh giá theo thang 7 mức.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu06|0": {
+   "claim": "Các tiêu chí trong bộ tiêu chuẩn được phân loại theo chu trình PDCA.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu07|0": {
+   "claim": "Công văn 768/BGDĐT-QLCL quy định cơ sở giáo dục đại học được công nhận đạt tiêu chuẩn chất lượng khi điểm trung bình của các tiêu chuẩn trong từng lĩnh vực đều đạt từ mức 3,5 điểm trở lên.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu07|1": {
+   "claim": "Công văn 768/BGDĐT-QLCL quy định cơ sở giáo dục đại học được công nhận đạt tiêu chuẩn chất lượng khi không có tiêu chuẩn nào có điểm trung bình dưới 2,0 điểm.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu08|0": {
+   "claim": "Bảng hướng dẫn đánh giá kèm Công văn 768 có mốc chuẩn tham chiếu để đánh giá tiêu chí đạt mức 4.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu09|0": {
+   "claim": "Cục Quản lý chất lượng chịu trách nhiệm giải quyết vướng mắc trong triển khai Công văn 768.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu09|1": {
+   "claim": "Địa chỉ của Cục Quản lý chất lượng là 35 Đại Cồ Việt, Hai Bà Trưng, Hà Nội.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu10|0": {
+   "claim": "Minh chứng có dấu * trong bảng hướng dẫn đánh giá là minh chứng phổ biến.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu10|1": {
+   "claim": "Minh chứng có dấu * trong bảng hướng dẫn đánh giá có liên quan trực tiếp tới yêu cầu của tiêu chí.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu10|2": {
+   "claim": "Cơ sở giáo dục dựa vào các gợi ý minh chứng có dấu * để tìm minh chứng phù hợp.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu10|3": {
+   "claim": "Cơ sở giáo dục có thể bổ sung các minh chứng khác (nếu có) khi cần.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu11|0": {
+   "claim": "Công văn 768/BGDĐT-QLCL yêu cầu cơ sở giáo dục minh chứng của 3 năm để đánh giá tiêu chí đạt mức 4 vào năm 2019.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu12|0": {
+   "claim": "Thông tư số 04/2016/TT-BGDĐT ban hành kèm theo Công văn 769/QLCL-KĐCLGD.",
+   "label": "contradicted",
+   "note": "Thông tư 04/2016 ban hành bộ tiêu chuẩn, không kèm theo Công văn 769"
+  },
+  "edu13|0": {
+   "claim": "Công văn 1074/KTKĐCLGD-KĐĐH đã hướng dẫn chung về sử dụng tiêu chuẩn đánh giá chất lượng chương trình đào tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu13|1": {
+   "claim": "Công văn 1074/KTKĐCLGD-KĐĐH do Cục Khảo thí và Kiểm định chất lượng giáo dục ban hành.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu13|2": {
+   "claim": "Công văn 1074/KTKĐCLGD-KĐĐH là công văn trước Công văn 769/QLCL-KĐCLGD.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu14|0": {
+   "claim": "Các tiêu chí trong tài liệu kèm Công văn 769 được phân loại theo nội hàm.",
+   "label": "unsupported",
+   "note": "Phân loại theo nội hàm là của Công văn 768; tài liệu 769 phân loại ĐT/ĐL"
+  },
+  "edu14|1": {
+   "claim": "Các tiêu chí trong tài liệu kèm Công văn 769 được phân loại theo chu trình Lập kế hoạch - Thực hiện - Rà soát - đánh giá - Cải tiến (Plan - Do - Check - Act: PDCA).",
+   "label": "unsupported",
+   "note": "PDCA nêu ở Công văn 768, không ở tài liệu 769"
+  },
+  "edu15|0": {
+   "claim": "Tiêu chí 1.5 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu tầm nhìn, sứ mạng và văn hóa của CSGD được cải tiến để đáp ứng nhu cầu và sự hài lòng của các bên liên quan.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu15|1": {
+   "claim": "Tiêu chí 1.5 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu quy trình xây dựng và phát triển tầm nhìn, sứ mạng và văn hóa của CSGD cũng được cải tiến để đáp ứng nhu cầu và sự hài lòng của các bên liên quan.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu16|0": {
+   "claim": "Cơ sở giáo dục cần thành lập hội đồng quản trị/hội đồng trường.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu16|1": {
+   "claim": "Cơ sở giáo dục cần thành lập các tổ chức đảng, đoàn thể.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu16|2": {
+   "claim": "Cơ sở giáo dục cần thành lập các hội đồng tư vấn khác.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|0": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như nguồn nhân lực.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|1": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như cơ sở vật chất.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|2": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như tài chính.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|3": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như đào tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|4": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như NCKH.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu17|5": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu các kế hoạch ngắn hạn và dài hạn cụ thể hóa kế hoạch chiến lược theo những lĩnh vực như phục vụ cộng đồng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu18|0": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD có chương trình đào tạo.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu18|1": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD có NCKH.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu18|2": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD phục vụ cộng đồng.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu18|3": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD phù hợp với các chủ trương của Đảng.",
+   "label": "contradicted",
+   "note": "Nội dung của TC 5.1, gán cho TC 5.2"
+  },
+  "edu18|4": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD phù hợp với quy định của Nhà nước.",
+   "label": "contradicted",
+   "note": "Nội dung của TC 5.1, gán cho TC 5.2"
+  },
+  "edu18|5": {
+   "claim": "Tiêu chí 5.2 của bộ tiêu chuẩn cơ sở giáo dục yêu cầu CSGD phù hợp với các văn bản liên quan.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu19|0": {
+   "claim": "Các văn bản quy định về tiêu chuẩn, quy trình tuyển dụng và lựa chọn đội ngũ cán bộ, giảng viên, nhân viên được gợi ý làm minh chứng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu19|1": {
+   "claim": "Các văn bản quy định về tiêu chuẩn, tiêu chí đề bạt, bổ nhiệm và sắp xếp nhân sự được gợi ý làm minh chứng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu19|2": {
+   "claim": "Trang thông tin điện tử và các tài liệu phổ biến các quy trình, tiêu chí tuyển dụng được gợi ý làm minh chứng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu20|0": {
+   "claim": "Cơ sở giáo dục đại học cần rà soát và cải tiến các KPIs và chỉ tiêu phấn đấu chính một lần trong 5 năm của chu kỳ đánh giá.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu21|0": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu ít nhất 75% số các bên liên quan hài lòng về dịch vụ phục vụ và kết nối cộng đồng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu21|1": {
+   "claim": "Tiêu chuẩn 3.1 của văn bản quy phạm pháp luật giáo dục đại học Việt Nam nêu yêu cầu này.",
+   "label": "unsupported",
+   "note": "Bằng chứng không nêu Tiêu chuẩn 3.1"
+  },
+  "edu22|0": {
+   "claim": "Tiêu chí 23.6 yêu cầu xác lập kết quả nghiên cứu và sáng tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu22|1": {
+   "claim": "Tiêu chí 23.6 yêu cầu giám sát kết quả nghiên cứu và sáng tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu22|2": {
+   "claim": "Tiêu chí 23.6 yêu cầu đối sánh kết quả nghiên cứu và sáng tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu22|3": {
+   "claim": "Tiêu chí 23.6 yêu cầu việc thương mại hóa kết quả nghiên cứu và sáng tạo.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu22|4": {
+   "claim": "Tiêu chí 23.6 yêu cầu thử nghiệm chuyển giao kết quả nghiên cứu và sáng tạo.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu22|5": {
+   "claim": "Tiêu chí 23.6 yêu cầu thành lập các đơn vị khởi nghiệp từ kết quả nghiên cứu và sáng tạo.",
+   "label": "unsupported",
+   "note": ""
+  },
+  "edu22|6": {
+   "claim": "Tiêu chí 23.6 yêu cầu cải tiến dựa trên kết quả nghiên cứu và sáng tạo.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu23|0": {
+   "claim": "Hướng dẫn đánh giá kèm Công văn 1669/QLCL-KĐCLGD (thay thế Công văn 769) quy định chuẩn đầu ra của chương trình đào tạo phải được rà soát, điều chỉnh ít nhất một lần trong 5 năm của chu kỳ đánh giá.",
+   "label": "contradicted",
+   "note": "Mốc chuẩn ghi ít nhất 2 năm một lần"
+  },
+  "edu24|0": {
+   "claim": "Mốc chuẩn tham chiếu yêu cầu chương trình dạy học được rà soát, cập nhật ít nhất 2 năm một lần.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu24|1": {
+   "claim": "Khi điều chỉnh, cần tham khảo các chương trình dạy học tiên tiến trong nước hoặc quốc tế.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu25|0": {
+   "claim": "Tiêu chí 6.3 về tuyển dụng giảng viên, nghiên cứu viên yêu cầu thực hiện quy hoạch đội ngũ GV, NCV.",
+   "label": "contradicted",
+   "note": "Nội dung của TC 6.1, gán cho TC 6.3"
+  },
+  "edu25|1": {
+   "claim": "Tiêu chí 6.3 về tuyển dụng giảng viên, nghiên cứu viên yêu cầu đáp ứng nhu cầu về đào tạo.",
+   "label": "contradicted",
+   "note": "Nội dung của TC 6.1"
+  },
+  "edu25|2": {
+   "claim": "Tiêu chí 6.3 về tuyển dụng giảng viên, nghiên cứu viên yêu cầu đáp ứng nhu cầu về hoạt động phục vụ cộng đồng.",
+   "label": "contradicted",
+   "note": "Nội dung của TC 6.1"
+  },
+  "edu26|0": {
+   "claim": "Cơ sở dữ liệu về tỉ lệ tốt nghiệp, thôi học của người học cần bao gồm thông tin về số liệu thống kê.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu26|1": {
+   "claim": "Cơ sở dữ liệu về tỉ lệ tốt nghiệp, thôi học của người học cần bao gồm thông tin theo dõi.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu26|2": {
+   "claim": "Cơ sở dữ liệu về tỉ lệ tốt nghiệp, thôi học của người học cần bao gồm thông tin báo cáo tổng kết.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu26|3": {
+   "claim": "Cơ sở dữ liệu về tỉ lệ tốt nghiệp, thôi học của người học cần bao gồm thông tin về chu kỳ đánh giá.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu27|0": {
+   "claim": "Theo tài liệu kèm Công văn 1669/QLCL-KĐCLGD, để đánh giá tiêu chí đạt mức 4 vào năm 2020 cần minh chứng của 4 năm.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu28|0": {
+   "claim": "Công văn 768 không nêu rõ số năm minh chứng để đạt mức 4.",
+   "label": "contradicted",
+   "note": "Công văn 768 nêu rõ số năm (2018: 2, 2019: 3, 2020: 4, từ 2021: 5)"
+  },
+  "edu28|1": {
+   "claim": "Công văn 1669 yêu cầu cho năm 2020 cần có minh chứng của 4 năm.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu28|2": {
+   "claim": "Công văn 1669 yêu cầu cho năm 2021 cần có minh chứng của 5 năm.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu28|3": {
+   "claim": "Không có năm nào trùng nhau giữa Công văn 768 và Công văn 1669.",
+   "label": "contradicted",
+   "note": "Năm 2020 và từ 2021 trùng nhau"
+  },
+  "edu29|0": {
+   "claim": "Công văn 768 và Công văn 769 có cùng đầu mối liên hệ là Phòng Kiểm định chất lượng giáo dục, Cục Quản lý chất lượng.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu29|1": {
+   "claim": "Đầu mối liên hệ của Công văn 768 và Công văn 769 là địa chỉ: 35 Đại Cồ Việt, Hai Bà Trưng, Hà Nội; email: phongkdclgd@moet.gov.vn.",
+   "label": "supported",
+   "note": ""
+  },
+  "edu30|0": {
+   "claim": "Công văn 768 hướng dẫn đánh giá đối tượng là quy trình thi, kiểm tra, đánh giá học sinh.",
+   "label": "contradicted",
+   "note": "Công văn 768 hướng dẫn đánh giá cơ sở giáo dục đại học"
+  },
+  "edu30|1": {
+   "claim": "Công văn 769 hướng dẫn đánh giá đối tượng là chính sách tuyển sinh và tiêu chí, phương pháp tuyển sinh.",
+   "label": "contradicted",
+   "note": "Công văn 769 hướng dẫn đánh giá chương trình đào tạo"
+  }
+ }
+}

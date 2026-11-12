@@ -16,7 +16,7 @@ import sys
 
 from common import OUT
 
-SOURCES = [("CV 768", "Công văn 768/BGDĐT-QLCL hướng dẫn đánh giá theo bộ tiêu chuẩn chất lượng cơ sở giáo dục đại học", "CV 768*.docx"),
+SOURCES = [("CV 768", "Công văn 768/QLCL-KĐCLGD hướng dẫn đánh giá theo bộ tiêu chuẩn chất lượng cơ sở giáo dục đại học", "CV 768*.docx"),
            ("CV 769", "Công văn 769/QLCL-KĐCLGD hướng dẫn đánh giá chương trình đào tạo", "CV 769*.docx"),
            ("CV 1668", "Hướng dẫn đánh giá kèm Công văn 1668/QLCL-KĐCLGD (thay thế Công văn 768)", "*1668*.pdf"),
            ("CV 1669", "Hướng dẫn đánh giá kèm Công văn 1669/QLCL-KĐCLGD (thay thế Công văn 769)", "*1669*.pdf")]
