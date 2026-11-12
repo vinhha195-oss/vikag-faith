@@ -32,12 +32,13 @@ cells = [
 %%bash
 set -eo pipefail
 cd /kaggle/working
-[ -d vikag-faith ] || git clone -q --depth 1 https://github.com/vinhha195-oss/vikag-faith.git
-pip install -q ollama
-command -v ollama > /dev/null || (curl -fsSL https://ollama.com/install.sh | sh > /dev/null)
-(nohup ollama serve > /kaggle/working/ollama.log 2>&1 &)
-sleep 8
-ollama pull qwen2.5:32b > /dev/null 2>&1
+echo "1. kiểm tra Internet"; curl -sI -m 10 https://github.com > /dev/null || { echo "KHÔNG CÓ INTERNET: Settings -> Internet -> On (cần xác minh số điện thoại)"; exit 1; }
+echo "2. tải mã nguồn"; [ -d vikag-faith ] || git clone -q --depth 1 https://github.com/vinhha195-oss/vikag-faith.git
+echo "3. cài thư viện"; pip install -q ollama
+echo "4. cài Ollama"; (apt-get -qq update && apt-get -qq install -y zstd) > /dev/null 2>&1 || true
+command -v ollama > /dev/null || curl -fsSL https://ollama.com/install.sh | sh 2>&1 | tail -n 3
+echo "5. chạy Ollama"; (nohup ollama serve > /kaggle/working/ollama.log 2>&1 &); sleep 10
+echo "6. tải Qwen2.5-32B (khoảng 20 GB)"; ollama pull qwen2.5:32b 2>&1 | tail -n 2
 ollama list
 """),
     code("""
