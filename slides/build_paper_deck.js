@@ -208,7 +208,8 @@ tag(s, "SUPPORTED", SUP, 2.9, 6.1, 1.9); tag(s, "CONTRADICTED", CON, 4.95, 6.1, 
 notes(s, `100 câu hỏi, hai chatbot trả lời thành 200 câu, tách được 610 ý.
 Em lấy mẫu 284 ý, bỏ 15 ý lỗi, còn 269 ý.
 Người kiểm tra ${ACG.n} ý.
-Mọi máy chấm nhìn cùng một tập bằng chứng, nên so sánh mới công bằng.`);
+Mọi máy chấm nhìn cùng một tập bằng chứng, nên so sánh mới công bằng.
+Đợt 4 thêm 3 chatbot nữa trên cùng 40 câu, thêm ${NC.n} ý chỉ có nhãn Claude.`);
 
 // ---------- 6. checkers ----------
 s = page("CÁCH LÀM", "Các máy chấm được so sánh trên cùng một tập bằng chứng", "Cách làm");
@@ -225,7 +226,7 @@ notes(s, `RAGAS chấm cả câu trả lời.
 LLM-judge dùng AI chấm từng ý.
 NLI xem một câu có suy ra được từ đoạn văn không.
 Fine-tune là luyện thêm bằng ví dụ tự tạo.
-GGF là tỉ lệ ý đúng; 3B, 7B, 14B là cỡ mô hình.`);
+GGF là tỉ lệ ý đúng; 3B, 7B, 14B, 32B là cỡ mô hình (tỉ tham số).`);
 
 // ---------- 7. labels ----------
 s = page("CÁCH LÀM", `Nhãn chính do Claude gán, người kiểm tra mù lại ${ACG.n} claim`, "Cách làm");
@@ -249,7 +250,8 @@ text(s, "Người gán không thấy nhãn hay lý do của Claude và không bi
 notes(s, `Phải nói rõ: nhãn chính do Claude gán, không phải người.
 Vì vậy em nhờ người kiểm tra mù ${ACG.n} ý.
 Claude trùng người ${pct(ACG.acc)}, κ = ${f(ACG.kappa, 2)}, là mức thấp.
-Nên không coi nhãn Claude là đáp án tuyệt đối.`);
+Nên không coi nhãn Claude là đáp án tuyệt đối.
+${NC.n} ý của 3 chatbot thêm ở đợt 4 cũng chỉ có nhãn Claude.`);
 
 // ---------- 8. RQ1 waffle ----------
 pres.addSection({ title: "Kết quả" });
@@ -274,8 +276,7 @@ Macro-F1 từ 0 đến 1, càng cao càng tốt.
 Judge 14B đạt ${f(J14.macro_f1)}, nhưng hơn 7B chưa có ý nghĩa thống kê.
 Chấm cả câu trả lời thì RAGAS tốt dần theo cỡ mô hình.
 Máy chấm hai tầng: máy so khớp tự quyết nửa số ý nó chắc nhất, nửa còn lại gửi judge 7B; theo người đạt ${f(C50.human.macro_f1)}, ngang judge chấm hết.
-Judge 32B (chạy trên Kaggle) đạt ${f(J32.macro_f1)} theo Claude nhưng chỉ ${f(J32.macro_f1_human)} theo người, kém judge 7B có ý nghĩa: judge càng lớn càng gần Claude, càng xa người.
-Sang miền giáo dục (ViEduReg, ${EDU.claims} ý): judge 7B vẫn ${f(EDU.judge_7b.macro_f1)}, máy so khớp XLM-R chỉ ${f(EDU.xhard.macro_f1)} vì báo nhầm ${EDU.xhard.false_alarm}/${EDU.xhard.right} ý đúng.`);
+Judge 32B (chạy trên Kaggle) đạt ${f(J32.macro_f1)} theo Claude nhưng chỉ ${f(J32.macro_f1_human)} theo người, kém judge 7B có ý nghĩa: judge càng lớn càng gần Claude, càng xa người.`);
 
 // ---------- 9. RQ2 ----------
 const c1 = CMP["nli_ft_v1 - nli_zs_v1"], c2 = CMP["nli_nosynth_v1 - nli_zs_v1"];
@@ -295,10 +296,9 @@ s.addChart(pres.ChartType.bar, [
   text(s, d, { x: 8.85, y: y + 0.4, w: 3.85, h: 0.9, fontSize: 14, color: SOFT });
 });
 notes(s, `Các số ở đây theo nhãn Claude.
-Dấu cộng: dữ liệu tự tạo tăng 0,117 điểm.
+Dấu cộng: dữ liệu tự tạo tăng 0,117 điểm; tăng lên 20.000 cặp đạt ${f(FF1.macro_f1)}, chưa hơn đợt 1 có ý nghĩa.
 Dấu trừ: nhét thông tin đồ thị làm điểm giảm.
 Dấu bằng: luật số và ngày gần như không đổi.
-Tăng lên 20.000 cặp đạt ${f(FF1.macro_f1)}, nhưng chưa hơn đợt 1 có ý nghĩa.
 Đợt 3 luyện XLM-R với lỗi sát thực tế (đổi cơ quan, chèn mục, phủ nhận sai): ${f(XH1.macro_f1)} theo Claude, cao nhất, nhưng theo người chỉ ${f(XH1.macro_f1_human)}.
 Lần thứ ba cùng một khuôn mẫu: điểm theo Claude tăng, theo người thì không.`);
 
@@ -358,7 +358,9 @@ figure(s, 8.9, 3.65, 3.8, `${f(100 * R.qa.naive.gold_passage_recall, 1)}% · ${f
 text(s, `GGF ${f(SY.by_hop.graph["4"].GGF)}–${f(SY.by_hop.naive["5"].GGF)} ở câu 4–5 hop, so với ${f(SY.by_hop.naive["1"].GGF)} ở câu 1 hop.`, { x: 8.9, y: 5.2, w: 3.8, h: 1, fontSize: 15, color: SOFT });
 notes(s, `Hai chatbot ngang nhau, p = ${f(SY.wilcoxon_GGF_p)}.
 Câu 1 hop đạt khoảng 0,85; câu 4 và 5 hop giảm mạnh.
-Đồ thị của ViHERMES khá thô, nên GraphRAG chưa lấy thêm được nhiều đoạn đúng.`);
+Đồ thị của ViHERMES khá thô, nên GraphRAG chưa lấy thêm được nhiều đoạn đúng.
+Đợt 4 thêm BM25, tìm theo vector và Naive RAG với Qwen 7B: theo nhãn Claude, Naive RAG vẫn cao nhất (${f(T5.naive.ggf_silver)}), tìm theo vector thấp nhất (${f(T5.dense.ggf_silver)}).
+Judge 7B lại xếp năm chatbot gần như ngược lại (ρ = ${f(D4.systems.rank_spearman_vs_silver_ggf.ggf_judge7, 2)}), nên dùng judge để so chatbot cũng phải cẩn thận.`);
 
 // ---------- 13. limits ----------
 pres.addSection({ title: "Kết luận" });
@@ -374,7 +376,7 @@ table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
 notes(s, `Em chủ động nêu giới hạn.
 Quan trọng nhất: nhãn chính do Claude gán, chỉ một người kiểm tra, mẫu còn nhỏ.
 Đợt 4 đã thêm 3 hệ (BM25, vector, Naive 7B), ${NC.n} claim silver, ViEduReg bản thử và toán tử Verify; vẫn còn xa mức khoảng 3.000 claim.
-Trên 5 hệ, judge 7B xếp hạng gần ngược nhãn silver (ρ = ${f(D4.systems.rank_spearman_vs_silver_ggf.ggf_judge7, 2)}).`);
+Sang miền giáo dục (ViEduReg, ${EDU.claims} ý): judge 7B vẫn ${f(EDU.judge_7b.macro_f1)}, XLM-R luyện trên văn bản y tế chỉ ${f(EDU.xhard.macro_f1)} vì báo nhầm ${EDU.xhard.false_alarm}/${EDU.xhard.right} ý đúng.`);
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
@@ -389,9 +391,9 @@ rule(s, 0.6, 5.1, 12.13);
 text(s, "Cảm ơn thầy cô và các bạn đã lắng nghe", { x: 0.6, y: 5.3, w: 12, h: 0.5, fontSize: 24, bold: true, color: ACC });
 text(s, `${AUTHOR} · Mã nguồn và dữ liệu: ${REPO}`, { x: 0.6, y: 5.9, w: 12, h: 0.4, fontSize: 16, color: SOFT });
 notes(s, `Em kết luận ba ý.
-Máy chấm có sẵn chỉ khớp mức trung bình; theo người, judge 7B tốt nhất.
+Máy chấm có sẵn chỉ khớp mức trung bình; theo người, judge 7B tốt nhất, judge 32B còn kém hơn.
 Luyện thêm giúp theo nhãn Claude, chưa chắc giúp theo người.
-AI tự sửa chủ yếu bằng cách xóa nội dung.
+AI tự sửa chủ yếu bằng cách xóa nội dung; toán tử Verify thì từ chối ${VO.refused}/${VO.answers} câu.
 Điểm của máy chỉ để tham khảo, văn bản pháp luật vẫn cần người kiểm tra.
 Em xin hết, mời thầy cô đặt câu hỏi.`);
 
