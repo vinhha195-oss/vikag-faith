@@ -74,20 +74,31 @@ def judge(claim, pool):
     return lab if lab in VI else None
 
 
-def run(question, use_judge):
-    if not question.strip():
-        return "<p>Nhập một câu hỏi.</p>"
+def analyse(question, use_judge=True):
+    """The whole live pipeline, as data: used by the Gradio page and by s22_record.py."""
     pool = [passage(n) for n in take_budget([e.node for e in retriever.seeds(question, k=8)])]  # same budget as Naive RAG
     answer = chat(f"NGỮ CẢNH:\n{format_context(pool)}\n\nCÂU HỎI: {question}", SYSTEM, GEN_MODEL, num_predict=400, num_ctx=4096)
     claims = clean(chat_json(f"{FEWSHOT}\nCÂU HỎI: {question}\nCÂU TRẢ LỜI: {answer}\nJSON:", SPLIT_SYSTEM, GEN_MODEL, num_predict=600).get("claims", []))
-    rows, n_judge = [], 0
+    rows = []
     for c in claims:
         e, k, window = verify(c, pool)
         label, tier = decide(e, k, TS, TC), "Máy so khớp"
         if use_judge and abs(e - TS) < MARGIN:
             j = judge(c, pool)
             if j:
-                label, tier, n_judge = j, "Giám khảo 7B (máy so khớp chưa chắc)", n_judge + 1
+                label, tier = j, "Giám khảo 7B (máy so khớp chưa chắc)"
+        rows.append({"claim": c, "label": label, "by": tier, "p": round(e, 3), "evidence": window[:900]})
+    return {"question": question, "answer": answer, "claims": rows, "sources": [p["title"][:160] for p in pool]}
+
+
+def run(question, use_judge):
+    if not question.strip():
+        return "<p>Nhập một câu hỏi.</p>"
+    a = analyse(question, use_judge)
+    answer, claims, pool = a["answer"], a["claims"], a["sources"]
+    rows, n_judge = [], sum(x["by"] != "Máy so khớp" for x in a["claims"])
+    for x in claims:
+        c, label, tier, e, window = x["claim"], x["label"], x["by"], x["p"], x["evidence"]
         name, fg, bg = VI[label]
         rows.append(f"""<div style="border:1px solid #d7e0e1;border-radius:10px;padding:10px 12px;margin:8px 0">
 <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>{html.escape(c)}</b>
@@ -99,14 +110,15 @@ def run(question, use_judge):
     head = (f"<h3>Câu trả lời</h3><p style='background:#edf2f2;padding:10px 12px;border-radius:8px'>{html.escape(answer)}</p>"
             f"<h3>{len(claims)} ý: {counts['supported']} có căn cứ · {counts['contradicted']} mâu thuẫn · {counts['unsupported']} không có căn cứ</h3>"
             f"<p style='font-size:13px;color:#56656c'>{n_judge} ý được chuyển sang giám khảo 7B. Kết quả của máy chỉ để tham khảo.</p>")
-    sources = "".join(f"<li>{html.escape(p['title'][:140])}</li>" for p in pool)
+    sources = "".join(f"<li>{html.escape(t[:140])}</li>" for t in pool)
     return head + "".join(rows) + f"<h3>Văn bản đã truy xuất</h3><ol style='font-size:13px'>{sources}</ol>"
 
 
 EXAMPLES = [["Công ty TNHH Fine Việt Nam được phép quảng cáo trên những nền tảng mạng xã hội và thương mại điện tử nào?", True],
             ["Thông tư hướng dẫn phương pháp chế biến dược liệu và vị thuốc cổ truyền có hiệu lực từ ngày nào?", True],
             ["Phòng ban nào thuộc Cục Dân số có chức năng liên quan đến thanh tra, xử lý vi phạm pháp luật?", False]]
-demo = gr.Interface(fn=run, inputs=[gr.Textbox(label="Câu hỏi về văn bản pháp quy y tế", lines=2), gr.Checkbox(value=True, label="Gửi ý chưa chắc sang giám khảo 7B (máy chấm hai tầng)")],
+if __name__ == "__main__":
+  demo = gr.Interface(fn=run, inputs=[gr.Textbox(label="Câu hỏi về văn bản pháp quy y tế", lines=2), gr.Checkbox(value=True, label="Gửi ý chưa chắc sang giám khảo 7B (máy chấm hai tầng)")],
                     outputs=gr.HTML(), examples=EXAMPLES, title="ViKAG-Faith: kiểm chứng từng ý của câu trả lời",
                     description="Chatbot trả lời từ văn bản ViHERMES; mỗi ý được máy so khớp XLM-R kiểm tra, ý chưa chắc chuyển sang Qwen2.5-7B.")
-demo.launch(share=True)
+  demo.launch(share=True)

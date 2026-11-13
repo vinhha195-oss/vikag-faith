@@ -37,6 +37,7 @@ cells = [
 | A | ViEduReg: 30 câu hỏi về văn bản kiểm định chất lượng giáo dục | 30 phút |
 | B | Ba hệ mới (BM25, vector, Qwen 7B) cho 40 câu hỏi | 1,5–2 giờ |
 | C | Toán tử Verify kiểu KAG trên 80 câu trả lời, chấm lại bằng judge 14B | 1,5 giờ |
+| D | Chạy sẵn 8 câu hỏi qua chatbot cho demo | 15 phút |
 
 1. **Runtime → Change runtime type → T4 GPU**, rồi **Runtime → Run all**. Cho phép Google Drive.
 2. Sau mỗi phần, `MyDrive/vikag-faith/dot4/vikag_dot4.zip` được cập nhật. Nhắn "check" để Claude lấy kết quả.
@@ -62,7 +63,7 @@ cd /content/vikag-faith
 rm -rf src && cp -r /content/repo/src src
 mkdir -p outputs/logs && cp -r /content/repo/outputs/* outputs/
 # results are written straight to Drive, so a dropped session keeps every finished answer
-for f in dot4_edu.jsonl dot4_systems.jsonl dot4_verify.jsonl; do ln -sf $DRIVE/$f outputs/$f; done
+for f in dot4_edu.jsonl dot4_systems.jsonl dot4_verify.jsonl dot4_live.jsonl; do ln -sf $DRIVE/$f outputs/$f; done
 [ -d models/verifier_xhard ] || cp -r /content/drive/MyDrive/vikag-faith/dot3/models/verifier_xhard models/
 pip install -q ollama "transformers==4.46.3" "tokenizers==0.20.3" "datasets==5.0.1" sentencepiece scikit-learn protobuf "gradio<6"
 python - <<'EOS'
@@ -105,6 +106,14 @@ os.chdir("/content/vikag-faith/src")
     code(RUN.replace("PART", "systems")),
     md("## Phần C. Toán tử Verify kiểu KAG"),
     code(RUN.replace("PART", "verify")),
+    md("## Phần D. Chạy sẵn 8 câu hỏi qua chatbot, cho tab \"Thử trực tiếp\" của demo"),
+    code("""
+%%bash
+DRIVE=/content/drive/MyDrive/vikag-faith/dot4
+cd /content/vikag-faith/src
+VIKAG_CPU=0 PYTHONIOENCODING=utf8 python s22_record.py 2>&1 | grep -E "live [0-9]+/|Error|Traceback"
+cd $DRIVE && rm -f vikag_dot4.zip && zip -q vikag_dot4.zip dot4_*.jsonl && ls -la vikag_dot4.zip
+"""),
 ]
 
 nb = {"cells": cells, "metadata": {"accelerator": "GPU", "colab": {"provenance": [], "gpuType": "T4"},
