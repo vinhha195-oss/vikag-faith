@@ -213,8 +213,8 @@ Mọi máy chấm nhìn cùng một tập bằng chứng, nên so sánh mới c�
 // ---------- 6. checkers ----------
 s = page("CÁCH LÀM", "Các máy chấm được so sánh trên cùng một tập bằng chứng", "Cách làm");
 table(s, ["Máy chấm", "Cách làm", "Biến thể"], [
-  [{ text: "RAGAS", options: { bold: true } }, "Tái hiện 2 prompt gốc, chấm cả câu trả lời", "Qwen2.5 3B, 7B, 14B"],
-  [{ text: "LLM-judge", options: { bold: true } }, "LLM gán 3 nhãn cho từng claim", "Qwen2.5 3B, 7B, 14B"],
+  [{ text: "RAGAS", options: { bold: true } }, "Tái hiện 2 prompt gốc, chấm cả câu trả lời", "Qwen2.5 3B, 7B, 14B, 32B"],
+  [{ text: "LLM-judge", options: { bold: true } }, "LLM gán 3 nhãn cho từng claim", "Qwen2.5 3B, 7B, 14B, 32B"],
   [{ text: "NLI mDeBERTa-v3", options: { bold: true } }, "Zero-shot trên cửa sổ 900 ký tự, ngưỡng chọn trên tập dev", "V1 đoạn văn · V2 thêm đồ thị"],
   [{ text: "NLI fine-tune", options: { bold: true } }, "12.000 cặp ViNLI + 3.328 cặp tổng hợp (đổi số, ngày, phủ định)", "Ablation: chỉ ViNLI"],
   [{ text: "Rule", options: { bold: true } }, "So khớp số, ngày, số hiệu văn bản", "Riêng lẻ, hoặc thêm vào NLI"],

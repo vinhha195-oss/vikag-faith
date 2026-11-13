@@ -531,7 +531,7 @@ equation(mr("CR", True) + mr(" = ", True) + mfrac(mr("|{c ∈ C : c") + mr(" con
          + mr("UR", True) + mr(" = ", True) + mfrac(mr("|{c ∈ C : c") + mr(" unsupported", True) + mr("}|"), CARD), 2)
 numbered([
     "**Metric dựa trên LLM:** RAGAS faithfulness tái hiện theo hai prompt gốc của thư viện (tách statement, rồi phán xét NLI theo lô) và LLM-judge "
-    "mức claim gán 3 nhãn cho các claim của đề tài; cả hai chạy với Qwen2.5-3B và 7B qua Ollama, đợt 2 thêm 14B và một verifier Qwen 3B trả nhãn kèm span bằng chứng (chưa fine-tune). Đầu ra không đọc được được loại khỏi phép đo, "
+    "mức claim gán 3 nhãn cho các claim của đề tài; cả hai chạy với Qwen2.5-3B và 7B qua Ollama, đợt 2 thêm 14B (đợt 4 thêm 32B) và một verifier Qwen 3B trả nhãn kèm span bằng chứng (chưa fine-tune). Đầu ra không đọc được được loại khỏi phép đo, "
     "không mặc định thành một nhãn.",
     f"**Verifier NLI:** mDeBERTa-v3-base-xnli-multilingual [13], [14] chạy trên cửa sổ 900 ký tự (bước 700); đợt 2 thử thêm XLM-R large xnli, zero-shot và fine-tune 16.000 cặp. Với claim c và các cửa sổ w:",
 ], start=5)
@@ -614,7 +614,7 @@ bullets([
     "Kendall giữa điểm tự động và GGF chuẩn trên 61–63 câu trả lời test (tùy số câu có đầu ra hợp lệ); revise: thay đổi GGF, CR, UR, token F1, EM và token recall so với đáp án ViHERMES.",
     "*Thống kê:* KTC 95% bootstrap 1.000 lần; bootstrap ghép cặp cho hiệu số macro-F1; Wilcoxon cặp cho so sánh hai hệ và trước/sau khi sửa; "
     "Cohen's κ cho độ đồng thuận Claude–người.",
-    "*Phần cứng:* Google Colab T4 16GB cho các bước dùng mô hình (Ollama, Q4_K_M; PyTorch float32), trừ zero-shot V3 (CPU) và fine-tune premise ngắn (GTX 1650) của đợt 2; máy cá nhân dùng cho phân tích và báo cáo, "
+    "*Phần cứng:* Google Colab T4 16GB cho các bước dùng mô hình (Ollama, Q4_K_M; PyTorch float32), Kaggle 2 × T4 cho judge 32B và đợt 4, trừ zero-shot V3 (CPU) và fine-tune premise ngắn (GTX 1650) của đợt 2; máy cá nhân dùng cho phân tích và báo cáo, "
     "vì GPU cá nhân (4GB) treo máy khi chạy mô hình.",
 ])
 
@@ -715,8 +715,8 @@ para(f"**Đợt 4 – judge 32B và miền giáo dục:** judge Qwen2.5-32B đ�
 table("Kết quả đợt 2–4 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
       ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
           ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
-          ["Judge 32B", f(J32["method"]["macro_f1"]), f"{f(J32['method']['ci95'][0], 2)}; {f(J32['method']['ci95'][1], 2)}", f(J32["method"]["auroc_not_supported"]), f"{J32['method']['caught']}/{J32['method']['wrong']}", f"{J32['method']['false_alarm']}/{J32['method']['right']}", f(J32["method"]["macro_f1_human"])],
           ["Judge 14B", f(J14["macro_f1"]), f"{f(J14['ci95'][0], 2)}; {f(J14['ci95'][1], 2)}", f(J14["auroc_not_supported"]), f"{J14['caught']}/{J14['wrong']}", f"{J14['false_alarm']}/{J14['right']}", f(J14["macro_f1_human"])],
+          ["Judge 32B", f(J32["method"]["macro_f1"]), f"{f(J32['method']['ci95'][0], 2)}; {f(J32['method']['ci95'][1], 2)}", f(J32["method"]["auroc_not_supported"]), f"{J32['method']['caught']}/{J32['method']['wrong']}", f"{J32['method']['false_alarm']}/{J32['method']['right']}", f(J32["method"]["macro_f1_human"])],
           ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
       ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
            for n, r in (("Fine-tune V1, 900 ký tự", FF1), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R + dữ liệu lỗi, đợt 3", XH1))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
