@@ -479,7 +479,7 @@ Each claim receives one label from supported, contradicted and unsupported. For 
 \end{equation}
 
 \subsection{Checkers}
-\textbf{LLM-based metrics.} RAGAS faithfulness is reimplemented from the two original prompts of the library, and a claim-level LLM-judge assigns the three labels to our claims. Both run with Qwen2.5-3B and 7B through Ollama; round 2 adds 14B, round 4 adds 32B, and a Qwen 3B verifier that returns a label with an evidence span. Unreadable outputs are excluded from measurement and never defaulted to a label.
+\textbf{LLM-based metrics.} RAGAS faithfulness is reimplemented from the two original prompts of the library, and a claim-level LLM-judge assigns the three labels to our claims. Both run with Qwen2.5-3B and 7B through Ollama; round 2 adds 14B and a Qwen 3B verifier that returns a label with an evidence span, and round 4 adds 32B. Unreadable outputs are excluded from measurement and never defaulted to a label.
 
 \textbf{NLI verifier.} mDeBERTa-v3-base-xnli-multilingual \cite{deberta,mdeberta} runs on windows of 900 characters with a stride of 700; round 2 adds XLM-R large xnli, zero-shot and fine-tuned on 16,000 pairs. For claim $c$ and windows $w$,
 \begin{equation}
