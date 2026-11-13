@@ -55,6 +55,8 @@ D3 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot3.json", encodin
 XH1, P3S, P3H, HD = D3["methods"]["xhard_v1"], D3["paired_silver"], D3["paired_human"], D3["hard_dev"]
 _CASC = json.load(open(ROOT / "outputs" / "analysis" / "cascade.json", encoding="utf-8"))
 C50 = next(r for r in _CASC["verifiers"]["ft_v1"] if abs(r["budget"] - 0.5) < 1e-9)
+D4 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot4.json", encoding="utf-8"))
+J32, EDU = D4["judge_32b"], D4["viedureg"]
 HT = json.load(open(ROOT / "outputs" / "analysis" / "ieee_extra.json", encoding="utf-8"))["human_tuned"]["ft_v1"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
@@ -697,9 +699,14 @@ para(f"**Đợt 3 – dữ liệu lỗi sát thực tế:** sinh 3.546 cặp the
      f"nhưng theo nhãn người chỉ {f(XH1['macro_f1_human'])}, không hơn XLM-R đợt 2. Đây là lần thứ ba cùng một khuôn mẫu lặp lại. "
      f"**Máy chấm hai tầng:** để fine-tune V1 tự quyết nửa số claim chắc nhất, chỉ gửi nửa còn lại cho judge 7B, đạt {f(C50['human']['macro_f1'])} theo nhãn người, "
      f"ngang judge chấm toàn bộ, còn báo nhầm theo silver giảm từ {CATCH['j7']['false_alarm']} xuống {C50['silver']['false_alarm']}/{C50['silver']['right']} (tỉ lệ 50% chọn sau khi xem kết quả).")
-table("Kết quả đợt 2 và 3 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
+para(f"**Đợt 4 – judge 32B và miền giáo dục:** judge Qwen2.5-32B (Kaggle, 2 × T4) đạt {f(J32['method']['macro_f1'])} theo silver nhưng {f(J32['method']['macro_f1_human'])} theo người, "
+     f"thấp hơn judge 7B có ý nghĩa (KTC [{f(J32['human - judge_7b']['ci95'][0], 2)}; {f(J32['human - judge_7b']['ci95'][1], 2)}]): judge càng lớn càng gần Claude, càng xa người. "
+     f"Trên bản thử ViEduReg ({EDU['questions']} câu hỏi về văn bản kiểm định chất lượng giáo dục đại học, {EDU['claims']} claim, nhãn silver), judge 7B giữ {f(EDU['judge_7b']['macro_f1'])}, "
+     f"còn XLM-R đợt 3 chỉ {f(EDU['xhard']['macro_f1'])} vì báo nhầm {EDU['xhard']['false_alarm']}/{EDU['xhard']['right']} claim đúng: verifier luyện trên văn bản y tế không chuyển được sang miền khác.")
+table("Kết quả đợt 2–4 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
       ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
           ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
+          ["Judge 32B", f(J32["method"]["macro_f1"]), f"{f(J32['method']['ci95'][0], 2)}; {f(J32['method']['ci95'][1], 2)}", f(J32["method"]["auroc_not_supported"]), f"{J32['method']['caught']}/{J32['method']['wrong']}", f"{J32['method']['false_alarm']}/{J32['method']['right']}", f(J32["method"]["macro_f1_human"])],
           ["Judge 14B", f(J14["macro_f1"]), f"{f(J14['ci95'][0], 2)}; {f(J14['ci95'][1], 2)}", f(J14["auroc_not_supported"]), f"{J14['caught']}/{J14['wrong']}", f"{J14['false_alarm']}/{J14['right']}", f(J14["macro_f1_human"])],
           ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
       ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
@@ -750,10 +757,10 @@ h2("7. Rủi ro & hạn chế")
 bullets([
     f"**Nhãn chuẩn là silver:** Claude trùng người {pct(ACG['acc'])} (κ = {f(ACG['kappa'], 2)}). Giảm thiểu: báo cáo song song theo nhãn người; mở rộng nhãn người, hai người gán và bước thống nhất.",
     "**Một người gán, không phải chuyên gia pháp lý;** lượt nhanh chỉ hiện 4 câu bằng chứng. Giảm thiểu: lượt C dùng toàn đoạn văn, báo cáo riêng.",
-    "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 14B (giới hạn Colab T4). Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
+    "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 32B. Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
     f"**Ngưỡng verifier kém ổn định:** chọn trên {R['claims_dev']} claim silver; chọn theo nhãn người cũng không cải thiện trên mẫu này. Giảm thiểu: thêm nhãn người, so thêm AUROC.",
     "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
-    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; chưa có ViEduReg, toán tử Verify trong KAG.",
+    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; ViEduReg mới là bản thử 30 câu, nhãn silver.",
 ])
 
 # 8 ------------------------------------------------------------------
@@ -764,7 +771,7 @@ para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulnes
      f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
 numbered([
     "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người.",
-    "Thử judge 32B; fine-tune verifier Qwen nhỏ trả span bằng chứng.",
+    "Fine-tune verifier Qwen nhỏ trả span bằng chứng; mở rộng ViEduReg với nhãn người.",
     "Đưa thông tin đồ thị vào verifier dưới dạng triple có cấu trúc; mở rộng sang LightRAG, HippoRAG 2, KAG và bộ quy chế đào tạo ViEduReg.",
 ])
 

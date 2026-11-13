@@ -26,6 +26,8 @@ for j in R("judges.jsonl"):
     judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
 for j in R("judges_dot2.jsonl"):  # judge 14B, round 2
     judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
+for j in R("judges_32b.jsonl"):  # judge 32B, round 4 (Kaggle)
+    judges.setdefault((j["qid"], j["system"]), {})[j["model"]] = j
 scores3 = {r["cid"]: r for r in R("verifier_scores_dot3.jsonl")}  # XLM-R with error-shaped hard negatives, round 3
 dot3 = json.load(open(OUT / "analysis" / "results_dot3.json", encoding="utf-8"))
 
@@ -64,6 +66,7 @@ for (q, s), cl in claims.items():
                   "ft": decide(scores[k]["ft_v1"], *th["ft_v1"]),
                   "v2": decide(scores[k]["zs_v2"], *th["zs_v2"]),
                   "j14": jg.get("qwen2.5:14b", {}).get("judge", {}).get(k),
+                  "j32": jg.get("qwen2.5:32b", {}).get("judge", {}).get(k),
                   "x3": decide(scores3[k]["xhard_v1"], *th3),
                   "cas": (jg.get("qwen2.5:7b", {}).get("judge", {}).get(k) if k in to_judge else None) or decide(scores[k]["ft_v1"], *th["ft_v1"]),
                   "human": audit.get(k)},
@@ -114,6 +117,10 @@ c50 = next(r for r in casc["verifiers"]["ft_v1"] if abs(r["budget"] - 0.5) < 1e-
 summary["dot3"] = {"xhard": dot3["methods"]["xhard_v1"], "xft": dot2["methods"]["nli_xft_v1"],
                    "p_silver_j7": dot3["paired_silver"]["xhard_v1 - judge_7b"], "hard_dev": dot3["hard_dev"],
                    "cascade": {"silver": c50["silver"], "human": c50["human"], "judge_alone": casc["judge_alone"]}}
+
+d4 = json.load(open(OUT / "analysis" / "results_dot4.json", encoding="utf-8"))
+summary["dot4"] = {"j32": d4["judge_32b"]["method"], "j32_vs_j7_human": d4["judge_32b"]["human - judge_7b"], "ragas32": d4["judge_32b"]["corr_ragas_32b"],
+                   "edu": d4["viedureg"], "j14": dot2["methods"]["judge_14b"]}
 
 data = {"items": sorted(items.values(), key=lambda x: (x["hop"], x["q"])), "passages": passages, "summary": summary}
 page = ROOT / "demo" / "vikag_faith_demo.html"

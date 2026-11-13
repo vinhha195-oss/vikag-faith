@@ -46,6 +46,7 @@ const D2 = require(path.join(ROOT, "outputs", "analysis", "results_dot2.json")),
 const HT = require(path.join(ROOT, "outputs", "analysis", "ieee_extra.json")).human_tuned.ft_v1;
 const D3 = require(path.join(ROOT, "outputs", "analysis", "results_dot3.json")), XH1 = D3.methods.xhard_v1;
 const C50 = require(path.join(ROOT, "outputs", "analysis", "cascade.json")).verifiers.ft_v1.find((r) => r.budget === 0.5);
+const D4 = require(path.join(ROOT, "outputs", "analysis", "results_dot4.json")), J32 = D4.judge_32b.method, EDU = D4.viedureg;
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -260,17 +261,20 @@ for (let i = 0; i < J.wrong; i++) {
 text(s, `Mỗi ô là một ý sai trong tập test. Ô đậm: Judge 7B bắt được.`, { x: 0.6, y: 6.1, w: 4.2, h: 0.7, fontSize: 14, color: SOFT });
 const rowsC = [["j7", "Judge 7B"], ["ft", "NLI fine-tune V1"], ["j3", "Judge 3B"], ["v1", "NLI zero-shot V1"]];
 const row14 = [{ text: "Judge 14B" }, { text: `${J14.caught}/${J14.wrong}` }, { text: `${J14.false_alarm}/${J14.right}` }, { text: f(J14.macro_f1) }];
+const row32 = [{ text: "Judge 32B" }, { text: `${J32.caught}/${J32.wrong}` }, { text: `${J32.false_alarm}/${J32.right}` }, { text: f(J32.macro_f1) }];
 table(s, ["Máy chấm", "Bắt được", "Báo nhầm", "Macro-F1"], rowsC.map(([k, n], i) => {
   const key = { j7: "judge_7b", ft: "nli_ft_v1", j3: "judge_3b", v1: "nli_zs_v1" }[k], c = CATCH[k], b = i === 0 ? { bold: true, color: ACC } : {};
   return [{ text: n, options: b }, { text: `${c.caught}/${c.wrong}`, options: b }, { text: `${c.false_alarm}/${c.right}`, options: b }, { text: f(CL[key].macro_f1), options: b }];
-}).concat([row14]), { x: 5.2, y: 2.0, w: 7.6, colW: [3.1, 1.5, 1.6, 1.4], rowH: [0.42, 0.48, 0.48, 0.48, 0.48, 0.48], fontSize: 16 });
+}).concat([row14, row32]), { x: 5.2, y: 2.0, w: 7.6, colW: [3.1, 1.5, 1.6, 1.4], rowH: [0.4, 0.42, 0.42, 0.42, 0.42, 0.42, 0.42], fontSize: 15 });
 text(s, `Theo nhãn silver. Báo nhầm là số ý đúng bị cho là sai. SelfCheckGPT đạt ${f(CL.nli_selfcheck.macro_f1)} dù không nhìn bằng chứng, ngang NLI zero-shot.`, { x: 5.3, y: 4.95, w: 7.4, h: 0.8, fontSize: 15, color: SOFT });
 text(s, `Chấm cả câu trả lời: RAGAS khớp nhất với điểm chuẩn, tăng theo mô hình: ρ = ${f(CO.ragas_3b.spearman)} (3B), ${f(CO.ragas_7b.spearman)} (7B), ${f(R14.spearman)} (14B).`, { x: 5.3, y: 5.8, w: 7.4, h: 0.8, fontSize: 15, color: SOFT });
 notes(s, `Ô đậm là ý judge 7B bắt được: ${CATCH.j7.caught} trên ${CATCH.j7.wrong}, còn sót khoảng 1/3.
 Macro-F1 từ 0 đến 1, càng cao càng tốt.
 Judge 14B đạt ${f(J14.macro_f1)}, nhưng hơn 7B chưa có ý nghĩa thống kê.
 Chấm cả câu trả lời thì RAGAS tốt dần theo cỡ mô hình.
-Máy chấm hai tầng: máy so khớp tự quyết nửa số ý nó chắc nhất, nửa còn lại gửi judge 7B; theo người đạt ${f(C50.human.macro_f1)}, ngang judge chấm hết.`);
+Máy chấm hai tầng: máy so khớp tự quyết nửa số ý nó chắc nhất, nửa còn lại gửi judge 7B; theo người đạt ${f(C50.human.macro_f1)}, ngang judge chấm hết.
+Judge 32B (chạy trên Kaggle) đạt ${f(J32.macro_f1)} theo Claude nhưng chỉ ${f(J32.macro_f1_human)} theo người, kém judge 7B có ý nghĩa: judge càng lớn càng gần Claude, càng xa người.
+Sang miền giáo dục (ViEduReg, ${EDU.claims} ý): judge 7B vẫn ${f(EDU.judge_7b.macro_f1)}, máy so khớp XLM-R chỉ ${f(EDU.xhard.macro_f1)} vì báo nhầm ${EDU.xhard.false_alarm}/${EDU.xhard.right} ý đúng.`);
 
 // ---------- 9. RQ2 ----------
 const c1 = CMP["nli_ft_v1 - nli_zs_v1"], c2 = CMP["nli_nosynth_v1 - nli_zs_v1"];
@@ -360,10 +364,10 @@ s = page("HẠN CHẾ", "Sáu giới hạn cần đọc kèm mọi con số", "K
 table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Nhãn chuẩn là silver", options: { bold: true } }, `Claude trùng người ${pct(ACG.acc)}`, "Báo cáo song song theo nhãn người"],
   [{ text: "Một người gán", options: { bold: true } }, "Không phải chuyên gia pháp lý; lượt nhanh chỉ xem 4 câu", "Hai người gán, đo κ người–người"],
-  [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge lớn nhất 14B`, "KTC bootstrap, kiểm định ghép cặp"],
+  [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge tới 32B`, "KTC bootstrap, kiểm định ghép cặp"],
   [{ text: "Ngưỡng kém ổn định", options: { bold: true } }, `Chọn trên ${R.claims_dev} claim; theo nhãn người cũng không cải thiện`, "Thêm nhãn người, so thêm AUROC"],
   [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
-  [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; chưa có ViEduReg, toán tử Verify KAG", "Verifier đọc triple có cấu trúc"],
+  [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; ViEduReg mới là bản thử 30 câu", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });
 notes(s, `Em chủ động nêu giới hạn.
 Quan trọng nhất: nhãn chính do Claude gán, chỉ một người kiểm tra, mẫu còn nhỏ.
@@ -371,7 +375,7 @@ So với đề cương còn thiếu: 2 hệ thay vì 5, ${R.claims_total} claim 
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
-[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình. Máy hai tầng ngang judge 7B mà chỉ gọi judge nửa số ý.`],
+[["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình. Judge 32B không hơn mà còn xa người hơn. Máy hai tầng ngang judge 7B với nửa số lần gọi.`],
  ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không hơn có ý nghĩa. Dữ liệu lỗi sát thực tế: ${f(XH1.macro_f1)} theo Claude, chỉ ${f(XH1.macro_f1_human)} theo người. Đồ thị, triple và rule chưa giúp được.`],
  ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;
