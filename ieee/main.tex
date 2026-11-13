@@ -96,12 +96,14 @@ Each claim receives one label from supported, contradicted and unsupported. For 
 \mathrm{GGF}=\frac{|\{c\in C: c\ \text{supported}\}|}{|C|},
 \end{equation}
 \begin{equation}
-\mathrm{CR}=\frac{|\{c\in C: c\ \text{contradicted}\}|}{|C|},\quad
+\mathrm{CR}=\frac{|\{c\in C: c\ \text{contradicted}\}|}{|C|},
+\end{equation}
+\begin{equation}
 \mathrm{UR}=\frac{|\{c\in C: c\ \text{unsupported}\}|}{|C|}.
 \end{equation}
 
 \subsection{Checkers}
-\textbf{LLM-based metrics.} RAGAS faithfulness is reimplemented from the two original prompts of the library, and a claim-level LLM-judge assigns the three labels to our claims. Both run with Qwen2.5-3B and 7B through Ollama; round 2 adds 14B and a Qwen 3B verifier that returns a label with an evidence span. Unreadable outputs are excluded from measurement and never defaulted to a label.
+\textbf{LLM-based metrics.} RAGAS faithfulness is reimplemented from the two original prompts of the library, and a claim-level LLM-judge assigns the three labels to our claims. Both run with Qwen2.5-3B and 7B through Ollama; round 2 adds 14B, round 4 adds 32B, and a Qwen 3B verifier that returns a label with an evidence span. Unreadable outputs are excluded from measurement and never defaulted to a label.
 
 \textbf{NLI verifier.} mDeBERTa-v3-base-xnli-multilingual \cite{deberta,mdeberta} runs on windows of 900 characters with a stride of 700; round 2 adds XLM-R large xnli, zero-shot and fine-tuned on 16,000 pairs. For claim $c$ and windows $w$,
 \begin{equation}
@@ -200,13 +202,13 @@ Circular 30/2017/TT-BYT takes effect on 01/01/2018. & The evidence gives no such
 \end{table}
 
 \section{Experimental Setup}
-\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans. Round 3 adds XLM-R trained with error-shaped hard negatives and a two-tier checker.
+\textbf{Configurations.} Round 1 compares 12 variants: LLM-judge and RAGAS with 3B and 7B; NLI zero-shot, fine-tuned and ViNLI-only, each with V1 and V2; SelfCheckGPT-NLI; and rule only. Each NLI variant is also tested with and without rules, and an always-supported baseline is included. Round 2 adds 12 variants: judge and RAGAS 14B, zero-shot V3, fine-tuned V1 and V3 at 450 and 900 characters, XLM-R zero-shot and fine-tuned V1 and V3, and Qwen 3B with spans. Round 3 adds XLM-R trained with error-shaped hard negatives and a two-tier checker. Round 4 adds judge and RAGAS 32B, three more systems, a pilot in a second domain and a KAG-style Verify operator.
 
 \textbf{Metrics.} At claim level we report three-label macro-F1, per-label F1 and AUROC for detecting non-supported claims. At answer level we report Spearman and Kendall correlation between automatic scores and reference GGF on 61--63 test answers, depending on valid outputs. For revision we report changes in GGF, CR, UR, token F1, exact match and token recall against ViHERMES answers.
 
 \textbf{Statistics.} We use 95\% bootstrap confidence intervals with 1,000 resamples, paired bootstrap for macro-F1 differences, paired Wilcoxon tests for system and before/after comparisons, and Cohen's $\kappa$ for agreement. Intervals are not corrected for multiple comparisons.
 
-\textbf{Hardware.} Models run on a Google Colab T4 GPU (Ollama with Q4\_K\_M quantisation; PyTorch in float32), except zero-shot V3 on CPU and the short-premise fine-tune on a local GTX 1650.
+\textbf{Hardware.} Models run on a Google Colab T4 GPU (Ollama with Q4\_K\_M quantisation; PyTorch in float32), except zero-shot V3 on CPU and the short-premise fine-tune on a local GTX 1650. The 32B judge and the round 4 systems run on Kaggle with two T4 GPUs.
 
 \section{Results}
 Table~\ref{tab:main} and Fig.~\ref{fig:scores} give the main results of round 1.
@@ -950,7 +952,7 @@ XLM-R fine-tuned V3 & 0.65 & 0.10 \\
 \end{table}
 
 \section{Reproducibility}
-The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, and \texttt{s11\_ieee\_extra} and \texttt{s12\_ieee\_more} compute the post hoc analyses of this paper. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
+The repository holds the pipeline as numbered scripts. \texttt{s1\_answer} generates answers, \texttt{s2\_claims} extracts claims, \texttt{s3\_pool} builds the evidence sets, \texttt{s3b\_triples} builds triples and the mutual index, \texttt{s4\_judges} runs RAGAS and the LLM-judges, \texttt{s5\_verifier} prepares data and trains and scores verifiers, \texttt{s6\_annotation} and \texttt{s6\_quick} build the labelling pages, \texttt{s7\_analysis} computes the round 1 results, \texttt{s8\_revise} runs verify-then-revise, \texttt{s9\_selfcheck} runs SelfCheckGPT, \texttt{s10\_dot2} analyses round 2, \texttt{s11\_ieee\_extra} and \texttt{s12\_ieee\_more} compute the post hoc analyses of this paper, \texttt{s13\_cascade} to \texttt{s18\_dot3} cover round 3, and \texttt{s19\_dot4} to \texttt{s22\_record} cover round 4. All sampling uses seed 42, and every number in this paper is generated from the stored result files.
 
 \begin{thebibliography}{99}
 \bibitem{kag} L. Liang \emph{et al.}, ``KAG: Boosting LLMs in professional domains via knowledge augmented generation,'' 2024, arXiv:2409.13731.
