@@ -77,6 +77,112 @@ if pe.exists() and pl.exists():
                        "majority": {"macro_f1": macro_f1(y, ["supported"] * len(y))},
                        "ragas7_spearman": float(spearmanr([a for a, _ in ok], [b for _, b in ok]).statistic), "ragas_n": len(ok)}
 
+# ---------- three more systems (s19_dot4.py systems) on the same 40 questions, silver labels in dot4_silver.json
+ps, pl = OUT / "dot4_systems.jsonl", OUT / "dot4_silver.json"
+if ps.exists() and pl.exists():
+    rows, lab = read_jsonl(ps), json.load(open(pl, encoding="utf-8"))["labels"]
+    th = json.load(open(OUT / "analysis" / "results_dot3.json", encoding="utf-8"))["thresholds"]["xhard_v1"]
+    rag7 = {(j["qid"], j["system"]): j["ragas"]["score"] for j in read_jsonl(OUT / "judges.jsonl") if j["model"] == "qwen2.5:7b"}
+    per = defaultdict(lambda: {"silver": [], "judge7": [], "ragas7": [], "claims": 0, "dist": defaultdict(int), "empty": 0})
+    for k in usable:  # the two round-1 systems, labels from prelabels.json
+        q, sy, _ = k.split("|"); per[(q, sy)]
+    for (q, sy) in list(per):
+        ks = [k for k in usable if k.startswith(f"{q}|{sy}|")]
+        a = per[(q, sy)]; a["sys"] = sy; a["n"] = len(ks)
+        a["ggf"] = sum(gold[k] == "supported" for k in ks) / len(ks)
+        a["ggf_j7"] = sum(pred["j7"].get(k) == "supported" for k in ks) / len(ks)
+        a["ragas7"] = rag7.get((q, sy)); a["bad"] = any(gold[k] != "supported" for k in ks)
+        for k in ks:
+            a["dist"][gold[k]] += 1
+    y, j7, xh, ent = [], [], [], []
+    for r in rows:
+        key = (r["qid"], r["system"]); a = per[key]; a["sys"] = r["system"]; a["ragas7"] = r["ragas7"]
+        ls = [lab[f"{r['qid']}|{r['system']}|{i}"] for i in range(len(r["claims"]))]
+        a["n"] = len(ls)
+        if not ls:
+            continue
+        a["ggf"] = sum(x == "supported" for x in ls) / len(ls)
+        a["ggf_j7"] = sum((x or "unsupported") == "supported" for x in r["judge7"]) / len(ls)
+        a["bad"] = any(x != "supported" for x in ls)
+        for i, l in enumerate(ls):
+            a["dist"][l] += 1; y.append(l); j7.append(r["judge7"][i] or "unsupported")
+            sc = r["xhard"][i]; ent.append(sc["entail"])
+            xh.append("supported" if sc["entail"] >= th[0] else "contradicted" if sc["contra"] >= th[1] else "unsupported")
+    table = {}
+    for sy in ("graph", "naive", "bm25", "dense", "naive7b"):
+        ans = [a for a in per.values() if a.get("sys") == sy]
+        full = [a for a in ans if a.get("n")]
+        rg = [a["ragas7"] for a in full if a["ragas7"] is not None]
+        table[sy] = {"answers": len(ans), "no_claims": len(ans) - len(full), "claims": sum(a["n"] for a in full),
+                     "dist": {l: sum(a["dist"][l] for a in full) for l in LABELS},
+                     "ggf_silver": float(np.mean([a["ggf"] for a in full])), "ggf_judge7": float(np.mean([a["ggf_j7"] for a in full])),
+                     "ragas7": float(np.mean(rg)), "answers_with_bad_claim": sum(a["bad"] for a in full)}
+    names = list(table)
+    rank = {m: float(spearmanr([table[n]["ggf_silver"] for n in names], [table[n][m] for n in names]).statistic) for m in ("ggf_judge7", "ragas7")}
+    full = [a for a in per.values() if a.get("n") and a["ragas7"] is not None]
+    rng = np.random.default_rng(42)
+
+    def check(p):
+        Y, P = np.array(y), np.array(p)
+        b = [macro_f1(Y[i], P[i]) for i in (rng.integers(0, len(y), len(y)) for _ in range(1000))]
+        wrong = [k for k, v in enumerate(y) if v != "supported"]; right = [k for k, v in enumerate(y) if v == "supported"]
+        return {"macro_f1": macro_f1(y, p), "ci95": [float(np.percentile(b, 2.5)), float(np.percentile(b, 97.5))],
+                "caught": sum(p[k] != "supported" for k in wrong), "wrong": len(wrong), "false_alarm": sum(p[k] != "supported" for k in right), "right": len(right)}
+
+    out["systems"] = {"table": table, "rank_spearman_vs_silver_ggf": rank,
+                      "answer_spearman_ragas7_vs_silver_ggf": {"n": len(full), "rho": float(spearmanr([a["ggf"] for a in full], [a["ragas7"] for a in full]).statistic)},
+                      "new_claims": {"n": len(y), "dist": {l: y.count(l) for l in LABELS}, "judge_7b": check(j7), "xhard": check(xh),
+                                     "majority": {"macro_f1": macro_f1(y, ["supported"] * len(y))}}}
+
+# ---------- KAG-style Verify operator (s19_dot4.py verify)
+pv = OUT / "dot4_verify.jsonl"
+if pv.exists():
+    rows = read_jsonl(pv)
+    order = defaultdict(list)
+    for c in read_jsonl(OUT / "claims.jsonl"):
+        order[(c["qid"], c["system"])].append(c["cid"])
+    # 1. the operator's own labels on the original 284 claims, as a checker
+    op = {}
+    for r in rows:
+        for cid, x in zip(order[(r["qid"], r["system"])], r["operator"]):
+            if cid in gold:
+                op[cid] = x["label"]
+    res = {"checker": table_row(op, keys, gold, human), "judge_calls": sum(r["judge_calls"] for r in rows),
+           "claims_checked": sum(len(r["operator"]) for r in rows),
+           "decided_by": {b: sum(x["by"] == b for r in rows for x in r["operator"]) for b in ("verifier", "judge7b", "document check")},
+           "human - judge_7b": paired(op, pred["j7"], keys, gold, human), "silver - judge_7b": paired(op, pred["j7"], keys, gold)}
+    # 2. what happens to the answers, every version rescored by the same 14B judge
+    j14 = {(j["qid"], j["system"]): j["judge"] for j in read_jsonl(OUT / "judges_dot2.jsonl")}
+    revised = {(r["qid"], r["system"]): r["rounds"] for r in read_jsonl(OUT / "revise.jsonl")}
+
+    def orig(key):
+        return [j14[key].get(cid) or "unsupported" for cid in order[key]]
+
+    def silver_ok(key):  # every usable claim of the original answer is supported (silver labels)
+        ks = [cid for cid in order[key] if cid in gold]
+        return bool(ks) and all(gold[cid] == "supported" for cid in ks)
+
+    def summarise(version):
+        refused = [k for k, v in version.items() if v is None]
+        kept = {k: v for k, v in version.items() if v}
+        return {"answers": len(version), "refused": len(refused),
+                "refused_but_silver_correct": sum(silver_ok(k) for k in refused),
+                "ggf14_mean": float(np.mean([sum(x == "supported" for x in v) / len(v) for v in kept.values()])),
+                "with_bad_claim": sum(any(x != "supported" for x in v) for v in kept.values()),
+                "claims": sum(len(v) for v in kept.values())}
+
+    versions = {"original": {}, "baseline_revise": {}, "verify_operator": {}}
+    for r in rows:
+        key = (r["qid"], r["system"])
+        versions["original"][key] = orig(key)
+        versions["baseline_revise"][key] = r["j14_base"] if revised.get(key) else orig(key)
+        versions["verify_operator"][key] = None if r["claims_op"] == [] else (r["j14_op"] if r["changed"] else orig(key))
+    res["outcome"] = {k: summarise(v) for k, v in versions.items()}
+    res["changed"] = sum(r["changed"] for r in rows)
+    res["baseline_changed"] = sum(bool(revised.get((r["qid"], r["system"]))) for r in rows)
+    res["silver_correct_answers"] = sum(silver_ok((r["qid"], r["system"])) for r in rows)
+    out["verify"] = res
+
 json.dump(out, open(RES, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 if "judge_32b" in out:
     r = out["judge_32b"]; m = r["method"]
@@ -85,5 +191,22 @@ if "judge_32b" in out:
         if " - " in k:
             print(" ", k, round(v["diff"], 3), [round(a, 2) for a in v["ci95"]])
     print("  ragas32", r["corr_ragas_32b"], "judge32", r["corr_judge_32b"])
+if "systems" in out:
+    r = out["systems"]
+    for k, v in r["table"].items():
+        print(f"{k:8s} ans {v['answers']} empty {v['no_claims']} claims {v['claims']} silver {v['ggf_silver']:.3f} j7 {v['ggf_judge7']:.3f} ragas7 {v['ragas7']:.3f} bad {v['answers_with_bad_claim']} {v['dist']}")
+    print("  rank rho", {k: round(v, 2) for k, v in r["rank_spearman_vs_silver_ggf"].items()}, "answer rho", r["answer_spearman_ragas7_vs_silver_ggf"])
+    n = r["new_claims"]
+    for k in ("judge_7b", "xhard"):
+        m = n[k]; print(f"  {k} {m['macro_f1']:.3f} [{m['ci95'][0]:.2f}, {m['ci95'][1]:.2f}] caught {m['caught']}/{m['wrong']} fa {m['false_alarm']}/{m['right']}")
+    print("  majority", round(n["majority"]["macro_f1"], 3), n["dist"])
+if "verify" in out:
+    r = out["verify"]; m = r["checker"]
+    print(f"operator checker silver {m['macro_f1']:.3f} human {m['macro_f1_human']:.3f} caught {m['caught']}/{m['wrong']} fa {m['false_alarm']}/{m['right']}",
+          "calls", r["judge_calls"], r["decided_by"], "changed", r["changed"], "base changed", r["baseline_changed"], "silver-correct", r["silver_correct_answers"])
+    for k in ("human - judge_7b", "silver - judge_7b"):
+        print(" ", k, round(r[k]["diff"], 3), [round(a, 2) for a in r[k]["ci95"]])
+    for k, v in r["outcome"].items():
+        print(" ", k, {a: (round(b, 3) if isinstance(b, float) else b) for a, b in v.items()})
 if "viedureg" in out:
     print("viedureg", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in out["viedureg"].items()})
