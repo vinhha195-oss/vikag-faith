@@ -57,6 +57,9 @@ _CASC = json.load(open(ROOT / "outputs" / "analysis" / "cascade.json", encoding=
 C50 = next(r for r in _CASC["verifiers"]["ft_v1"] if abs(r["budget"] - 0.5) < 1e-9)
 D4 = json.load(open(ROOT / "outputs" / "analysis" / "results_dot4.json", encoding="utf-8"))
 J32, EDU = D4["judge_32b"], D4["viedureg"]
+SYS5, VER = D4["systems"], D4["verify"]
+T5, NC = SYS5["table"], SYS5["new_claims"]
+VO, VB, V0 = VER["outcome"]["verify_operator"], VER["outcome"]["baseline_revise"], VER["outcome"]["original"]
 HT = json.load(open(ROOT / "outputs" / "analysis" / "ieee_extra.json", encoding="utf-8"))["human_tuned"]["ft_v1"]
 CATCH = json.loads(_story[_at:_story.index(chr(10), _at)].strip().rstrip(";"))["summary"]["catch"]
 
@@ -699,10 +702,16 @@ para(f"**Đợt 3 – dữ liệu lỗi sát thực tế:** sinh 3.546 cặp the
      f"nhưng theo nhãn người chỉ {f(XH1['macro_f1_human'])}, không hơn XLM-R đợt 2. Đây là lần thứ ba cùng một khuôn mẫu lặp lại. "
      f"**Máy chấm hai tầng:** để fine-tune V1 tự quyết nửa số claim chắc nhất, chỉ gửi nửa còn lại cho judge 7B, đạt {f(C50['human']['macro_f1'])} theo nhãn người, "
      f"ngang judge chấm toàn bộ, còn báo nhầm theo silver giảm từ {CATCH['j7']['false_alarm']} xuống {C50['silver']['false_alarm']}/{C50['silver']['right']} (tỉ lệ 50% chọn sau khi xem kết quả).")
-para(f"**Đợt 4 – judge 32B và miền giáo dục:** judge Qwen2.5-32B (Kaggle, 2 × T4) đạt {f(J32['method']['macro_f1'])} theo silver nhưng {f(J32['method']['macro_f1_human'])} theo người, "
+para(f"**Đợt 4 – judge 32B và miền giáo dục:** judge Qwen2.5-32B đạt {f(J32['method']['macro_f1'])} theo silver nhưng {f(J32['method']['macro_f1_human'])} theo người, "
      f"thấp hơn judge 7B có ý nghĩa (KTC [{f(J32['human - judge_7b']['ci95'][0], 2)}; {f(J32['human - judge_7b']['ci95'][1], 2)}]): judge càng lớn càng gần Claude, càng xa người. "
      f"Trên bản thử ViEduReg ({EDU['questions']} câu hỏi về văn bản kiểm định chất lượng giáo dục đại học, {EDU['claims']} claim, nhãn silver), judge 7B giữ {f(EDU['judge_7b']['macro_f1'])}, "
-     f"còn XLM-R đợt 3 chỉ {f(EDU['xhard']['macro_f1'])} vì báo nhầm {EDU['xhard']['false_alarm']}/{EDU['xhard']['right']} claim đúng: verifier luyện trên văn bản y tế không chuyển được sang miền khác.")
+     f"còn XLM-R đợt 3 chỉ {f(EDU['xhard']['macro_f1'])} vì báo nhầm {EDU['xhard']['false_alarm']}/{EDU['xhard']['right']} claim đúng: verifier luyện trên văn bản y tế không chuyển được sang miền khác. "
+     f"**Thêm ba hệ** (BM25, vector, Naive RAG với Qwen 7B) trên cùng 40 câu hỏi, thêm {NC['n']} claim silver: silver xếp Naive {f(T5['naive']['ggf_silver'])} > GraphRAG {f(T5['graph']['ggf_silver'])} > "
+     f"Naive 7B {f(T5['naive7b']['ggf_silver'])} > BM25 {f(T5['bm25']['ggf_silver'])} > vector {f(T5['dense']['ggf_silver'])}, còn GGF do judge 7B chấm xếp gần ngược lại "
+     f"(ρ = {f(SYS5['rank_spearman_vs_silver_ggf']['ggf_judge7'], 2)}); trên claim mới, XLM-R đợt 3 {f(NC['xhard']['macro_f1'])}, judge 7B {f(NC['judge_7b']['macro_f1'])}. "
+     f"**Toán tử Verify kiểu KAG** (XLM-R, judge 7B cho claim chưa chắc, kiểm số hiệu văn bản) chỉ gọi judge {VER['judge_calls']} lần cho {VER['claims_checked']} claim, "
+     f"theo người đạt {f(VER['checker']['macro_f1_human'])}, không khác judge 7B có ý nghĩa. Chấm lại bằng judge 14B, GGF tăng {f(V0['ggf14_mean'])} → {f(VO['ggf14_mean'])}, ngang bản sửa cũ ({f(VB['ggf14_mean'])}), "
+     f"nhưng toán tử từ chối {VO['refused']}/{VO['answers']} câu, trong đó {VO['refused_but_silver_correct']} câu vốn đúng hết theo silver.")
 table("Kết quả đợt 2–4 trên tập test, so với đợt 1 và judge 7B (ngưỡng chọn trên dev, cùng lưới với đợt 1)",
       ["Phương pháp", "Silver", "KTC 95%", "AUROC", "Bắt được", "Báo nhầm", "Người"], [
           ["Judge 7B", f(j7["macro_f1"]), f"{f(j7['ci95'][0], 2)}; {f(j7['ci95'][1], 2)}", f(j7["auroc_not_supported"]), f"{CATCH['j7']['caught']}/{CATCH['j7']['wrong']}", f"{CATCH['j7']['false_alarm']}/{CATCH['j7']['right']}", f(hj7)],
@@ -710,7 +719,7 @@ table("Kết quả đợt 2–4 trên tập test, so với đợt 1 và judge 7B
           ["Judge 14B", f(J14["macro_f1"]), f"{f(J14['ci95'][0], 2)}; {f(J14['ci95'][1], 2)}", f(J14["auroc_not_supported"]), f"{J14['caught']}/{J14['wrong']}", f"{J14['false_alarm']}/{J14['right']}", f(J14["macro_f1_human"])],
           ["Fine-tune V1, đợt 1", f(CL["nli_ft_v1"]["macro_f1"]), f"{f(CL['nli_ft_v1']['ci95'][0], 2)}; {f(CL['nli_ft_v1']['ci95'][1], 2)}", f(AP["ft20_v1 - ft_v1 silver"]["b"]), f"{CATCH['ft']['caught']}/{CATCH['ft']['wrong']}", f"{CATCH['ft']['false_alarm']}/{CATCH['ft']['right']}", f(hft)],
       ] + [[n, f(r["macro_f1"]), f"{f(r['ci95'][0], 2)}; {f(r['ci95'][1], 2)}", f(r["auroc_not_supported"]), f"{r['caught']}/{r['wrong']}", f"{r['false_alarm']}/{r['right']}", f(r["macro_f1_human"])]
-           for n, r in (("Fine-tune V1, 450 ký tự", FT1), ("Fine-tune V1, 900 ký tự", FF1), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R + dữ liệu lỗi, đợt 3", XH1))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
+           for n, r in (("Fine-tune V1, 900 ký tự", FF1), ("XLM-R zero-shot V1", XZ1), ("XLM-R fine-tune V1", XF1), ("XLM-R + dữ liệu lỗi, đợt 3", XH1))], [3.7, 1.4, 2.2, 1.9, 2.0, 2.0, 1.4])
 
 h3("6.3 RQ3 – Verify-then-revise")
 table("Verify-then-revise trên 80 câu trả lời (GGF, CR, UR do judge 7B chấm; token F1, recall, EM so với đáp án ViHERMES)",
@@ -731,48 +740,45 @@ table("Ví dụ verify-then-revise (câu hỏi 3 hop, Naive RAG; trích nguyên 
     "là từ ngày 01/7/2025.",
     "Không tìm thấy thông tin về thời điểm dự kiến trình Quốc hội Luật sửa đổi Luật Dược. Thời điểm ban hành Nghị định 124/2021/NĐ-CP và thời "
     "điểm các bệnh viện tự chủ được tự quyết định mua sắm thuốc theo Luật số 90/2025/QH15 *được nêu rõ trong ngữ cảnh*."]], [1, 1], align=["l", "l"], size=10)
-para("Judge 7B gắn cờ hai claim đầu (văn bản ghi Luật Dược trình Quốc hội tháng 10/2022). Câu trả lời mới đạt GGF = 1 theo judge nhưng đã bỏ cả ba "
-     "mốc thời gian, kể cả mốc 01/7/2025 mà judge và Claude đều gán supported, và thay bằng câu chung chung “được nêu rõ trong ngữ cảnh”. Đây là dạng "
-     "điển hình khiến GGF tăng trong khi token recall giảm.")
+para("Câu mới đạt GGF = 1 theo judge nhưng đã bỏ cả ba mốc thời gian, kể cả mốc 01/7/2025 vốn đúng: GGF tăng trong khi token recall giảm.")
 
 h3("6.4 Hai hệ và độ khó theo hop")
 table("Chất lượng hỏi đáp và độ trung thực của hai hệ", ["Hệ", "Token F1 (100 câu)", "Recall đoạn vàng", "GGF", "CR", "UR"], [
     ["Naive RAG", f(QA["naive"]["answer_f1"]), pct(QA["naive"]["gold_passage_recall"], 1), f(SY["naive"]["GGF"]), f(SY["naive"]["CR"]), f(SY["naive"]["UR"])],
     ["GraphRAG", f(QA["graph"]["answer_f1"]), pct(QA["graph"]["gold_passage_recall"], 1), f(SY["graph"]["GGF"]), f(SY["graph"]["CR"]), f(SY["graph"]["UR"])],
 ], [3, 3, 3, 2, 2, 2])
-para(f"Hai hệ không khác nhau có ý nghĩa (Wilcoxon cặp trên GGF, p = {f(SY['wilcoxon_GGF_p'])}). Đồ thị phát hành của ViHERMES khá thô (mỗi đoạn chủ yếu gắn "
-     f"với văn bản gốc, ít cạnh sửa đổi), nên lan truyền thêm được ít đoạn vàng. Độ trung thực giảm rõ ở câu 4–5 hop (Hình 4).")
+para(f"Hai hệ không khác nhau có ý nghĩa (Wilcoxon cặp trên GGF, p = {f(SY['wilcoxon_GGF_p'])}); đồ thị ViHERMES thô, ít cạnh sửa đổi, nên lan truyền thêm được ít đoạn vàng. Độ trung thực giảm rõ ở câu 4–5 hop (Hình 4).")
 figure(F4, "GGF trung bình theo số hop (8 câu hỏi mỗi mức; GraphRAG mức 5 hop có 7 câu trả lời có claim; nhãn silver).", width=Cm(13))
 
 h3("6.5 Phân tích lỗi")
 bullets([
     "**Sai mốc thời gian:** “Luật sửa đổi Luật Dược trình Quốc hội tháng 10/2025” trong khi tờ trình ghi tháng 10/2022; mốc 10/2025 thuộc Luật An toàn thực phẩm.",
-    "**Gán sai chủ thể:** nhiệm vụ truyền thông cải cách hành chính của Văn phòng Bộ bị gán cho Viện Chiến lược và Chính sách y tế.",
+    "**Gán sai chủ thể:** nhiệm vụ của Văn phòng Bộ bị gán cho Viện Chiến lược và Chính sách y tế.",
     "**Sai phép tổng hợp:** cộng tiền phạt của nhiều quyết định (Bảng 4). Cả hai LLM-judge bỏ sót vì phải tự cộng số từ nhiều văn bản; NLI lại bắt được.",
-    "**Bịa thêm danh sách:** liệt kê Instagram, TikTok, YouTube trong khi giấy xác nhận quảng cáo chỉ ghi facebook, zalo; NLI zero-shot bị lừa vì một văn bản khác trong ngữ cảnh có chữ “instagram”.",
+    "**Bịa thêm danh sách:** liệt kê Instagram, TikTok, YouTube trong khi giấy xác nhận chỉ ghi facebook, zalo; NLI zero-shot bị lừa vì văn bản khác có chữ “instagram”.",
 ])
 
 # 7 ------------------------------------------------------------------
 h2("7. Rủi ro & hạn chế")
 bullets([
     f"**Nhãn chuẩn là silver:** Claude trùng người {pct(ACG['acc'])} (κ = {f(ACG['kappa'], 2)}). Giảm thiểu: báo cáo song song theo nhãn người; mở rộng nhãn người, hai người gán và bước thống nhất.",
-    "**Một người gán, không phải chuyên gia pháp lý;** lượt nhanh chỉ hiện 4 câu bằng chứng. Giảm thiểu: lượt C dùng toàn đoạn văn, báo cáo riêng.",
-    "**Quy mô nhỏ:** 2 hệ thay vì 5, 284 claim thay vì khoảng 3.000, judge lớn nhất 32B. Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
+    "**Một người gán, không phải chuyên gia pháp lý;** lượt nhanh chỉ hiện 4 câu bằng chứng (lượt C dùng toàn đoạn).",
+    f"**Quy mô nhỏ:** 5 hệ nhưng chỉ 2 hệ có nhãn người, {284 + NC['n']} claim thay vì khoảng 3.000, judge lớn nhất 32B; nhãn silver của 3 hệ mới gán trên câu trích ngắn. Giảm thiểu: KTC bootstrap và kiểm định ghép cặp cho mọi so sánh chính.",
     f"**Ngưỡng verifier kém ổn định:** chọn trên {R['claims_dev']} claim silver; chọn theo nhãn người cũng không cải thiện trên mẫu này. Giảm thiểu: thêm nhãn người, so thêm AUROC.",
-    "**Verify-then-revise tự chấm:** câu trả lời đã sửa chỉ được chấm bằng judge đã gắn cờ. Giảm thiểu: chấm lại bằng người hoặc metric độc lập.",
-    "**Đồ thị dạng văn bản:** triple được nối vào đầu vào dưới dạng văn bản, verifier chưa đọc được cấu trúc; ViEduReg mới là bản thử 30 câu, nhãn silver.",
+    "**Câu trả lời đã sửa chưa có người chấm:** đợt 4 chấm lại bằng judge 14B độc lập, vẫn là LLM.",
+    "**Đồ thị dạng văn bản** (verifier chưa đọc cấu trúc); ViEduReg mới là bản thử 30 câu, nhãn silver.",
 ])
 
 # 8 ------------------------------------------------------------------
 h2("8. Kết luận & hướng phát triển")
 para(f"Trên văn bản pháp quy y tế tiếng Việt, các metric faithfulness tự động chạy bằng LLM mở cỡ nhỏ chỉ khớp ở mức thấp đến trung bình với nhãn chuẩn. "
      f"LLM-judge 7B là metric ổn định nhất ở cả hai bộ nhãn; RAGAS tốt nhất ở mức câu trả lời và tăng theo kích thước mô hình. Fine-tune mDeBERTa bằng dữ liệu tổng hợp trong miền tăng "
-     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp không hơn có ý nghĩa; dữ liệu lỗi sát thực tế cho điểm silver cao nhất nhưng không tăng theo người. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Vòng verify-then-revise với bộ "
-     f"sinh 3B giảm claim sai bằng cách xóa nội dung, là đánh đổi chứ chưa phải cải thiện thuần. Hướng phát triển:")
+     f"điểm theo nhãn silver nhưng không theo nhãn người, tăng lên khoảng 20.000 cặp không hơn có ý nghĩa; dữ liệu lỗi sát thực tế cho điểm silver cao nhất nhưng không tăng theo người. Điều này cho thấy meta-evaluation dùng nhãn LLM có thể đổi thứ hạng metric. Sửa câu trả lời (kể cả toán tử Verify) "
+     f"giảm claim sai bằng cách xóa nội dung hoặc từ chối: một đánh đổi. Hướng phát triển:")
 numbered([
     "Gán nhãn người cho toàn bộ mẫu với hai người có chuyên môn pháp lý, báo cáo κ giữa người với người.",
     "Fine-tune verifier Qwen nhỏ trả span bằng chứng; mở rộng ViEduReg với nhãn người.",
-    "Đưa thông tin đồ thị vào verifier dưới dạng triple có cấu trúc; mở rộng sang LightRAG, HippoRAG 2, KAG và bộ quy chế đào tạo ViEduReg.",
+    "Đưa triple có cấu trúc vào verifier; thử LightRAG, HippoRAG 2.",
 ])
 
 h2("Caveats")
@@ -782,9 +788,9 @@ bullets([
 
 h2("References")
 REFS = [
-    "Nguyen, L.S.T., Bui, Q.M., Ngo, T.T., Vo, Q.T.N., Le, D.N.H., Quan, T.T.: ViHERMES: A Graph-Grounded Multihop Question Answering Benchmark and System for Vietnamese Healthcare Regulations. ACIIDS 2026. arXiv:2602.07361 — https://github.com/ura-hcmut/ViHERMES",
-    "Es, S., James, J., Espinosa-Anke, L., Schockaert, S.: RAGAs: Automated Evaluation of Retrieval Augmented Generation. EACL 2024 System Demonstrations — https://aclanthology.org/2024.eacl-demo.16/",
-    "Liang, L., et al.: KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation. arXiv:2409.13731 (2024) — https://arxiv.org/abs/2409.13731",
+    "Nguyen, L.S.T., Bui, Q.M., Ngo, T.T., Vo, Q.T.N., Le, D.N.H., Quan, T.T.: ViHERMES: A Graph-Grounded Multihop Question Answering Benchmark and System for Vietnamese Healthcare Regulations. ACIIDS 2026. arXiv:2602.07361",
+    "Es, S., James, J., Espinosa-Anke, L., Schockaert, S.: RAGAs: Automated Evaluation of Retrieval Augmented Generation. EACL 2024 System Demonstrations",
+    "Liang, L., et al.: KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation. arXiv:2409.13731 (2024)",
     "Edge, D., Trinh, H., Cheng, N., et al.: From Local to Global: A Graph RAG Approach to Query-Focused Summarization. arXiv:2404.16130 (2024)",
     "Guo, Z., Xia, L., Yu, Y., Ao, T., Huang, C.: LightRAG: Simple and Fast Retrieval-Augmented Generation. arXiv:2410.05779 (2024)",
     "Gutiérrez, B.J., Shu, Y., Qi, W., Zhou, S., Su, Y.: From RAG to Memory: Non-Parametric Continual Learning for Large Language Models (HippoRAG 2). arXiv:2502.14802 (2025)",

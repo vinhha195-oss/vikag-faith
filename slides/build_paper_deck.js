@@ -47,6 +47,7 @@ const HT = require(path.join(ROOT, "outputs", "analysis", "ieee_extra.json")).hu
 const D3 = require(path.join(ROOT, "outputs", "analysis", "results_dot3.json")), XH1 = D3.methods.xhard_v1;
 const C50 = require(path.join(ROOT, "outputs", "analysis", "cascade.json")).verifiers.ft_v1.find((r) => r.budget === 0.5);
 const D4 = require(path.join(ROOT, "outputs", "analysis", "results_dot4.json")), J32 = D4.judge_32b.method, EDU = D4.viedureg;
+const VER = D4.verify, VO = D4.verify.outcome.verify_operator, V0 = D4.verify.outcome.original, T5 = D4.systems.table, NC = D4.systems.new_claims;
 const NPASS = 1 + (AG.quick_passes || []).length;
 
 const pres = new pptxgen();
@@ -335,12 +336,13 @@ table(s, ["Vòng sửa", "GGF", "CR", "F1", "Recall"], [
   ["1", f(R1.GGF_after), f(R1.CR_after), f(R1.answer_f1_after), f(R1.answer_recall_after)],
   ["2", f(R2.GGF_after), f(R2.CR_after), f(R2.answer_f1_after), f(R2.answer_recall_after)],
 ], { x: 7.2, y: 2.0, w: 5.6, colW: [1.4, 1.05, 1.05, 1.05, 1.05], rowH: [0.45, 0.55, 0.55, 0.55], fontSize: 15 });
-text(s, "Vòng 1 cho phần lớn mức tăng. EM = 0 ở mọi cấu hình vì đáp án ViHERMES dài khoảng 115 từ. GGF do chính judge 7B chấm lại nên là giới hạn trên.", { x: 7.3, y: 4.45, w: 5.4, h: 1.5, fontSize: 15, color: SOFT });
+text(s, `Toán tử Verify kiểu KAG (đợt 4, judge 14B chấm lại): GGF ${f(V0.ggf14_mean)} → ${f(VO.ggf14_mean)}, nhưng từ chối ${VO.refused}/${VO.answers} câu, ${VO.refused_but_silver_correct} câu trong đó vốn đúng hết.`, { x: 7.3, y: 4.45, w: 5.4, h: 1.5, fontSize: 15, color: SOFT });
 notes(s, `Judge 7B gắn cờ ý sai, AI viết lại, tối đa 2 vòng.
 Ý đúng tăng, ý mâu thuẫn giảm một nửa.
 Nhưng token F1 giảm và câu trả lời ngắn đi.
 AI chủ yếu xóa ý chứ chưa sửa cho đúng.
-Đây là đánh đổi, chưa phải cải thiện thuần.`);
+Đây là đánh đổi, chưa phải cải thiện thuần.
+Toán tử Verify kiểu KAG ở đợt 4 chỉ gọi judge ${VER.judge_calls} lần cho ${VER.claims_checked} ý, chấm lại bằng judge 14B độc lập: GGF tăng ngang bản sửa cũ, nhưng từ chối ${VO.refused} câu.`);
 
 // ---------- 12. hops ----------
 s = page("HAI HỆ", `Naive RAG và GraphRAG ngang nhau (p = ${f(SY.wilcoxon_GGF_p)}), khó là ở câu nhiều hop`, "Kết quả");
@@ -364,20 +366,21 @@ s = page("HẠN CHẾ", "Sáu giới hạn cần đọc kèm mọi con số", "K
 table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
   [{ text: "Nhãn chuẩn là silver", options: { bold: true } }, `Claude trùng người ${pct(ACG.acc)}`, "Báo cáo song song theo nhãn người"],
   [{ text: "Một người gán", options: { bold: true } }, "Không phải chuyên gia pháp lý; lượt nhanh chỉ xem 4 câu", "Hai người gán, đo κ người–người"],
-  [{ text: "Quy mô nhỏ", options: { bold: true } }, `2 hệ, ${R.claims_total} claim, judge tới 32B`, "KTC bootstrap, kiểm định ghép cặp"],
+  [{ text: "Quy mô nhỏ", options: { bold: true } }, `5 hệ, ${R.claims_total + NC.n} claim; 3 hệ mới chỉ có silver`, "KTC bootstrap, kiểm định ghép cặp"],
   [{ text: "Ngưỡng kém ổn định", options: { bold: true } }, `Chọn trên ${R.claims_dev} claim; theo nhãn người cũng không cải thiện`, "Thêm nhãn người, so thêm AUROC"],
-  [{ text: "Revise tự chấm", options: { bold: true } }, "Judge vừa gắn cờ vừa chấm lại", "Chấm bằng người hoặc metric độc lập"],
+  [{ text: "Revise chấm bằng LLM", options: { bold: true } }, "Đợt 4 chấm lại bằng judge 14B, chưa có người", "Người chấm câu trả lời đã sửa"],
   [{ text: "Đồ thị dạng văn bản", options: { bold: true } }, "Triple nối dạng văn bản; ViEduReg mới là bản thử 30 câu", "Verifier đọc triple có cấu trúc"],
 ], { x: 0.5, y: 1.6, w: 12.3, colW: [3.1, 5.2, 4.0], rowH: [0.45, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72], fontSize: 15 });
 notes(s, `Em chủ động nêu giới hạn.
 Quan trọng nhất: nhãn chính do Claude gán, chỉ một người kiểm tra, mẫu còn nhỏ.
-So với đề cương còn thiếu: 2 hệ thay vì 5, ${R.claims_total} claim thay vì khoảng 3.000, chưa có ViEduReg và toán tử Verify của KAG.`);
+Đợt 4 đã thêm 3 hệ (BM25, vector, Naive 7B), ${NC.n} claim silver, ViEduReg bản thử và toán tử Verify; vẫn còn xa mức khoảng 3.000 claim.
+Trên 5 hệ, judge 7B xếp hạng gần ngược nhãn silver (ρ = ${f(D4.systems.rank_spearman_vs_silver_ggf.ggf_judge7, 2)}).`);
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
 [["RQ1", `Judge 7B (${f(SENS.judge_7b.macro_f1_vs_human)} theo người) và RAGAS tốt nhất, chỉ khớp mức trung bình. Judge 32B không hơn mà còn xa người hơn. Máy hai tầng ngang judge 7B với nửa số lần gọi.`],
  ["RQ2", `Dữ liệu tổng hợp giúp mDeBERTa theo silver, không giữ được theo người; 20.000 cặp không hơn có ý nghĩa. Dữ liệu lỗi sát thực tế: ${f(XH1.macro_f1)} theo Claude, chỉ ${f(XH1.macro_f1_human)} theo người. Đồ thị, triple và rule chưa giúp được.`],
- ["RQ3", "Sửa giảm claim sai bằng cách xóa nội dung: đây là đánh đổi, chưa phải cải thiện thuần."]].forEach(([k, d], i) => {
+ ["RQ3", `Sửa giảm claim sai bằng cách xóa nội dung; toán tử Verify từ chối ${VO.refused}/${VO.answers} câu. Đây là đánh đổi, chưa phải cải thiện thuần.`]].forEach(([k, d], i) => {
   const y = 2.0 + i * 0.98;
   text(s, k, { x: 0.6, y, w: 1.3, h: 0.85, fontSize: 24, bold: true, color: ACC, fontFace: MONO, valign: "middle" });
   text(s, d, { x: 1.95, y, w: 10.75, h: 0.85, fontSize: 18, valign: "middle" });

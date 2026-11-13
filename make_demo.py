@@ -120,7 +120,9 @@ summary["dot3"] = {"xhard": dot3["methods"]["xhard_v1"], "xft": dot2["methods"][
 
 d4 = json.load(open(OUT / "analysis" / "results_dot4.json", encoding="utf-8"))
 summary["dot4"] = {"j32": d4["judge_32b"]["method"], "j32_vs_j7_human": d4["judge_32b"]["human - judge_7b"], "ragas32": d4["judge_32b"]["corr_ragas_32b"],
-                   "edu": d4["viedureg"], "j14": dot2["methods"]["judge_14b"]}
+                   "edu": d4["viedureg"], "j14": dot2["methods"]["judge_14b"],
+                   "sys": d4["systems"]["table"], "rank": d4["systems"]["rank_spearman_vs_silver_ggf"], "ver": d4["verify"]["outcome"],
+                   "ver_calls": d4["verify"]["judge_calls"], "ver_claims": d4["verify"]["claims_checked"]}
 
 live = OUT / "dot4_live.jsonl"  # real chatbot runs recorded on Colab (s22_record.py), shown offline
 summary["live"] = R("dot4_live.jsonl") if live.exists() else []
