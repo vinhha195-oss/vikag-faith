@@ -122,6 +122,9 @@ d4 = json.load(open(OUT / "analysis" / "results_dot4.json", encoding="utf-8"))
 summary["dot4"] = {"j32": d4["judge_32b"]["method"], "j32_vs_j7_human": d4["judge_32b"]["human - judge_7b"], "ragas32": d4["judge_32b"]["corr_ragas_32b"],
                    "edu": d4["viedureg"], "j14": dot2["methods"]["judge_14b"]}
 
+live = OUT / "dot4_live.jsonl"  # real chatbot runs recorded on Colab (s22_record.py), shown offline
+summary["live"] = R("dot4_live.jsonl") if live.exists() else []
+
 data = {"items": sorted(items.values(), key=lambda x: (x["hop"], x["q"])), "passages": passages, "summary": summary}
 page = ROOT / "demo" / "vikag_faith_demo.html"
 lines = page.read_text(encoding="utf-8").split("\n")
