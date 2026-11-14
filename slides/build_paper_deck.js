@@ -130,7 +130,8 @@ notes(s, `Em là Hà Văn Vinh, giáo viên hướng dẫn là ${ADVISOR}.
 Tên ngắn là "Ai chấm máy chấm?": em không chấm chatbot, em chấm các công cụ chấm tự động.
 Bên phải là cách làm: tách câu trả lời thành từng ý, rồi gắn nhãn cho từng ý.
 SUPPORTED: văn bản xác nhận. CONTRADICTED: văn bản nói ngược lại. UNSUPPORTED: văn bản không nhắc tới.
-Em sẽ trình bày vấn đề, cách làm, kết quả và kết luận.`);
+Em sẽ trình bày vấn đề, cách làm, kết quả và kết luận.
+Ví dụ dễ hiểu: chatbot giống học sinh làm bài được mở sách, văn bản pháp luật là sách, máy chấm tự động là máy chấm bài. Em không chấm học sinh, em kiểm tra xem máy chấm có chấm đúng không.`);
 
 // ---------- 2. the error ----------
 s = page("VẤN ĐỀ", "AI trả lời trôi chảy, nhưng một con số sai là đủ gây hậu quả", "Vấn đề");
@@ -149,7 +150,8 @@ notes(s, `Đây là một lỗi thật trong dữ liệu.
 AI nói tháng 10/2025, văn bản ghi tháng 10/2022.
 Mốc 10/2025 là của luật khác, AI đã ghép nhầm.
 Câu văn trôi chảy nên người đọc khó nhận ra.
-Vậy máy chấm có đáng tin với tiếng Việt không?`);
+Vậy máy chấm có đáng tin với tiếng Việt không?
+Ví dụ dễ hiểu: giống học sinh chép đúng tên luật nhưng nhầm năm. Đọc lướt thì thấy rất hợp lý, chỉ khi mở sách ra so mới biết sai.`);
 
 // ---------- 3. the gap ----------
 s = page("VẤN ĐỀ", "Điểm tổng không cho biết sai ở đâu, và máy chấm chủ yếu được thử trên tiếng Anh", "Vấn đề");
@@ -164,7 +166,8 @@ s = page("VẤN ĐỀ", "Điểm tổng không cho biết sai ở đâu, và má
 notes(s, `Có ba khoảng trống.
 Một: chỉ có một điểm cho cả câu trả lời, nên không biết ý nào sai.
 Hai: ViHERMES cho thấy kiểm chứng rất quan trọng, nhưng chưa ai đo công cụ kiểm chứng tốt đến đâu.
-Ba: các máy chấm chủ yếu được thử trên tiếng Anh.`);
+Ba: các máy chấm chủ yếu được thử trên tiếng Anh.
+Ví dụ dễ hiểu: chấm cả câu trả lời được 7/10 giống chỉ ghi điểm tổng mà không gạch chỗ sai, người đọc không biết phải sửa ý nào.`);
 
 // ---------- 4. questions ----------
 s = page("CÂU HỎI NGHIÊN CỨU", "Đề tài không xây chatbot mới, mà kiểm tra các máy chấm", "Vấn đề");
@@ -185,7 +188,8 @@ notes(s, `Đề tài không làm chatbot giỏi hơn, mà kiểm tra các máy c
 Ba câu hỏi:
 Máy có sẵn tốt đến đâu?
 Thêm đồ thị, thêm luật, luyện thêm có giúp không?
-Để AI tự sửa thì tốt lên hay xấu đi?`);
+Để AI tự sửa thì tốt lên hay xấu đi?
+Ví dụ dễ hiểu: RQ1 hỏi máy chấm có sẵn bắt lỗi giỏi đến đâu; RQ2 hỏi cho máy đọc thêm, học thêm thì có giỏi hơn không; RQ3 hỏi bắt lỗi xong bảo AI tự sửa thì bài tốt lên hay chỉ ngắn đi.`);
 
 // ---------- 5. pipeline as a funnel ----------
 pres.addSection({ title: "Cách làm" });
@@ -209,7 +213,8 @@ notes(s, `100 câu hỏi, hai chatbot trả lời thành 200 câu, tách đượ
 Em lấy mẫu 284 ý, bỏ 15 ý lỗi, còn 269 ý.
 Người kiểm tra ${ACG.n} ý.
 Mọi máy chấm nhìn cùng một tập bằng chứng, nên so sánh mới công bằng.
-Đợt 4 thêm 3 chatbot nữa trên cùng 40 câu, thêm ${NC.n} ý chỉ có nhãn Claude.`);
+Đợt 4 thêm 3 chatbot nữa trên cùng 40 câu, thêm ${NC.n} ý chỉ có nhãn Claude.
+Ví dụ dễ hiểu: câu trả lời “Fine Việt Nam được quảng cáo trên Facebook, Instagram, TikTok…” được tách thành từng ý “được quảng cáo trên Facebook”, “được quảng cáo trên Instagram”… rồi so từng ý với giấy phép, vốn chỉ ghi facebook, zalo, Tiki, Shopee, Lazada.`);
 
 // ---------- 6. checkers ----------
 s = page("CÁCH LÀM", "Các máy chấm được so sánh trên cùng một tập bằng chứng", "Cách làm");
@@ -226,7 +231,8 @@ notes(s, `RAGAS chấm cả câu trả lời.
 LLM-judge dùng AI chấm từng ý.
 NLI xem một câu có suy ra được từ đoạn văn không.
 Fine-tune là luyện thêm bằng ví dụ tự tạo.
-GGF là tỉ lệ ý đúng; 3B, 7B, 14B, 32B là cỡ mô hình (tỉ tham số).`);
+GGF là tỉ lệ ý đúng; 3B, 7B, 14B, 32B là cỡ mô hình (tỉ tham số).
+Ví dụ dễ hiểu: LLM-judge giống nhờ một giáo viên AI đọc sách rồi chấm từng ý; NLI giống máy dò xem một câu có suy ra được từ đoạn sách không; RAGAS chỉ cho một điểm cho cả bài.`);
 
 // ---------- 7. labels ----------
 s = page("CÁCH LÀM", `Nhãn chính do Claude gán, người kiểm tra mù lại ${ACG.n} claim`, "Cách làm");
@@ -251,7 +257,8 @@ notes(s, `Phải nói rõ: nhãn chính do Claude gán, không phải người.
 Vì vậy em nhờ người kiểm tra mù ${ACG.n} ý.
 Claude trùng người ${pct(ACG.acc)}, κ = ${f(ACG.kappa, 2)}, là mức thấp.
 Nên không coi nhãn Claude là đáp án tuyệt đối.
-${NC.n} ý của 3 chatbot thêm ở đợt 4 cũng chỉ có nhãn Claude.`);
+${NC.n} ý của 3 chatbot thêm ở đợt 4 cũng chỉ có nhãn Claude.
+Ví dụ dễ hiểu: giống có một bộ đáp án do trợ giảng AI soạn. Em nhờ một người chấm lại ${ACG.n} ý mà không cho xem đáp án đó, để biết đáp án AI đúng đến đâu.`);
 
 // ---------- 8. RQ1 waffle ----------
 pres.addSection({ title: "Kết quả" });
@@ -276,7 +283,8 @@ Macro-F1 từ 0 đến 1, càng cao càng tốt.
 Judge 14B đạt ${f(J14.macro_f1)}, nhưng hơn 7B chưa có ý nghĩa thống kê.
 Chấm cả câu trả lời thì RAGAS tốt dần theo cỡ mô hình.
 Máy chấm hai tầng: máy so khớp tự quyết nửa số ý nó chắc nhất, nửa còn lại gửi judge 7B; theo người đạt ${f(C50.human.macro_f1)}, ngang judge chấm hết.
-Judge 32B (chạy trên Kaggle) đạt ${f(J32.macro_f1)} theo Claude nhưng chỉ ${f(J32.macro_f1_human)} theo người, kém judge 7B có ý nghĩa: judge càng lớn càng gần Claude, càng xa người.`);
+Judge 32B (chạy trên Kaggle) đạt ${f(J32.macro_f1)} theo Claude nhưng chỉ ${f(J32.macro_f1_human)} theo người, kém judge 7B có ý nghĩa: judge càng lớn càng gần Claude, càng xa người.
+Ví dụ dễ hiểu: judge 7B giống máy soi hành lý ở sân bay, bắt được khoảng 2/3 đồ cấm và thỉnh thoảng báo nhầm. Với câu Fine Việt Nam, máy bắt được Instagram, Pinterest, YouTube nhưng cho qua TikTok.`);
 
 // ---------- 9. RQ2 ----------
 const c1 = CMP["nli_ft_v1 - nli_zs_v1"], c2 = CMP["nli_nosynth_v1 - nli_zs_v1"];
@@ -300,7 +308,8 @@ Dấu cộng: dữ liệu tự tạo tăng 0,117 điểm; tăng lên 20.000 cặ
 Dấu trừ: nhét thông tin đồ thị làm điểm giảm.
 Dấu bằng: luật số và ngày gần như không đổi.
 Đợt 3 luyện XLM-R với lỗi sát thực tế (đổi cơ quan, chèn mục, phủ nhận sai): ${f(XH1.macro_f1)} theo Claude, cao nhất, nhưng theo người chỉ ${f(XH1.macro_f1_human)}.
-Lần thứ ba cùng một khuôn mẫu: điểm theo Claude tăng, theo người thì không.`);
+Lần thứ ba cùng một khuôn mẫu: điểm theo Claude tăng, theo người thì không.
+Ví dụ dễ hiểu: luyện thêm bằng ví dụ tự tạo giống học sinh luyện đề do chính mình ra: điểm đề luyện tăng, nhưng đi thi thật chưa chắc tăng.`);
 
 // ---------- 10. ranking flips ----------
 s = page("KIỂM ĐỊNH MÙ", "Đổi sang nhãn người, bảng xếp hạng đổi theo", "Kết quả");
@@ -318,7 +327,8 @@ notes(s, `Đây là phát hiện quan trọng nhất.
 Đổi sang nhãn người, bảng xếp hạng đổi theo.
 Máy đã luyện tụt từ ${f(SENS.nli_ft_v1.macro_f1_vs_claude)} xuống ${f(SENS.nli_ft_v1.macro_f1_vs_human)}; judge 7B đứng đầu với ${f(SENS.judge_7b.macro_f1_vs_human)}.
 Claude khắt khe hơn người. Chọn lại ngưỡng theo người cũng không cải thiện.
-Chỉ có một người gán, nên đây là kiểm định, không phải đáp án tuyệt đối.`);
+Chỉ có một người gán, nên đây là kiểm định, không phải đáp án tuyệt đối.
+Ví dụ dễ hiểu: máy luyện theo đáp án của trợ giảng AI nên chấm khớp trợ giảng, nhưng lệch với giáo viên thật.`);
 
 // ---------- 11. RQ3 numbers ----------
 s = page("RQ3 · VERIFY-THEN-REVISE", "Tự sửa giảm ý sai, nhưng AI chủ yếu xóa ý thay vì sửa cho đúng", "Kết quả");
@@ -342,7 +352,8 @@ notes(s, `Judge 7B gắn cờ ý sai, AI viết lại, tối đa 2 vòng.
 Nhưng token F1 giảm và câu trả lời ngắn đi.
 AI chủ yếu xóa ý chứ chưa sửa cho đúng.
 Đây là đánh đổi, chưa phải cải thiện thuần.
-Toán tử Verify kiểu KAG ở đợt 4 chỉ gọi judge ${VER.judge_calls} lần cho ${VER.claims_checked} ý, chấm lại bằng judge 14B độc lập: GGF tăng ngang bản sửa cũ, nhưng từ chối ${VO.refused} câu.`);
+Toán tử Verify kiểu KAG ở đợt 4 chỉ gọi judge ${VER.judge_calls} lần cho ${VER.claims_checked} ý, chấm lại bằng judge 14B độc lập: GGF tăng ngang bản sửa cũ, nhưng từ chối ${VO.refused} câu.
+Ví dụ dễ hiểu: học sinh bị gạch lỗi rồi viết lại, nhưng thay vì sửa năm cho đúng thì xóa luôn cả câu; bài ít lỗi hơn nhưng thiếu ý. Toán tử Verify nhiều khi còn nộp giấy trắng: “không tìm thấy thông tin”.`);
 
 // ---------- 12. hops ----------
 s = page("HAI HỆ", `Naive RAG và GraphRAG ngang nhau (p = ${f(SY.wilcoxon_GGF_p)}), khó là ở câu nhiều hop`, "Kết quả");
@@ -360,7 +371,8 @@ notes(s, `Hai chatbot ngang nhau, p = ${f(SY.wilcoxon_GGF_p)}.
 Câu 1 hop đạt khoảng 0,85; câu 4 và 5 hop giảm mạnh.
 Đồ thị của ViHERMES khá thô, nên GraphRAG chưa lấy thêm được nhiều đoạn đúng.
 Đợt 4 thêm BM25, tìm theo vector và Naive RAG với Qwen 7B: theo nhãn Claude, Naive RAG vẫn cao nhất (${f(T5.naive.ggf_silver)}), tìm theo vector thấp nhất (${f(T5.dense.ggf_silver)}).
-Judge 7B lại xếp năm chatbot gần như ngược lại (ρ = ${f(D4.systems.rank_spearman_vs_silver_ggf.ggf_judge7, 2)}), nên dùng judge để so chatbot cũng phải cẩn thận.`);
+Judge 7B lại xếp năm chatbot gần như ngược lại (ρ = ${f(D4.systems.rank_spearman_vs_silver_ggf.ggf_judge7, 2)}), nên dùng judge để so chatbot cũng phải cẩn thận.
+Ví dụ dễ hiểu: câu 1 hop giống hỏi một chỗ trong sách, câu 5 hop phải ghép 5 chỗ lại nên dễ sai hơn. Còn judge 7B và nhãn Claude xếp 5 chatbot gần như ngược nhau, giống hai giám khảo chấm cùng một cuộc thi mà ra hai bảng xếp hạng trái ngược.`);
 
 // ---------- 13. limits ----------
 pres.addSection({ title: "Kết luận" });
@@ -376,7 +388,8 @@ table(s, ["Giới hạn", "Cụ thể", "Giảm thiểu"], [
 notes(s, `Em chủ động nêu giới hạn.
 Quan trọng nhất: nhãn chính do Claude gán, chỉ một người kiểm tra, mẫu còn nhỏ.
 Đợt 4 đã thêm 3 hệ (BM25, vector, Naive 7B), ${NC.n} claim silver, ViEduReg bản thử và toán tử Verify; vẫn còn xa mức khoảng 3.000 claim.
-Sang miền giáo dục (ViEduReg, ${EDU.claims} ý): judge 7B vẫn ${f(EDU.judge_7b.macro_f1)}, XLM-R luyện trên văn bản y tế chỉ ${f(EDU.xhard.macro_f1)} vì báo nhầm ${EDU.xhard.false_alarm}/${EDU.xhard.right} ý đúng.`);
+Sang miền giáo dục (ViEduReg, ${EDU.claims} ý): judge 7B vẫn ${f(EDU.judge_7b.macro_f1)}, XLM-R luyện trên văn bản y tế chỉ ${f(EDU.xhard.macro_f1)} vì báo nhầm ${EDU.xhard.false_alarm}/${EDU.xhard.right} ý đúng.
+Ví dụ dễ hiểu: kết quả hiện giống khảo sát trên một lớp 40 học sinh với một giáo viên chấm lại: có giá trị, nhưng cần thêm lớp và thêm giáo viên mới khẳng định chắc được.`);
 
 // ---------- 14. conclusion and thanks ----------
 s = page("KẾT LUẬN", "Điểm của máy chấm chỉ là tín hiệu tham khảo, văn bản pháp luật vẫn cần người kiểm tra", "Kết luận");
@@ -395,6 +408,7 @@ Máy chấm có sẵn chỉ khớp mức trung bình; theo người, judge 7B t�
 Luyện thêm giúp theo nhãn Claude, chưa chắc giúp theo người.
 AI tự sửa chủ yếu bằng cách xóa nội dung; toán tử Verify thì từ chối ${VO.refused}/${VO.answers} câu.
 Điểm của máy chỉ để tham khảo, văn bản pháp luật vẫn cần người kiểm tra.
+Ví dụ dễ hiểu: máy chấm giống xét nghiệm sàng lọc trong bệnh viện: không thay bác sĩ, nhưng cho biết ai cần gặp bác sĩ. Ở đây máy gắn cờ những ý đáng ngờ để người đọc lại, không phải đọc hết.
 Em xin hết, mời thầy cô đặt câu hỏi.`);
 
 // ---------- native Office equation for the checkers slide ----------
