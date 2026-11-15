@@ -3,7 +3,7 @@
 Đánh giá tính trung thực (faithfulness) mức claim cho hệ hỏi đáp GraphRAG tiếng Việt trên dữ liệu
 [ViHERMES](https://github.com/ura-hcmut/ViHERMES) (văn bản pháp quy y tế).
 
-**Sản phẩm nộp (thư mục [nop_bai/](nop_bai/)):** bài báo Word, slide PowerPoint, slide PDF · số liệu gốc:
+**Sản phẩm nộp (thư mục `nop_bai/`, chỉ lưu trên máy, không đưa lên GitHub):** bài báo Word, slide PowerPoint và PDF, bản IEEE PDF · số liệu gốc:
 [outputs/analysis/results.json](outputs/analysis/results.json) · đề cương:
 https://claude.ai/artifact/Ek3Puhkwvimrrbj97ojenf
 
@@ -22,7 +22,7 @@ https://claude.ai/artifact/Ek3Puhkwvimrrbj97ojenf
 | Năm hệ (đợt 4) | Thêm BM25, vector, Naive RAG với Qwen 7B trên cùng 40 câu, 413 claim nhãn silver (`outputs/dot4_silver.json`, Claude gán trên câu trích ngắn, không phải nhãn người). GGF silver: Naive 0,694 > GraphRAG 0,638 > Naive 7B 0,616 > BM25 0,575 > vector 0,532; judge 7B xếp gần ngược (ρ = −0,60 trên 5 hệ). Trên claim mới: XLM-R đợt 3 0,563, judge 7B 0,525 |
 | Độ tin cậy nhãn | Năm lượt kiểm định mù do người gán (C: 60 claim phân tầng; G–J: 4 × 30 claim ngẫu nhiên, còn 105): gộp 165 claim (58% bộ dữ liệu), Claude trùng người 65%, κ = 0,29, tương quan thứ hạng metric 0,46. Theo nhãn người, judge-7B tốt nhất (0,528); verifier fine-tune (0,381) không hơn zero-shot (0,409) |
 
-**Demo:** `demo/vikag_faith_demo.html`, một file duy nhất, mở bằng trình duyệt, không cần mạng (5 tab: đề tài là gì, 4 ví dụ đã được người kiểm tra, tra cứu 80 câu trả lời, kết quả đợt 1–4, thử trực tiếp với 8 câu chatbot chạy sẵn). Bản đăng: https://claude.ai/artifact/Hav1SviyP3Q9rQcBY8dGHG ·
+**Demo:** `demo/vikag_faith_demo.html` (chỉ lưu trên máy, không đưa lên GitHub), một file duy nhất, mở bằng trình duyệt, không cần mạng (5 tab: đề tài là gì, 4 ví dụ đã được người kiểm tra, tra cứu 80 câu trả lời, kết quả đợt 1–4, thử trực tiếp với 8 câu chatbot chạy sẵn). Bản đăng: https://claude.ai/artifact/Hav1SviyP3Q9rQcBY8dGHG ·
 **Dữ liệu:** `dataset/ViFaithKAG/` (sinh bởi `make_dataset.py`).
 
 Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (checkpoint fp16), nên kết luận cũ "fine-tune không giúp ích" là sai.
@@ -41,7 +41,7 @@ Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (c
 | Khoảng 3.000 claim | Chưa: 697 claim (284 + 413) |
 | Nhãn người | 165 claim, một người gán; người thứ hai (lượt K, `outputs/annotation/annotate_K.html`) chưa làm |
 | Bài Word 14 trang, slide 14 trang + PDF, demo | Xong, đã cập nhật đợt 4 |
-| Bản IEEE | Mã nguồn đã cập nhật đợt 4; cần biên dịch lại trên Overleaf (PDF trong `nop_bai/` là bản 06/11) |
+| Bản IEEE | Mã nguồn đã cập nhật đợt 4; đã biên dịch trên Overleaf (14 trang), PDF trong `nop_bai/ViKAG-Faith_IEEE.pdf` |
 
 ## Nguồn nhãn
 

@@ -23,3 +23,7 @@ outputs/annotation/annotate_*.html
 
 # Office lock files
 ~$*
+
+# deliverables and demo stay on the local machine only
+demo/
+nop_bai/
