@@ -73,7 +73,7 @@ Lưu ý: các lần fine-tune trước 28/10/2026 trên Colab bị loss = NaN (c
 | `src/s19_dot4.py`, `src/s20_viedureg.py`, `src/s21_dot4.py`, `src/s22_record.py` | Đợt 4: ba hệ mới, ViEduReg (`outputs/viedureg/`), toán tử Verify, phân tích (`results_dot4.json`), ghi sẵn 8 câu chatbot cho demo (`dot4_live.jsonl`) |
 | `make_colab_dot4.py`, `make_kaggle_32b.py`, `make_kaggle_dot4.py` | Notebook đợt 4: Colab (`colab/ViKAG_Faith_Dot4.ipynb`), Kaggle 2 × T4 cho judge 32B (`kaggle/ViKAG_Judge32B.ipynb`) và phần B–D khi Colab hết GPU (`kaggle/ViKAG_Dot4.ipynb`) |
 | `src/s6_second.py`, `src/s17_check_app.py` | Trang gán nhãn cho người thứ hai (pass K, 57 claim bất đồng trộn 23 claim đồng thuận); app kiểm chứng chạy trên máy, không cần LLM |
-| `make_paper_ieee.py`, `ieee/` | Bản tiếng Anh theo mẫu IEEE (IEEEtran); tải `ieee/ViKAG-Faith_IEEE_Overleaf.zip` lên Overleaf để biên dịch |
+| `make_paper_ieee.py` | Bản tiếng Anh theo mẫu IEEE (IEEEtran): sinh `ieee/main.tex` và gói `ieee/ViKAG-Faith_IEEE_Overleaf.zip` (thư mục `ieee/` chỉ lưu trên máy) để biên dịch trên Overleaf |
 | `src/s3b_triples.py`, `src/s10_dot2.py`, `make_colab_dot2.py` | Đợt 2: triple + mutual index, phân tích riêng (`results_dot2.json`), notebook Colab cho judge 14B, Qwen span, XLM-R và fine-tune 900 ký tự |
 | `make_demo.py` | Cập nhật số liệu thẳng vào `demo/vikag_faith_demo.html` (không có file khuôn riêng) |
 | `make_dataset.py` | Đóng gói `dataset/ViFaithKAG` (claims/answers/passages JSONL + README, ghi nguồn ViHERMES MIT) |
